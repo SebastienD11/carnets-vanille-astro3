@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { homePagePostsQuery } from '../api/api'
+import { homePagePostsQuery, type Post } from '../api/posts'
 
 const data = await homePagePostsQuery()
-const posts = data.posts.nodes
+const posts = data
 
 Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 ---
@@ -11,6 +11,13 @@ Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 <Layout title="Home Page">
   <main>
     <h2>Recent Posts</h2>
-    {posts.map((post) => <h1 class="text-3xl font-bold text-white underline">{post.title}</h1>)}
+    {
+      posts.map((post: Post) => (
+        <>
+          <h1 class="text-3xl font-bold text-white underline">{post.title}</h1>
+          <div set:html={post.excerpt} />
+        </>
+      ))
+    }
   </main>
 </Layout>

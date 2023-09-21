@@ -1,4 +1,9 @@
-export async function homePagePostsQuery() {
+export type Post = {
+  title: string
+  excerpt: string
+}
+
+export async function homePagePostsQuery(): Promise<Post[]> {
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
@@ -35,5 +40,5 @@ export async function homePagePostsQuery() {
     })
   })
   const { data } = await response.json()
-  return data
+  return data.posts.nodes
 }
