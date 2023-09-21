@@ -9,12 +9,8 @@ Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 ---
 
 <Layout title="Home Page">
-	<main>
-		<h2>Recent Posts</h2>
-		{
-			posts.map((post) => {
-				return post.title
-			})
-		}
-	</main>
+  <main>
+    <h2>Recent Posts</h2>
+    {posts.map((post) => <h1 class="text-3xl font-bold text-white underline">{post.title}</h1>)}
+  </main>
 </Layout>
