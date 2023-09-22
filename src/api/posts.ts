@@ -1,6 +1,7 @@
 export type Post = {
-  title: string
   excerpt: string
+  title: string
+  uri: string
 }
 
 export async function homePagePostsQuery(): Promise<Post[]> {
