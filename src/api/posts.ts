@@ -4,11 +4,12 @@ export type Post = {
 }
 
 export async function homePagePostsQuery(): Promise<Post[]> {
-  const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      query: `{
+  try {
+    const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `{
                   posts {
                     nodes {
                       date
@@ -37,8 +38,12 @@ export async function homePagePostsQuery(): Promise<Post[]> {
                   }
                 }
               `
+      })
     })
-  })
-  const { data } = await response.json()
-  return data.posts.nodes
+    const { data } = await response.json()
+    return data?.posts?.nodes
+  } catch (error) {
+    console.log('There was an error', error)
+    return []
+  }
 }

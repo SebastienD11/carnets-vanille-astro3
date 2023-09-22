@@ -12,12 +12,14 @@ Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
   <main>
     <h2>Recent Posts</h2>
     {
-      posts.map((post: Post) => (
-        <>
-          <h1 class="text-3xl font-bold text-white underline">{post.title}</h1>
-          <div set:html={post.excerpt} />
-        </>
-      ))
+      posts.length > 1 &&
+        posts.map((post: Post) => (
+          <>
+            <h1 class="text-3xl font-bold text-white underline">{post.title}</h1>
+            <div set:html={post.excerpt} />
+          </>
+        ))
     }
+    {posts.length === 0 && <p>No posts found.</p>}
   </main>
 </Layout>
