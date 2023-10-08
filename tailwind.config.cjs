@@ -98,6 +98,7 @@ module.exports = {
         }
       }),
       colors: {
+        black: '#0c0a09', // stone-950
         twitter: {
           DEFAULT: '#1DA1F2'
         },
