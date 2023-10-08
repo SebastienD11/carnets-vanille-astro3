@@ -47,3 +47,9 @@
 - Comment Bloc
 - Comment Form
 - Dark/Light Theme Switcher
+
+### SEO
+
+- Favicon
+- Yoast metas
+- Hreflang
