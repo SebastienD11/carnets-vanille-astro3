@@ -6,6 +6,7 @@ interface Props {
 const { title } = Astro.props
 
 import Header from '../components/Header.astro'
+import '@fontsource-variable/mulish'
 ---
 
 <!doctype html>
@@ -18,7 +19,7 @@ import Header from '../components/Header.astro'
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="bg-white text-black dark:bg-black dark:text-white">
+  <body class="font-mulish bg-white text-black dark:bg-black dark:text-white">
     <Header />
     <slot />
   </body>

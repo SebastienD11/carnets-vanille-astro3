@@ -12,6 +12,8 @@
   "dependencies": {
     "@astrojs/node": "^6.0.1",
     "@astrojs/tailwind": "^5.0.0",
+    "@fontsource-variable/mulish": "^5.0.14",
+    "@tailwindcss/typography": "^0.5.10",
     "astro": "^3.1.2",
     "prettier": "^3.0.3",
     "prettier-plugin-astro": "^0.12.0",
