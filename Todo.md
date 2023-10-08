@@ -50,6 +50,5 @@
 
 ### SEO
 
-- Favicon
 - Yoast metas
 - Hreflang
