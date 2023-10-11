@@ -2,8 +2,11 @@
 import Layout from '../layouts/Layout.astro'
 import { homePagePostsQuery, type Post } from '../api/posts'
 import IndexPosts from '../components/indexPosts.astro'
+import { getLangFromUrl } from '../i18n/utils'
 
-const data = await homePagePostsQuery()
+const currentLang = getLangFromUrl(Astro.url)
+
+const data = await homePagePostsQuery(currentLang)
 const posts = data
 
 const seo = {

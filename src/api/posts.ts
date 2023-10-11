@@ -4,14 +4,15 @@ export type Post = {
   uri: string
 }
 
-export async function homePagePostsQuery(): Promise<Post[]> {
+export async function homePagePostsQuery(lang: string = 'fr'): Promise<Post[]> {
+  console.log
   try {
     const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        query: `{
-                  posts {
+        query: `query getHomePost($lang: String!) {
+                  posts(where: {language: $lang}) {
                     nodes {
                       date
                       uri
@@ -38,7 +39,10 @@ export async function homePagePostsQuery(): Promise<Post[]> {
                     }
                   }
                 }
-              `
+              `,
+        variables: {
+          lang: lang
+        }
       })
     })
     const { data } = await response.json()
