@@ -9,12 +9,9 @@ export const defaultLang = 'fr'
 
 export const ui = {
   en: {
-    'nav.home': 'Home',
-    'nav.about': 'About',
-    'nav.twitter': 'Twitter'
+    'index.recentsPost.title': 'Recent Post'
   },
   fr: {
-    'nav.home': 'Accueil',
-    'nav.about': 'À propos'
+    'index.recentsPost.title': 'Articles récents'
   }
 } as const

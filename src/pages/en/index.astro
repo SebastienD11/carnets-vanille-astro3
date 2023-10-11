@@ -1,18 +1,20 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import Card from '../../components/post/card.astro'
 import { homePagePostsQuery, type Post } from '../../api/posts'
+import IndexPosts from '../../components/indexPosts.astro'
 
 const data = await homePagePostsQuery()
 const posts = data
 
+const seo = {
+  title: 'Home Page'
+}
+
 Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 ---
 
-<Layout title="Home Page">
+<Layout title={seo.title}>
   <main>
-    <h2>Recent Posts</h2>
-    {posts.length > 1 && posts.map((post: Post) => <Card post={post} />)}
-    {posts.length === 0 && <p>No posts found.</p>}
+    <IndexPosts posts={posts} />
   </main>
 </Layout>
