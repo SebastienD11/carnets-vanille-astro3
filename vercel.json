@@ -5,7 +5,7 @@
       "has": [
         {
           "type": "host",
-          "value": "vercel.app"
+          "value": "carnets-vanille-astro3.vercel.app"
         }
       ],
       "headers": [
