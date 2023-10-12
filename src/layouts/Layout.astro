@@ -26,6 +26,8 @@ const lang = getLangFromUrl(Astro.url)
     <!-- SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    <!-- Temporary no index for safety -->
+    <meta name="robots" content="noindex" />
     <!-- ## SEO -->
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
