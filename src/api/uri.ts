@@ -1,6 +1,11 @@
 export async function getNodeByURI(uri: string) {
   // Handle the case where the URI is a category
-  const newUri = uri.replace('categorie/', '')
+  let newUri = uri.replace('categorie/', '')
+  newUri = newUri.replace('en/', '')
+  newUri = newUri.replace('fr/', '')
+
+  console.log(uri)
+  console.log(newUri)
 
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: 'post',

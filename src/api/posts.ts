@@ -5,7 +5,6 @@ export type Post = {
 }
 
 export async function homePagePostsQuery(lang: string = 'fr'): Promise<Post[]> {
-  console.log
   try {
     const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
       method: 'post',

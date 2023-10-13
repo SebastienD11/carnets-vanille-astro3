@@ -3,6 +3,12 @@ import Layout from '../layouts/Layout.astro'
 import Archive from '../templates/Archive.astro'
 import Single from '../templates/Single.astro'
 import { getNodeByURI } from '../api/uri'
+import { getAllUris } from '../api/getUris'
+
+export async function getStaticPaths() {
+  return await getAllUris('fr')
+}
+
 const uri = `/${Astro.params.uri}/`
 const data = await getNodeByURI(uri)
 const node = data.nodeByUri
