@@ -5,14 +5,17 @@ import Single from '../templates/Single.astro'
 import { getNodeByURI } from '../api/uri'
 import { getAllUris } from '../api/getUris'
 
+// Return a list of all "fr" resources (pages, posts, tags, categories, etc), existing in the CMS.
 export async function getStaticPaths() {
   return await getAllUris('fr')
 }
 
+// For the current URI, return the corresponding node from the CMS.
 const uri = `/${Astro.params.uri}/`
 const data = await getNodeByURI(uri)
 const node = data.nodeByUri
 
+// Return the appropriate template for the current node.
 function resolveContentTemplate(type: string) {
   let template
   switch (type) {
