@@ -4,6 +4,7 @@ import Archive from '../templates/Archive.astro'
 import Single from '../templates/Single.astro'
 import { getNodeByURI } from '../api/uri'
 import { getAllUris } from '../api/getUris'
+import type { Post } from '../api/uri'
 
 // Return a list of all "fr" resources (pages, posts, tags, categories, etc), existing in the CMS.
 export async function getStaticPaths() {
@@ -13,7 +14,7 @@ export async function getStaticPaths() {
 // For the current URI, return the corresponding node from the CMS.
 const uri = `/${Astro.params.uri}/`
 const data = await getNodeByURI(uri)
-const node = data.nodeByUri
+const node: Post = data.nodeByUri
 
 // Return the appropriate template for the current node.
 function resolveContentTemplate(type: string) {
@@ -39,8 +40,12 @@ function resolveContentTemplate(type: string) {
 }
 
 const Template = resolveContentTemplate(node.__typename)
+
+const seo = {
+  title: node.title
+}
 ---
 
-<Layout title={node.title || node.name}>
+<Layout title={seo.title} description="">
   <Template node={node} />
 </Layout>
