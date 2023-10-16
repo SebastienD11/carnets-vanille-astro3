@@ -4,9 +4,6 @@ export async function getNodeByURI(uri: string) {
   newUri = newUri.replace('en/', '')
   newUri = newUri.replace('fr/', '')
 
-  console.log(uri)
-  console.log(newUri)
-
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
