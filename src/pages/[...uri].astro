@@ -4,6 +4,7 @@ import Archive from '../templates/Archive.astro'
 import Single from '../templates/Single.astro'
 import { getNodeByURI } from '../api/uri'
 import { getAllUris } from '../api/getUris'
+import { buildAlternates } from '../utils/seo'
 import type { Post } from '../api/uri'
 
 // Return a list of all "fr" resources (pages, posts, tags, categories, etc), existing in the CMS.
@@ -42,10 +43,27 @@ function resolveContentTemplate(type: string) {
 const Template = resolveContentTemplate(node.__typename)
 
 const seo = {
-  title: node.title
+  alternates: buildAlternates(node),
+  canonical: node.seo.canonical,
+  metaDesc: node.seo.metaDesc,
+  metaRobotsNofollow: node.seo.metaRobotsNofollow,
+  metaRobotsNoindex: node.seo.metaRobotsNoindex,
+  opengraphAuthor: node.seo.opengraphAuthor,
+  opengraphDescription: node.seo.opengraphDescription,
+  opengraphModifiedTime: node.seo.opengraphModifiedTime,
+  opengraphPublishedTime: node.seo.opengraphPublishedTime,
+  opengraphPublisher: node.seo.opengraphPublisher,
+  opengraphSiteName: node.seo.opengraphSiteName,
+  opengraphTitle: node.seo.opengraphTitle,
+  opengraphType: node.seo.opengraphType,
+  opengraphUrl: node.seo.opengraphUrl,
+  opengraphLocale: node.language.default_locale,
+  opengraphImage: node.seo.opengraphImage,
+  readingTime: node.seo.readingTime,
+  title: node.seo.title
 }
 ---
 
-<Layout title={seo.title} description="">
+<Layout seo={seo}>
   <Template node={node} />
 </Layout>

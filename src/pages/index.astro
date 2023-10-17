@@ -13,7 +13,7 @@ const seo = {
 Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 ---
 
-<Layout title={seo.title}>
+<Layout seo={seo}>
   <main>
     <IndexPosts posts={posts} />
   </main>

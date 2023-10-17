@@ -1,3 +1,5 @@
+import type { Seo } from './seo'
+
 export async function getNodeByURI(uri: string) {
   // Handle the case where the URI is a category
   let newUri = uri.replace('categorie/', '')
@@ -20,6 +22,10 @@ export async function getNodeByURI(uri: string) {
               uri
               excerpt
               content
+              language {
+                language_code
+                default_locale
+              }
               categories {
                 nodes {
                   name
@@ -35,6 +41,44 @@ export async function getNodeByURI(uri: string) {
                     height
                     width
                   }
+                }
+              }
+              seo {
+                canonical
+                metaDesc
+                metaRobotsNofollow
+                metaRobotsNoindex
+                opengraphAuthor
+                opengraphDescription
+                opengraphModifiedTime
+                opengraphPublishedTime
+                opengraphPublisher
+                opengraphSiteName
+                opengraphTitle
+                opengraphType
+                opengraphUrl
+                opengraphImage {
+                  guid
+                  mediaDetails {
+                    height
+                    width
+                    sizes {
+                      height
+                      width
+                    }
+                  }
+                  mediaType
+                  mediaItemUrl
+                  mediaItemId
+                  mimeType
+                }
+                readingTime
+                title
+              }
+              translations {
+                guid
+                language {
+                  language_code
                 }
               }
             }
@@ -86,4 +130,15 @@ export type Post = {
       }
     }
   }
+  language: {
+    language_code: string
+    default_locale: string
+  }
+  seo: Seo
+  translations: {
+    guid: string
+    language: {
+      language_code: string
+    }
+  }[]
 }
