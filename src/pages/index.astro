@@ -1,12 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { homePagePostsQuery, type Post } from '../api/posts'
+import { fetchIndexPosts } from '../api/getIndexPosts'
 import IndexPosts from '../components/indexPosts.astro'
-import { getLangFromUrl } from '../i18n/utils'
 
-const currentLang = getLangFromUrl(Astro.url)
-
-const data = await homePagePostsQuery(currentLang)
+const data = await fetchIndexPosts('fr')
 const posts = data
 
 const seo = {
@@ -16,7 +13,7 @@ const seo = {
 Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 ---
 
-<Layout title={seo.title}>
+<Layout seo={seo}>
   <main>
     <IndexPosts posts={posts} />
   </main>

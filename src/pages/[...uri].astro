@@ -2,10 +2,46 @@
 import Layout from '../layouts/Layout.astro'
 import Archive from '../templates/Archive.astro'
 import Single from '../templates/Single.astro'
-import { getNodeByURI } from '../api/uri'
-const uri = `/${Astro.params.uri}/`
-const data = await getNodeByURI(uri)
-const node = data.nodeByUri
+import { getNodeByURI } from '../api/getByUrl'
+import { getAllUris } from '../api/getAllUrls'
+import { buildSeo } from '../utils/seo'
+import { getPostById, type Post } from '../api/post'
+
+type NodeType = 'Post' | 'Page' | 'Category' | 'Tag'
+type Translation = {
+  id: string
+  languageCode: string
+}
+type NodePerURIType = {
+  id: string
+  __typename: NodeType
+  language_code: string
+  translations: Translation[]
+}
+
+const lang = 'fr'
+
+// Return a list of all resources (pages, posts, tags, categories, etc), existing in the CMS in the current locale.
+export async function getStaticPaths() {
+  return await getAllUris('fr')
+}
+
+// For the current URI, return the corresponding node from the CMS.
+const uri: string = `/${Astro.params.uri}/`
+const data: NodePerURIType = await getNodeByURI(uri)
+const type: NodeType = data.__typename
+
+// getNodeByURI may not be able to return the current local post if anoter one exist for another locale with the same URL.
+// Because of that, before we continue, we need to double check if the object received is the one we want. If not, we look at the translations array to find the correct one.
+let nodeId: string = data.id
+if (data.language_code !== lang) {
+  const langTranslation = data.translations.find(
+    (translation: Translation) => translation.languageCode === lang
+  )
+  if (langTranslation) {
+    nodeId = langTranslation.id
+  }
+}
 
 function resolveContentTemplate(type: string) {
   let template
@@ -29,9 +65,21 @@ function resolveContentTemplate(type: string) {
   return template
 }
 
-const Template = resolveContentTemplate(node.__typename)
+const Template = resolveContentTemplate(type)
+
+let node: Post
+switch (type) {
+  case 'Post':
+    node = await getPostById(nodeId)
+    break
+
+  default:
+    node = await getPostById(nodeId)
+    break
+}
 ---
 
-<Layout title={node.title || node.name}>
+<Layout seo={buildSeo(node)}>
   <Template node={node} />
 </Layout>
+ ../api/getAllUrls

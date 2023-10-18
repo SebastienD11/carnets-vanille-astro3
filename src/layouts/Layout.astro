@@ -2,13 +2,14 @@
 import Header from '../components/header/Header.astro'
 import '@fontsource-variable/mulish'
 import { getLangFromUrl } from '../i18n/utils'
+import type { Seo as SeoType } from '../api/seo'
+import Seo from '../components/head/seo.astro'
 
 interface Props {
-  title: string
-  description: string
+  seo: SeoType
 }
 
-const { title, description } = Astro.props
+const { seo } = Astro.props
 
 const lang = getLangFromUrl(Astro.url)
 ---
@@ -24,23 +25,19 @@ const lang = getLangFromUrl(Astro.url)
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="generator" content={Astro.generator} />
     <!-- SEO -->
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <!-- Temporary no index for safety -->
-    <meta name="robots" content="noindex" />
-    <!-- ## SEO -->
+    <Seo seo={seo} />
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" /><!-- 180×180 -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <!-- ## Favicon -->
   </head>
+
   <body
     class="mx-auto bg-stone-50 px-4 py-6 font-mulish text-black md:container dark:bg-stone-900 dark:text-white"
   >
     <Header />
     <slot />
+    <style is:global></style>
   </body>
 </html>
-<style is:global></style>
