@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { homePagePostsQuery, type Post } from '../api/posts'
+import { fetchIndexPosts } from '../api/getIndexPosts'
 import IndexPosts from '../components/indexPosts.astro'
 
-const data = await homePagePostsQuery('fr')
+const data = await fetchIndexPosts('fr')
 const posts = data
 
 const seo = {

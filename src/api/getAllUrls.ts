@@ -4,7 +4,7 @@ export async function getAllUris(lang: string = 'fr') {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       query: `query GetAllUris($lang: String!) {
-        posts(first: 100, where: {language: $lang}) {
+          posts(first: 20, where: {language: $lang}) {
             nodes {
               uri
             }
@@ -25,6 +25,11 @@ export async function getAllUris(lang: string = 'fr') {
     .map((node) => {
       let trimmedURI = node.uri.substring(1)
       trimmedURI = trimmedURI.substring(0, trimmedURI.length - 1)
+
+      // Remove `en/ and fr/ from the URI to allow the right path at build time
+      // en/ Page are already within a /en folder`
+      trimmedURI = trimmedURI.replace('en/', '')
+      trimmedURI = trimmedURI.replace('fr/', '')
       return {
         params: {
           uri: trimmedURI

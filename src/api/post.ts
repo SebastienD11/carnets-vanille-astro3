@@ -1,49 +1,40 @@
 import type { Seo } from './seo'
 
-export async function getNodeByURI(uri: string) {
-  // Handle the case where the URI is a category
-  let newUri = uri.replace('categorie/', '')
-  newUri = newUri.replace('en/', '')
-  newUri = newUri.replace('fr/', '')
-
+export async function getPostById(id: string): Promise<Post> {
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      query: `query GetNodeByURI($uri: String!) {
-          nodeByUri(uri: $uri) {
-            __typename
-            isContentNode
-            isTermNode
-            ... on Post {
-              id
-              title
-              date
-              uri
-              excerpt
-              content
-              language {
+      query: `query getPostById($id: ID!) {
+        postBy(id: $id) {
+            id
+            title
+            date
+            uri
+            excerpt
+            content
+            language {
                 language_code
                 default_locale
-              }
-              categories {
+            }
+            categories {
                 nodes {
-                  name
-                  uri
+                name
+                uri
                 }
-              }
-              featuredImage {
+            }
+            featuredImage {
                 node {
-                  srcSet
-                  sourceUrl
-                  altText
-                  mediaDetails {
+                srcSet
+                sourceUrl
+                altText
+                mediaDetails {
                     height
                     width
-                  }
                 }
-              }
-              seo {
+                }
+            }
+            seo {
                 canonical
                 metaDesc
                 metaRobotsNofollow
@@ -58,51 +49,39 @@ export async function getNodeByURI(uri: string) {
                 opengraphType
                 opengraphUrl
                 opengraphImage {
-                  guid
-                  mediaDetails {
+                guid
+                mediaDetails {
                     height
                     width
                     sizes {
-                      height
-                      width
+                    height
+                    width
                     }
-                  }
-                  mediaType
-                  mediaItemUrl
-                  mediaItemId
-                  mimeType
+                }
+                mediaType
+                mediaItemUrl
+                mediaItemId
+                mimeType
                 }
                 readingTime
                 title
-              }
-              translations {
-                guid
+            }
+            translations {
+                link
                 language {
-                  language_code
+                language_code
                 }
-              }
-            }
-            ... on Page {
-              id
-              title
-              uri
-              date
-              content
-            }
-            ... on Category {
-              id
-              name
             }
           }
         }
       `,
       variables: {
-        uri: newUri
+        id: id
       }
     })
   })
   const { data } = await response.json()
-  return data
+  return data.postBy
 }
 
 export type Post = {
@@ -136,7 +115,7 @@ export type Post = {
   }
   seo: Seo
   translations: {
-    guid: string
+    link: string
     language: {
       language_code: string
     }
