@@ -7,6 +7,7 @@ export type Seo = {
   metaDesc: string
   metaRobotsNofollow: string
   metaRobotsNoindex: string
+  opengraphLocale: string
   opengraphAuthor: string
   opengraphDescription: string
   opengraphImage: {
