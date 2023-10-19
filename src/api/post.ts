@@ -1,11 +1,10 @@
 import type { Seo } from './seo'
 
+// For whatever reason, we need to query "posts" with a "where" condition including the language, instead of the single "post" with the ID, if we want to get the right tags and categories for the lang.
+
 export async function getPostById(postId: number, lang: string = 'fr'): Promise<Post> {
   console.log('====================================')
   console.log('Fetch Post by ID: ' + postId + ' and lang: ' + lang)
-  console.log(
-    'For whatever reason, we need to query "posts" with a "where" condition including the language, instead of the single "post" with the ID, if we want to get the right tags and categories for the lang.'
-  )
   console.log('====================================')
 
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
