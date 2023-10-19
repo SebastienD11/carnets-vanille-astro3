@@ -18,6 +18,7 @@ export async function getNodeByURI(uri: string) {
             }
             ... on Page {
               id
+              databaseId
               languageCode
               translations {
                 id
@@ -27,6 +28,7 @@ export async function getNodeByURI(uri: string) {
             }
             ... on Tag {
               id
+              databaseId
               languageCode
               translations {
                 id
@@ -36,6 +38,7 @@ export async function getNodeByURI(uri: string) {
             }
             ... on Category {
               id
+              databaseId
               languageCode
               translations {
                 id

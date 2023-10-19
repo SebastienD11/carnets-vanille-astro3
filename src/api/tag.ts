@@ -1,12 +1,12 @@
 import type { Seo } from './seo'
 
-export async function getTagById(id: string): Promise<Tag> {
+export async function getTagById(tagId: string): Promise<Tag> {
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      query: `query getTagById($id: ID!) {
-          tag(id: $id) {
+      query: `query getTagById($tagId: ID!) {
+          tag(id: $tagId, idType: DATABASE_ID) {
             id
             name
             uri
@@ -38,7 +38,7 @@ export async function getTagById(id: string): Promise<Tag> {
         }
       `,
       variables: {
-        id: id
+        tagId: tagId
       }
     })
   })
