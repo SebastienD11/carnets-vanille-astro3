@@ -12,10 +12,12 @@ import { type Node, type NodeType } from '../api/node'
 
 type Translation = {
   id: string
+  databaseId: number
   languageCode: string
 }
 type NodePerURIType = {
   id: string
+  databaseId: number
   __typename: NodeType
   language_code: string
   translations: Translation[]
@@ -35,13 +37,13 @@ const type: NodeType = data.__typename
 
 // getNodeByURI may not be able to return the current local post if anoter one exist for another locale with the same URL.
 // Because of that, before we continue, we need to double check if the object received is the one we want. If not, we look at the translations array to find the correct one.
-let nodeId: string = data.id
+let nodeId: number = data.databaseId
 if (data.language_code !== lang) {
   const langTranslation = data.translations.find(
     (translation: Translation) => translation.languageCode === lang
   )
   if (langTranslation) {
-    nodeId = langTranslation.id
+    nodeId = langTranslation.databaseId
   }
 }
 
@@ -72,14 +74,14 @@ const Template = resolveContentTemplate(type)
 let node: Node
 switch (type) {
   case 'Post':
-    node = await getPostById(nodeId)
+    node = await getPostById(nodeId, lang)
     break
   case 'Tag':
     node = await getTagById(nodeId)
     break
 
   default:
-    node = await getPostById(nodeId)
+    node = await getPostById(nodeId, lang)
     break
 }
 ---

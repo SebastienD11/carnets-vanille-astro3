@@ -8,9 +8,11 @@ export async function getNodeByURI(uri: string) {
             __typename
             ... on Post {
               id
+              databaseId
               languageCode
               translations {
                 id
+                databaseId
                 languageCode
               }
             }
@@ -19,6 +21,7 @@ export async function getNodeByURI(uri: string) {
               languageCode
               translations {
                 id
+                databaseId
                 languageCode
               }
             }
@@ -27,6 +30,7 @@ export async function getNodeByURI(uri: string) {
               languageCode
               translations {
                 id
+                databaseId
                 languageCode
               }
             }
@@ -35,6 +39,7 @@ export async function getNodeByURI(uri: string) {
               languageCode
               translations {
                 id
+                databaseId
                 languageCode
               }
             }

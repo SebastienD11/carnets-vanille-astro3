@@ -1,6 +1,7 @@
 ---
+import type { Post } from '../api/post'
 import type { Tag } from '../api/tag'
-const { node } = Astro.props
+const node: Post = Astro.props.node
 ---
 
 <h1>{node.title}</h1>

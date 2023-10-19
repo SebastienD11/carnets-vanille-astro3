@@ -50,6 +50,7 @@ export async function getTagById(id: string): Promise<Tag> {
 export type Tag = {
   __typename: 'Tag'
   id: string
+  databaseId: number
   name: string
   uri: string
   language: {

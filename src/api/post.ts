@@ -1,12 +1,17 @@
 import type { Seo } from './seo'
 
-export async function getPostById(id: string): Promise<Post> {
+export async function getPostById(postId: number, lang: string = 'fr'): Promise<Post> {
+  console.log('====================================')
+  console.log('Fetch Post by ID: ' + postId + ' and lang: ' + lang)
+  console.log('====================================')
+
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      query: `query getPostById($id: ID!) {
-        postBy(id: $id) {
+      query: `query getPostById($postId: Int!, $language: String!) {
+        posts(where: {id: $postId, language: $language}) {
+          nodes {
             id
             title
             date
@@ -24,70 +29,73 @@ export async function getPostById(id: string): Promise<Post> {
                 }
             }
             tags {
-                nodes {
-                  name
-                  uri
-                }
+              nodes {
+                name
+                uri
+              }
             }
             featuredImage {
-                node {
+              node {
                 srcSet
                 sourceUrl
                 altText
-                  mediaDetails {
-                      height
-                      width
-                  }
+                mediaDetails {
+                  height
+                  width
                 }
+              }
             }
             seo {
-                canonical
-                metaDesc
-                metaRobotsNofollow
-                metaRobotsNoindex
-                opengraphAuthor
-                opengraphDescription
-                opengraphModifiedTime
-                opengraphPublishedTime
-                opengraphPublisher
-                opengraphSiteName
-                opengraphTitle
-                opengraphType
-                opengraphUrl
-                opengraphImage {
-                  guid
-                  mediaDetails {
-                      height
-                      width
-                      sizes {
-                        height
-                        width
-                      }
+              canonical
+              metaDesc
+              metaRobotsNofollow
+              metaRobotsNoindex
+              opengraphAuthor
+              opengraphDescription
+              opengraphModifiedTime
+              opengraphPublishedTime
+              opengraphPublisher
+              opengraphSiteName
+              opengraphTitle
+              opengraphType
+              opengraphUrl
+              opengraphImage {
+                guid
+                mediaDetails {
+                  height
+                  width
+                  sizes {
+                    height
+                    width
                   }
-                  mediaType
-                  mediaItemUrl
-                  mediaItemId
-                  mimeType
                 }
-                readingTime
-                title
+                mediaType
+                mediaItemUrl
+                mediaItemId
+                mimeType
+              }
+              readingTime
+              title
             }
             translations {
-                link
-                language {
-                  language_code
-                }
+              link
+              language {
+                language_code
+              }
             }
           }
         }
+      }
       `,
       variables: {
-        id: id
+        postId: postId,
+        language: lang
       }
     })
   })
+
   const { data } = await response.json()
-  return data.postBy
+  return data.posts.nodes[0]
 }
 
 export async function getPostByTagId(id: string, lang: string = 'fr'): Promise<PostTag[]> {
@@ -144,6 +152,7 @@ export type PostTag = {
 export type Post = {
   __typename: 'Post'
   id: string
+  databaseId: number
   title: string
   date: string
   uri: string
