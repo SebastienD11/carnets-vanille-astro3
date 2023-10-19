@@ -28,7 +28,6 @@ const node: Post = Astro.props.node
   src={node.featuredImage?.node?.mediaItemUrl}
   srcset={node.featuredImage?.node?.srcSet}
   alt={node.featuredImage?.node?.altText}
-  loading="lazy"
   width={node.featuredImage?.node?.mediaDetails?.width}
   height={node.featuredImage?.node?.mediaDetails?.height}
 />
