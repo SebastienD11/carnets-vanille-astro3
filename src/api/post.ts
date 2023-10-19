@@ -106,7 +106,7 @@ export async function getPostByTagId(id: string, lang: string = 'fr'): Promise<P
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       query: `query getPostByTagId($tagId: String!, $language: String!) {
-        posts(first: 100, where: {tagId: $tagId, language: $language}) {
+        posts(first: 150, where: {tagId: $tagId, language: $language}) {
           nodes {
             title
             uri

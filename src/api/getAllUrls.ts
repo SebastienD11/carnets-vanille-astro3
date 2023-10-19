@@ -4,12 +4,12 @@ export async function getAllUris(lang: string = 'fr') {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       query: `query GetAllUris($lang: String!) {
-          posts(first: 20, where: {language: $lang}) {
+          posts(first: 150, where: {language: $lang}) {
             nodes {
               uri
             }
           }
-          tags(first: 100, where: {language: $lang}) {
+          tags(first: 150, where: {language: $lang}) {
             nodes {
               uri
             }
