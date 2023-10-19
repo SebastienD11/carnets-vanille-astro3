@@ -1,6 +1,6 @@
 import type { Seo } from './seo'
 
-export async function getTagById(tagId: string): Promise<Tag> {
+export async function getTagById(tagId: number): Promise<Tag> {
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
