@@ -9,6 +9,11 @@ export async function getAllUris(lang: string = 'fr') {
               uri
             }
           }
+          tags(first: 100, where: {language: $lang}) {
+            nodes {
+              uri
+            }
+          }
         }`,
       variables: {
         lang: lang

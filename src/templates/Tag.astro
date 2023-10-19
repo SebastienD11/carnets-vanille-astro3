@@ -1,0 +1,19 @@
+---
+import Card from '../components/post/card.astro'
+import type { Tag } from '../api/tag'
+import type { PostTag } from '../api/post'
+import { getPostByTagId } from '../api/post'
+import { getLangFromUrl } from '../i18n/utils'
+
+const lang = getLangFromUrl(Astro.url)
+const node: Tag = Astro.props.node
+const posts = await getPostByTagId(node.id, lang)
+---
+
+<h1>{node.name} - Archive</h1>
+
+{
+  posts.map((post: PostTag) => {
+    return <Card post={post} />
+  })
+}

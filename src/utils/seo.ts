@@ -1,6 +1,6 @@
-import type { Post } from '../api/post'
+import type { Node } from '../api/node'
 
-const buildAlternates = (node: Post) => {
+const buildAlternates = (node: Node) => {
   if (node.translations.length === 0) return []
   const alternates = node.translations.map((translation) => {
     return {
@@ -22,7 +22,7 @@ const buildAlternates = (node: Post) => {
   return alternates
 }
 
-export const buildSeo = (node: Post) => {
+export const buildSeo = (node: Node) => {
   return {
     alternates: buildAlternates(node),
     canonical: node.seo.canonical,

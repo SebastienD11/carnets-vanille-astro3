@@ -19,8 +19,14 @@ export async function getPostById(id: string): Promise<Post> {
             }
             categories {
                 nodes {
-                name
-                uri
+                  name
+                  uri
+                }
+            }
+            tags {
+                nodes {
+                  name
+                  uri
                 }
             }
             featuredImage {
@@ -28,10 +34,10 @@ export async function getPostById(id: string): Promise<Post> {
                 srcSet
                 sourceUrl
                 altText
-                mediaDetails {
-                    height
-                    width
-                }
+                  mediaDetails {
+                      height
+                      width
+                  }
                 }
             }
             seo {
@@ -49,19 +55,19 @@ export async function getPostById(id: string): Promise<Post> {
                 opengraphType
                 opengraphUrl
                 opengraphImage {
-                guid
-                mediaDetails {
-                    height
-                    width
-                    sizes {
-                    height
-                    width
-                    }
-                }
-                mediaType
-                mediaItemUrl
-                mediaItemId
-                mimeType
+                  guid
+                  mediaDetails {
+                      height
+                      width
+                      sizes {
+                        height
+                        width
+                      }
+                  }
+                  mediaType
+                  mediaItemUrl
+                  mediaItemId
+                  mimeType
                 }
                 readingTime
                 title
@@ -69,7 +75,7 @@ export async function getPostById(id: string): Promise<Post> {
             translations {
                 link
                 language {
-                language_code
+                  language_code
                 }
             }
           }
@@ -84,6 +90,57 @@ export async function getPostById(id: string): Promise<Post> {
   return data.postBy
 }
 
+export async function getPostByTagId(id: string, lang: string = 'fr'): Promise<PostTag[]> {
+  const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: `query getPostByTagId($tagId: String!, $language: String!) {
+        posts(first: 100, where: {tagId: $tagId, language: $language}) {
+          nodes {
+            title
+            uri
+            featuredImage {
+              node {
+                srcSet
+                sourceUrl
+                altText
+                mediaDetails {
+                  height
+                  width
+                }
+              }
+            }
+          }
+        }
+      }
+      `,
+      variables: {
+        tagId: id,
+        language: lang
+      }
+    })
+  })
+  const { data } = await response.json()
+  return data.posts.nodes
+}
+
+export type PostTag = {
+  uri: string
+  title: string
+  featuredImage: {
+    node: {
+      srcSet: string
+      sourceUrl: string
+      altText: string
+      mediaDetails: {
+        height: number
+        width: number
+      }
+    }
+  }
+}
+
 export type Post = {
   __typename: 'Post'
   id: string
@@ -93,6 +150,12 @@ export type Post = {
   excerpt: string
   content: string
   categories: {
+    nodes: {
+      name: string
+      uri: string
+    }[]
+  }
+  tags: {
     nodes: {
       name: string
       uri: string

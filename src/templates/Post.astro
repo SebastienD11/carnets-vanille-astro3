@@ -1,14 +1,15 @@
 ---
+import type { Tag } from '../api/tag'
 const { node } = Astro.props
 ---
 
 <h1>{node.title}</h1>
-<!-- Display categories links if node has terms -->
+<!-- Display tags links if node has terms -->
 {
-  node.categories
-    ? node?.categories?.nodes.map((category) => (
-        <a class="term-link" href={category.uri}>
-          {category.name}
+  node.tags
+    ? node?.tags?.nodes.map((tag: Tag) => (
+        <a class="term-link" href={tag.uri}>
+          {tag.name}
         </a>
       ))
     : null

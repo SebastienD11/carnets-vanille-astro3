@@ -22,6 +22,14 @@ export async function getNodeByURI(uri: string) {
                 languageCode
               }
             }
+            ... on Tag {
+              id
+              languageCode
+              translations {
+                id
+                languageCode
+              }
+            }
             ... on Category {
               id
               languageCode
