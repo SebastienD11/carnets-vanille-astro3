@@ -1,8 +1,8 @@
 ---
-import type { Post } from '../api/getIndexPosts'
 import Card from './post/card.astro'
 
 import { getLangFromUrl, useTranslations } from '../i18n/utils'
+import type { Post } from '../api/post'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)

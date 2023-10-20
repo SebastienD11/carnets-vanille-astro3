@@ -11,6 +11,21 @@ export async function getPostById(postId: number): Promise<Post> {
   return post
 }
 
+export async function getPosts(): Promise<Post[]> {
+  console.log('====================================')
+  console.log('Fetch Posts')
+  console.log('====================================')
+
+  const res = await fetch(
+    import.meta.env.WORDPRESS_REST_API_URL + `/posts/?_embed=wp:term,wp:featuredmedia`
+  )
+  const posts: Post[] = await res.json()
+
+  console.log(posts)
+
+  return posts
+}
+
 export type Post = {
   id: number
   date: string

@@ -1,10 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { fetchIndexPosts } from '../api/getIndexPosts'
 import IndexPosts from '../components/indexPosts.astro'
+import { getPosts } from '../api/post'
 
-const data = await fetchIndexPosts('fr')
-const posts = data
+const posts = await getPosts()
 
 const seo = {
   title: 'Accueil'
