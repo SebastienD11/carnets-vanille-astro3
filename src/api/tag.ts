@@ -7,7 +7,6 @@ export async function getTagById(tagId: number): Promise<Tag> {
   const tag: Tag = await res.json()
 
   console.log(import.meta.env.WORDPRESS_REST_API_URL + `/tags/${tagId}`)
-  console.log(tag)
 
   return tag
 }
