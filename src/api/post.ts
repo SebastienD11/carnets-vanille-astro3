@@ -1,5 +1,3 @@
-import type { Seo } from './seo'
-
 export async function getPostById(postId: number): Promise<Post> {
   console.log('====================================')
   console.log('Fetch Post by ID: ' + postId)
