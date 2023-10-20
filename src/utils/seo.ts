@@ -1,6 +1,6 @@
 import type { Node } from '../api/node'
 const buildAlternates = (node: Node) => {
-  if (node.wpml_translations.length === 0) return []
+  if (!node.wpml_translations || node.wpml_translations.length === 0) return []
 
   const alternates = []
   node.wpml_translations.map((translation) => {
