@@ -49,11 +49,5 @@ export type Post = {
     'wp:featuredmedia': any // Todo, type this
   }
   wpml_current_locale: string
-  wpml_translations: {
-    localesss: string
-    id: number
-    slug: string
-    post_title: string
-    href: string
-  }[]
+  wpml_translations: any // Todo, type this
 }
