@@ -1,7 +1,7 @@
 export async function getPostById(postId: number): Promise<Post> {
   console.log('====================================')
   console.log('Fetch Post by ID: ' + postId)
-  console.log('====================================')
+  console.log('================')
 
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL + `/posts/${postId}?_embed=wp:term,wp:featuredmedia`
@@ -13,8 +13,8 @@ export async function getPostById(postId: number): Promise<Post> {
 
 export async function getPosts(filter?: string): Promise<Post[]> {
   console.log('====================================')
-  console.log('Fetch Posts')
-  console.log('====================================')
+  console.log('Fetch Posts for query: ' + filter)
+  console.log('================')
 
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL + `/posts/?_embed=wp:term,wp:featuredmedia&` + filter
