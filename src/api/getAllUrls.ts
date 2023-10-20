@@ -6,6 +6,10 @@ type Node = {
 // - While loop to get all post (REST API limit to 100 posts per query)
 
 export async function getAllUris(lang: string = 'fr') {
+  console.log('====================================')
+  console.log('====================================')
+  console.log('Fetch all URIS for lang : ' + lang)
+
   const posts = await getAllPostsUrils(lang)
   const tags = await getAllTagsUrils(lang)
 
@@ -19,6 +23,10 @@ export async function getAllUris(lang: string = 'fr') {
       }
     }
   })
+
+  console.log(uris)
+  console.log('====================================')
+  console.log('====================================')
 
   return uris
 }
