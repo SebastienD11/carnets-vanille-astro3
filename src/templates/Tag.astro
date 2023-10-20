@@ -12,8 +12,10 @@ const posts = await getPosts(`tags=${node?.id}&lang=${lang}`)
 
 <h1>{node.name} - Archive</h1>
 
-{
-  posts.map((post: Post) => {
-    return <Card post={post} />
-  })
-}
+<div class="grid grid-cols-3 gap-4">
+  {
+    posts.map((post: Post) => {
+      return <Card post={post} />
+    })
+  }
+</div>

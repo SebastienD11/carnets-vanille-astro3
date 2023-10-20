@@ -11,5 +11,10 @@ const { posts } = Astro.props
 ---
 
 <h2 class="text-2xl font-extrabold">{t('index.recentsPost.title')}</h2>
-{posts.length > 1 && posts.map((post: Post) => <Card post={post} />)}
-{posts.length === 0 && <p>No posts found.</p>}
+<div class="grid grid-cols-3 gap-4">
+  {
+    posts.map((post: Post) => {
+      return <Card post={post} />
+    })
+  }
+</div>
