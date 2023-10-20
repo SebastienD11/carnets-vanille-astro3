@@ -1,197 +1,59 @@
 import type { Seo } from './seo'
 
-// For whatever reason, we need to query "posts" with a "where" condition including the language, instead of the single "post" with the ID, if we want to get the right tags and categories for the lang.
-
-export async function getPostById(postId: number, lang: string = 'fr'): Promise<Post> {
+export async function getPostById(postId: number): Promise<Post> {
   console.log('====================================')
-  console.log('Fetch Post by ID: ' + postId + ' and lang: ' + lang)
+  console.log('Fetch Post by ID: ' + postId)
   console.log('====================================')
 
-  const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      query: `query getPostById($postId: Int!, $language: String!) {
-        posts(where: {id: $postId, language: $language}) {
-          nodes {
-            id
-            title
-            date
-            uri
-            excerpt
-            content
-            language {
-                language_code
-                default_locale
-            }
-            categories {
-                nodes {
-                  name
-                  uri
-                }
-            }
-            tags {
-              nodes {
-                name
-                uri
-              }
-            }
-            featuredImage {
-              node {
-                srcSet
-                sourceUrl
-                altText
-                mediaDetails {
-                  height
-                  width
-                }
-              }
-            }
-            seo {
-              canonical
-              metaDesc
-              metaRobotsNofollow
-              metaRobotsNoindex
-              opengraphAuthor
-              opengraphDescription
-              opengraphModifiedTime
-              opengraphPublishedTime
-              opengraphPublisher
-              opengraphSiteName
-              opengraphTitle
-              opengraphType
-              opengraphUrl
-              opengraphImage {
-                guid
-                mediaDetails {
-                  height
-                  width
-                  sizes {
-                    height
-                    width
-                  }
-                }
-                mediaType
-                mediaItemUrl
-                mediaItemId
-                mimeType
-              }
-              readingTime
-              title
-            }
-            translations {
-              link
-              language {
-                language_code
-              }
-            }
-          }
-        }
-      }
-      `,
-      variables: {
-        postId: postId,
-        language: lang
-      }
-    })
-  })
+  const res = await fetch(
+    import.meta.env.WORDPRESS_REST_API_URL + `/posts/${postId}?_embed=wp:term,wp:featuredmedia`
+  )
+  const post: Post = await res.json()
 
-  const { data } = await response.json()
-  return data.posts.nodes[0]
-}
-
-export async function getPostByTagId(id: string, lang: string = 'fr'): Promise<PostTag[]> {
-  const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      query: `query getPostByTagId($tagId: String!, $language: String!) {
-        posts(first: 150, where: {tagId: $tagId, language: $language}) {
-          nodes {
-            title
-            uri
-            featuredImage {
-              node {
-                srcSet
-                sourceUrl
-                altText
-                mediaDetails {
-                  height
-                  width
-                }
-              }
-            }
-          }
-        }
-      }
-      `,
-      variables: {
-        tagId: id,
-        language: lang
-      }
-    })
-  })
-  const { data } = await response.json()
-  return data.posts.nodes
-}
-
-export type PostTag = {
-  uri: string
-  title: string
-  featuredImage: {
-    node: {
-      srcSet: string
-      sourceUrl: string
-      altText: string
-      mediaDetails: {
-        height: number
-        width: number
-      }
-    }
-  }
+  return post
 }
 
 export type Post = {
-  __typename: 'Post'
-  id: string
-  databaseId: number
-  title: string
+  id: number
   date: string
-  uri: string
-  excerpt: string
-  content: string
-  categories: {
-    nodes: {
-      name: string
-      uri: string
-    }[]
+  date_gmt: string
+  modified: string
+  modified_gmt: string
+  slug: string
+  status: string
+  type: 'post'
+  link: string
+  title: {
+    rendered: string
   }
-  tags: {
-    nodes: {
-      name: string
-      uri: string
-    }[]
+  content: {
+    rendered: string
+    protected: boolean
   }
-  featuredImage: {
-    node: {
-      srcSet: string
-      sourceUrl: string
-      altText: string
-      mediaDetails: {
-        height: number
-        width: number
-      }
-    }
+  excerpt: {
+    rendered: string
+    protected: boolean
   }
-  language: {
-    language_code: string
-    default_locale: string
+  author: number
+  featured_media: number
+  comment_status: string
+  sticky: boolean
+  template: string
+  format: string
+  categories: number[]
+  tags: number[]
+  acf: []
+  yoast_head: string
+  _embedded: {
+    'wp:term': any // Todo, type this
+    'wp:featuredmedia': any // Todo, type this
   }
-  seo: Seo
-  translations: {
-    link: string
-    language: {
-      language_code: string
-    }
+  wpml_current_locale: string
+  wpml_translations: {
+    localesss: string
+    id: number
+    slug: string
+    post_title: string
+    href: string
   }[]
 }

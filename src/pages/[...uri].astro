@@ -74,14 +74,14 @@ const Template = resolveContentTemplate(type)
 let node: Node
 switch (type) {
   case 'Post':
-    node = await getPostById(nodeId, lang)
+    node = await getPostById(nodeId)
     break
   case 'Tag':
     node = await getTagById(nodeId)
     break
 
   default:
-    node = await getPostById(nodeId, lang)
+    node = await getPostById(nodeId)
     break
 }
 ---

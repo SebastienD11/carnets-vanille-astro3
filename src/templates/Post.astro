@@ -4,9 +4,9 @@ import type { Tag } from '../api/tag'
 const node: Post = Astro.props.node
 ---
 
-<h1>{node.title}</h1>
+<h1>{node.title.rendered}</h1>
 <!-- Display tags links if node has terms -->
-{
+<!-- {
   node.tags
     ? node?.tags?.nodes.map((tag: Tag) => (
         <a class="term-link" href={tag.uri}>
@@ -14,10 +14,10 @@ const node: Post = Astro.props.node
         </a>
       ))
     : null
-}
+} -->
 <!-- Only show date if node is a Post -->
 {
-  node.__typename === 'Post' ? (
+  node.type === 'post' ? (
     <p class="post-details">
       Posted on <time datetime={node.date}>{new Date(node.date).toLocaleDateString()}</time>
     </p>
@@ -25,39 +25,11 @@ const node: Post = Astro.props.node
 }
 <img
   class="featured-image"
-  src={node.featuredImage?.node?.mediaItemUrl}
-  srcset={node.featuredImage?.node?.srcSet}
-  alt={node.featuredImage?.node?.altText}
-  width={node.featuredImage?.node?.mediaDetails?.width}
-  height={node.featuredImage?.node?.mediaDetails?.height}
+  src={node._embedded['wp:featuredmedia'][0]?.source_url}
+  srcset={node._embedded['wp:featuredmedia'][0]?.source_url}
+  alt={node._embedded['wp:featuredmedia'][0]?.alt_text}
+  width={node._embedded['wp:featuredmedia'][0]?.mediaDetails?.width}
+  height={node._embedded['wp:featuredmedia'][0]?.mediaDetails?.height}
 />
 
-<article set:html={node.content} />
-
-<style is:global>
-  .wp-block-image img {
-    width: 100%;
-    height: auto;
-  }
-</style>
-<style>
-  img.featured-image {
-    width: 100%;
-    border-radius: 10px;
-    height: auto;
-  }
-  .post-details {
-    color: darkgrey;
-    font-weight: 300;
-  }
-  a.term-link {
-    display: inline-block;
-    height: 1.5rem;
-    padding: 0.75rem;
-    margin: 0.5rem 0.5rem 0.5rem 0;
-    background: linear-gradient(90deg, #0076dc 0%, #7a1ba6 100%);
-    color: #fff;
-    border-radius: 10px;
-    font-weight: bold;
-  }
-</style>
+<article set:html={node.content.rendered} />
