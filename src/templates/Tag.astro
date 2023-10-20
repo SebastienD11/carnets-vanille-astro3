@@ -3,9 +3,11 @@ import Card from '../components/post/card.astro'
 import type { Tag } from '../api/tag'
 import type { Post } from '../api/post'
 import { getPosts } from '../api/post'
+import { getLangFromUrl } from '../i18n/utils'
 
+const lang = getLangFromUrl(Astro.url)
 const node: Tag = Astro.props.node
-const posts = await getPosts()
+const posts = await getPosts(`tags=${node.id}&lang=${lang}`)
 ---
 
 <h1>{node.name} - Archive</h1>
