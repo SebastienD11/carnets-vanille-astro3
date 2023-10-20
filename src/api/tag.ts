@@ -1,67 +1,28 @@
-import type { Seo } from './seo'
-
 export async function getTagById(tagId: number): Promise<Tag> {
-  const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      query: `query getTagById($tagId: ID!) {
-          tag(id: $tagId, idType: DATABASE_ID) {
-            id
-            name
-            uri
-            description
-            language {
-              language_code
-              default_locale
-            }
-            seo {
-              canonical
-              metaDesc
-              metaRobotsNofollow
-              metaRobotsNoindex
-              opengraphAuthor
-              opengraphDescription
-              opengraphSiteName
-              opengraphTitle
-              opengraphType
-              opengraphUrl
-              title
-            }
-            translations {
-              link
-              language {
-                language_code
-              }
-            }
-          }
-        }
-      `,
-      variables: {
-        tagId: tagId
-      }
-    })
-  })
-  const { data } = await response.json()
+  console.log('====================================')
+  console.log('Fetch Tag by ID: ' + tagId)
+  console.log('====================================')
 
-  return data.tag
+  const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/tags/${tagId}`)
+  const tag: Tag = await res.json()
+
+  console.log(import.meta.env.WORDPRESS_REST_API_URL + `/tags/${tagId}`)
+  console.log(tag)
+
+  return tag
 }
 
 export type Tag = {
-  __typename: 'Tag'
-  id: string
-  databaseId: number
+  id: number
+  description: string
+  link: string
   name: string
-  uri: string
-  language: {
-    language_code: string
-    default_locale: string
-  }
-  seo: Seo
-  translations: {
-    link: string
-    language: {
-      language_code: string
-    }
+  slug: string
+  taxonomy: string
+  yoast_head: string
+  wpml_current_locale: string
+  wpml_translations: {
+    locale: string
+    href: string
   }[]
 }
