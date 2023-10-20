@@ -21,10 +21,6 @@ export async function getPosts(filter?: string): Promise<Post[]> {
   )
   const posts: Post[] = await res.json()
 
-  console.log(
-    import.meta.env.WORDPRESS_REST_API_URL + `/posts/?_embed=wp:term,wp:featuredmedia&` + filter
-  )
-
   return posts
 }
 
