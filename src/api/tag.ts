@@ -2,9 +2,11 @@ export async function getTagById(tagId: number): Promise<Tag> {
   console.log('====================================')
   console.log('Fetch Tag by ID: ' + tagId)
   console.log('================')
+  console.time('timer_tag')
 
   const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/tags/${tagId}`)
   const tag: Tag = await res.json()
+  console.timeEnd('timer_tag')
 
   return tag
 }

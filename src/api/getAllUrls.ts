@@ -9,12 +9,14 @@ export async function getAllUris(lang: string = 'fr') {
   console.log('====================================')
   console.log('Fetch all URIS for lang : ' + lang)
   console.log('================')
+  console.time('timer_urls')
 
   const posts = await getAllPostsUrils(lang)
   const tags = await getAllTagsUrils(lang)
 
   let data: Node[] = posts
   data = data.concat(tags)
+  console.timeEnd('timer_urls')
 
   const uris = data.map((node: Node) => {
     return {

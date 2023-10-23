@@ -2,6 +2,7 @@ export async function getNodeByURI(uri: string) {
   console.log('====================================')
   console.log('Fetch by URI: ' + uri)
   console.log('================')
+  console.time('timer_url')
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
@@ -58,5 +59,6 @@ export async function getNodeByURI(uri: string) {
     })
   })
   const { data } = await response.json()
+  console.timeEnd('timer_url')
   return data.nodeByUri
 }
