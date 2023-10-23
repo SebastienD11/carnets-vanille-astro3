@@ -1,7 +1,9 @@
 ---
 import type { Post } from '../api/post'
 import type { Tag as TagType } from '../api/tag'
+import type { Category as CategoryType } from '../api/category'
 import BadgeTag from '../components/tag/badgeTag.astro'
+import BadgeCategory from '../components/category/badgeCategory.astro'
 
 const post: Post = Astro.props.node
 ---
@@ -13,6 +15,18 @@ const post: Post = Astro.props.node
 -->
 <div class="flex gap-4">
   {post._embedded['wp:term'][1]?.map((tag: TagType) => <BadgeTag tag={tag} />)}
+</div>
+
+<!-- 
+  Display categories links if post has terms
+  ['wp:term'][0] refers to tag 
+-->
+<div class="flex gap-4">
+  {
+    post._embedded['wp:term'][0]?.map((category: CategoryType) => (
+      <BadgeCategory category={category} />
+    ))
+  }
 </div>
 
 <!-- Only show date if post is a Post -->
