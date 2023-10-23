@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import Archive from '../templates/Archive.astro'
+import Category from '../templates/Category.astro'
 import Tag from '../templates/Tag.astro'
 import Post from '../templates/Post.astro'
 import { getNodeByURI } from '../api/getByUrl'
@@ -8,6 +8,7 @@ import { getAllUris } from '../api/getAllUrls'
 import { buildSeo } from '../utils/seo'
 import { getPostById } from '../api/post'
 import { getTagById } from '../api/tag'
+import { getCategoryById } from '../api/category'
 import { type Node, type NodeType } from '../api/node'
 
 type Translation = {
@@ -57,7 +58,7 @@ function resolveContentTemplate(type: string) {
       template = Post
       break
     case 'Category':
-      template = Archive
+      template = Category
       break
     case 'Tag':
       template = Tag
@@ -78,6 +79,9 @@ switch (type) {
     break
   case 'Tag':
     node = await getTagById(nodeId)
+    break
+  case 'Category':
+    node = await getCategoryById(nodeId)
     break
 
   default:

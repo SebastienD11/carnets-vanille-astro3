@@ -1,0 +1,21 @@
+---
+import Card from '../components/post/card.astro'
+import type { Post } from '../api/post'
+import { getPosts } from '../api/post'
+import { getLangFromUrl } from '../i18n/utils'
+import type { Category } from '../api/category'
+
+const lang = getLangFromUrl(Astro.url)
+const node: Category = Astro.props.node
+const posts = await getPosts(`categories=${node?.id}&lang=${lang}`)
+---
+
+<h1>{node.name} - Category</h1>
+
+<div class="grid grid-cols-3 gap-4">
+  {
+    posts.map((post: Post) => {
+      return <Card post={post} />
+    })
+  }
+</div>
