@@ -3,13 +3,12 @@ import Layout from '../../layouts/Layout.astro'
 import IndexPosts from '../../components/indexPosts.astro'
 import { getPosts } from '../../api/post'
 import { getLangFromUrl } from '../../i18n/utils'
+import { getSEObyUrl } from '../../api/yoast'
 
 const lang = getLangFromUrl(Astro.url)
 const posts = await getPosts(`lang=${lang}`)
 
-const seo = {
-  title: 'Home'
-}
+const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + `&lang=${lang}`)
 
 Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 ---
