@@ -4,10 +4,18 @@ import type { Tag } from '../api/tag'
 import type { Post } from '../api/post'
 import { getPosts } from '../api/post'
 import { getLangFromUrl } from '../i18n/utils'
+import { getPageNumberInUrl } from '../utils/pagination'
+import { PER_PAGE } from '../constant'
 
 const lang = getLangFromUrl(Astro.url)
 const node: Tag = Astro.props.node
-const posts = await getPosts(lang, `&tags=${node?.id}`)
+
+// Handle Pagination & Filters
+const page = getPageNumberInUrl(Astro.url)
+let filters = `&tags=${node?.id}&per_page=${PER_PAGE}`
+filters = page ? `${filters}&page=${page}` : filters
+
+const posts = await getPosts(lang, filters)
 ---
 
 <h1>{node.name} - Archive</h1>

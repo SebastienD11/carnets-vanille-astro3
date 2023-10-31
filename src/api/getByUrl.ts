@@ -8,7 +8,9 @@ export async function getResourceByUri(uri: string, lang: string): Promise<any> 
   console.log('================')
   console.time('timer_uri')
 
-  const splitUri = uri.split('/')
+  // We retreive only the part of the URL that we care about : the resource's slug
+  const urlSplitByPage = uri.split('/page/')
+  const splitUri = urlSplitByPage[0].split('/')
   const newUri =
     splitUri[splitUri.length - 1] === ''
       ? splitUri[splitUri.length - 2]
