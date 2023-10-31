@@ -9,6 +9,7 @@ export async function getCategoryBySlug(slug: string, lang: string): Promise<Cat
 
 export type Category = {
   id: number
+  count: number
   description: string
   link: string
   name: string

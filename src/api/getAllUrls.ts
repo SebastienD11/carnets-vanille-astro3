@@ -1,5 +1,12 @@
-type Node = {
-  slug: string
+import { PER_PAGE } from '../constant'
+import type { Category } from './category'
+import type { Post } from './post'
+import type { Tag } from './tag'
+
+type Uri = {
+  params: {
+    uri: string
+  }
 }
 
 // Todo:
@@ -15,18 +22,10 @@ export async function getAllUris(lang: string = 'fr') {
   const tags = await getAllTagsUrils(lang)
   const categories = await getAllCategoriesUrils(lang)
 
-  let data: Node[] = posts
-  data = data.concat(tags)
-  data = data.concat(categories)
+  let uris: any[] = posts
+  uris = uris.concat(tags)
+  uris = uris.concat(categories)
   console.timeEnd('timer_urls')
-
-  const uris = data.map((node: Node) => {
-    return {
-      params: {
-        uri: node.slug
-      }
-    }
-  })
 
   return uris
 }
@@ -35,32 +34,68 @@ const getAllPostsUrils = async (lang: string) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL + `/posts?per_page=100&_fields=slug&lang=${lang}`
   )
-  const posts: Node[] = await res.json()
-  return posts
+  const posts: Post[] = await res.json()
+  const postUris: Uri[] = posts.map((post: Post) => {
+    return {
+      params: {
+        uri: post.slug
+      }
+    }
+  })
+  return postUris
 }
 
 const getAllTagsUrils = async (lang: string) => {
   const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/tags?per_page=100&_fields=slug&lang=${lang}`
+    import.meta.env.WORDPRESS_REST_API_URL + `/tags?per_page=100&_fields=slug,count&lang=${lang}`
   )
-  const tags: Node[] = await res.json()
+  const tags: Tag[] = await res.json()
+  const tagsUris: Uri[] = []
 
-  tags.map((tag: Node) => {
-    tag.slug = 'tag/' + tag.slug
+  tags.map((tag: Tag) => {
+    tagsUris.push({
+      params: {
+        uri: 'tag/' + tag.slug
+      }
+    })
+    let pages = Math.ceil(tag.count / PER_PAGE)
+    while (pages > 1) {
+      tagsUris.push({
+        params: {
+          uri: 'tag/' + tag.slug + '/page/' + pages
+        }
+      })
+      pages = pages - 1
+    }
   })
 
-  return tags
+  return tagsUris
 }
 
 const getAllCategoriesUrils = async (lang: string) => {
   const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/categories?per_page=100&_fields=slug&lang=${lang}`
+    import.meta.env.WORDPRESS_REST_API_URL +
+      `/categories?per_page=100&_fields=slug,count&lang=${lang}`
   )
-  const categories: Node[] = await res.json()
+  const categories: Category[] = await res.json()
+  const categoriesUris: Uri[] = []
 
-  categories.map((category: Node) => {
-    category.slug = category.slug
+  categories.map((category: Category) => {
+    categoriesUris.push({
+      params: {
+        uri: category.slug
+      }
+    })
+    let pages = Math.ceil(category.count / PER_PAGE)
+    while (pages > 1) {
+      categoriesUris.push({
+        params: {
+          uri: category.slug + '/page/' + pages
+        }
+      })
+      pages = pages - 1
+    }
   })
 
-  return categories
+  return categoriesUris
 }
