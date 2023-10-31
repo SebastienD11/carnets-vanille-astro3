@@ -7,7 +7,7 @@ import { getLangFromUrl } from '../i18n/utils'
 
 const lang = getLangFromUrl(Astro.url)
 const node: Tag = Astro.props.node
-const posts = await getPosts(`tags=${node?.id}&lang=${lang}`)
+const posts = await getPosts(lang, `&tags=${node?.id}`)
 ---
 
 <h1>{node.name} - Archive</h1>

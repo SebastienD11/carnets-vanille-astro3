@@ -1,14 +1,10 @@
-export async function getCategoryById(categoryId: number): Promise<Category> {
-  console.log('====================================')
-  console.log('Fetch Category by ID: ' + categoryId)
-  console.log('================')
-  console.time('timer_category')
+export async function getCategoryBySlug(slug: string, lang: string): Promise<Category | null> {
+  const res = await fetch(
+    import.meta.env.WORDPRESS_REST_API_URL + `/categories/?slug=${slug}&lang=${lang}`
+  )
+  const category: Category[] = await res.json()
 
-  const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/categories/${categoryId}`)
-  const category: Category = await res.json()
-  console.timeEnd('timer_category')
-
-  return category
+  return category.length > 0 ? category[0] : null
 }
 
 export type Category = {
@@ -17,7 +13,7 @@ export type Category = {
   link: string
   name: string
   slug: string
-  taxonomy: string
+  taxonomy: 'category'
   yoast_head: string
   wpml_current_locale: string
   wpml_translations: {

@@ -6,9 +6,9 @@ import { getLangFromUrl } from '../../i18n/utils'
 import { getSEObyUrl } from '../../api/yoast'
 
 const lang = getLangFromUrl(Astro.url)
-const posts = await getPosts(`lang=${lang}`)
+const posts = await getPosts(lang)
 
-const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + `&lang=${lang}`)
+const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL, lang)
 
 Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 ---
