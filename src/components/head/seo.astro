@@ -1,34 +1,8 @@
 ---
-import type { Seo } from '../../api/seo'
 interface Props {
-  seo: Seo
+  seo: string
 }
 const { seo } = Astro.props
 ---
 
-<title>{seo.title}</title>
-<meta name="description" content={seo.metaDesc} />
-<link rel="canonical" href={seo.canonical} />
-<!-- Alternates -->
-{
-  seo.alternates?.map((alternate) => (
-    <link rel="alternates" hreflang={alternate.hrefLang} href={alternate.href} />
-  ))
-}
-<!-- OpenGraph -->
-<meta property="og:locale" content={seo.opengraphLocale} />
-<meta property="og:type" content={seo.opengraphType} />
-<meta property="og:title" content={seo.opengraphTitle} />
-<meta property="og:description" content={seo.opengraphDescription} />
-<meta property="og:url" content={seo.opengraphUrl} />
-<meta property="og:site_name" content={seo.opengraphSiteName} />
-<meta property="article:publisher" content={seo.opengraphPublisher} />
-<meta property="article:published_time" content={seo.opengraphPublishedTime} />
-<meta property="article:modified_time" content={seo.opengraphModifiedTime} />
-<meta property="og:image" content={seo.opengraphImage?.guid} />
-<meta property="og:image:width" content={seo.opengraphImage?.mediaDetails.width.toString()} />
-<meta property="og:image:height" content={seo.opengraphImage?.mediaDetails.height.toString()} />
-<meta property="og:image:type" content={seo.opengraphImage?.mimeType} />
-<!-- Temporary no index for safety -->
-<meta name="robots" content="noindex, nofollow" />
-<!-- <meta name="robots" content={`${seo.metaRobotsNoindex}, ${seo.metaRobotsNofollow}`} /> -->
+<Fragment set:html={seo} />

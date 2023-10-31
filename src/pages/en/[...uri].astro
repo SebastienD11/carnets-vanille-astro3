@@ -1,29 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import Archive from '../../templates/Archive.astro'
+import Category from '../../templates/Category.astro'
 import Tag from '../../templates/Tag.astro'
 import Post from '../../templates/Post.astro'
-import { getNodeByURI } from '../../api/getByUrl'
+import { getResourceByUri } from '../../api/getByUrl'
 import { getAllUris } from '../../api/getAllUrls'
 import { buildSeo } from '../../utils/seo'
-import { getPostById } from '../../api/post'
-import { getTagById } from '../../api/tag'
-import { type Node, type NodeType } from '../../api/node'
-
-type Translation = {
-  id: string
-  databaseId: number
-  languageCode: string
-}
-type NodePerURIType = {
-  id: string
-  databaseId: number
-  __typename: NodeType
-  language_code: string
-  translations: Translation[]
-}
-
-const lang = 'en'
+import { getTypeByData } from '../../utils/type'
 
 // Return a list of all resources (pages, posts, tags, categories, etc), existing in the CMS in the current locale.
 export async function getStaticPaths() {
@@ -32,34 +15,23 @@ export async function getStaticPaths() {
 
 // For the current URI, return the corresponding node from the CMS.
 const uri: string = `/${Astro.params.uri}/`
-const data: NodePerURIType = await getNodeByURI(uri)
-const type: NodeType = data.__typename
+const data = await getResourceByUri(uri, 'en')
 
-// getNodeByURI may not be able to return the current local post if anoter one exist for another locale with the same URL.
-// Because of that, before we continue, we need to double check if the object received is the one we want. If not, we look at the translations array to find the correct one.
-let nodeId: number = data.databaseId
-if (data.language_code !== lang) {
-  const langTranslation = data.translations.find(
-    (translation: Translation) => translation.languageCode === lang
-  )
-  if (langTranslation) {
-    nodeId = langTranslation.databaseId
-  }
-}
+function resolveContentTemplate(type: string | null) {
+  if (!type) throw new Error(`No type found`)
 
-function resolveContentTemplate(type: string) {
   let template
   switch (type) {
-    case 'Post':
+    case 'post':
       template = Post
       break
-    case 'Page':
+    case 'page':
       template = Post
       break
-    case 'Category':
-      template = Archive
+    case 'category':
+      template = Category
       break
-    case 'Tag':
+    case 'post_tag':
       template = Tag
       break
     default:
@@ -69,23 +41,9 @@ function resolveContentTemplate(type: string) {
   return template
 }
 
-const Template = resolveContentTemplate(type)
-
-let node: Node
-switch (type) {
-  case 'Post':
-    node = await getPostById(nodeId, lang)
-    break
-  case 'Tag':
-    node = await getTagById(nodeId)
-    break
-
-  default:
-    node = await getPostById(nodeId, lang)
-    break
-}
+const Template = resolveContentTemplate(getTypeByData(data))
 ---
 
-<Layout seo={buildSeo(node)}>
-  <Template node={node} />
+<Layout seo={buildSeo(data)}>
+  <Template node={data} />
 </Layout>

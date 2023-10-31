@@ -50,5 +50,4 @@
 
 ### SEO
 
-- Yoast metas
-- Hreflang
+- No index development URL

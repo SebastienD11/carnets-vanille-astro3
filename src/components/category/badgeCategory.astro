@@ -1,0 +1,13 @@
+---
+import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
+import type { Category } from '../../api/category'
+
+const lang = getLangFromUrl(Astro.url)
+const translatePath = useTranslatedPath(lang)
+
+const category: Category = Astro.props.category
+---
+
+<a class="rounded-sm bg-framboise p-2 text-black" href={translatePath('/' + category.slug)}>
+  {category.name}
+</a>

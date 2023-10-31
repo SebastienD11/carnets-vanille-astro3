@@ -1,0 +1,13 @@
+---
+import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
+import type { Tag } from '../../api/tag'
+
+const lang = getLangFromUrl(Astro.url)
+const translatePath = useTranslatedPath(lang)
+
+const tag: Tag = Astro.props.tag
+---
+
+<a class="rounded-sm bg-vanille p-2 text-black" href={translatePath('/tag/' + tag.slug)}>
+  {tag.name}
+</a>

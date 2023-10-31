@@ -2,11 +2,10 @@
 import Header from '../components/header/Header.astro'
 import '@fontsource-variable/mulish'
 import { getLangFromUrl } from '../i18n/utils'
-import type { Seo as SeoType } from '../api/seo'
 import Seo from '../components/head/seo.astro'
 
 interface Props {
-  seo: SeoType
+  seo: string
 }
 
 const { seo } = Astro.props

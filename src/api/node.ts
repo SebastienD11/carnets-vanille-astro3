@@ -1,5 +1,6 @@
+import type { Category } from './category'
 import type { Post } from './post'
 import type { Tag } from './tag'
 
-export type NodeType = 'Post' | 'Page' | 'Category' | 'Tag'
-export type Node = Post | Tag
+export type NodeType = 'post' | 'page' | 'category' | 'post_tag'
+export type Node = Post | Tag | Category
