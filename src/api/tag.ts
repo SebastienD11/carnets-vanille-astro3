@@ -9,6 +9,7 @@ export async function getTagBySlug(slug: string, lang: string): Promise<Tag | nu
 
 export type Tag = {
   id: number
+  count: number
   description: string
   link: string
   name: string
