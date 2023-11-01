@@ -1,4 +1,4 @@
-import { PER_PAGE } from '../constant'
+import { POSTS_PER_PAGE } from '../constant'
 import type { Category } from './category'
 import type { Post } from './post'
 import type { Tag } from './tag'
@@ -99,7 +99,7 @@ const getAllTagsUrils = async (lang: string) => {
         uri: 'tag/' + tag.slug
       }
     })
-    let pages = Math.ceil(tag.count / PER_PAGE)
+    let pages = Math.ceil(tag.count / POSTS_PER_PAGE)
     while (pages > 1) {
       tagsUris.push({
         params: {
@@ -148,7 +148,7 @@ const getAllCategoriesUrils = async (lang: string) => {
         uri: category.slug
       }
     })
-    let pages = Math.ceil(category.count / PER_PAGE)
+    let pages = Math.ceil(category.count / POSTS_PER_PAGE)
     while (pages > 1) {
       categoriesUris.push({
         params: {
