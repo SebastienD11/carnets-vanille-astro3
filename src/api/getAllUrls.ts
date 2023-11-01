@@ -9,8 +9,14 @@ type Uri = {
   }
 }
 
-// Todo:
-// - While loop to get all post (REST API limit to 100 posts per query)
+const FETCH_PER_PAGE = 100 // Lower this number if it causes connection issues to your hosting. It cannot be greater than 100.
+
+/*****************
+ *
+ *  NOTE
+ *  REST API will default to status : published for Post and Pages
+ *
+ *****************/
 
 export async function getAllUris(lang: string = 'fr') {
   console.log('====================================')
@@ -30,11 +36,23 @@ export async function getAllUris(lang: string = 'fr') {
   return uris
 }
 
+/*****************
+ *
+ *  POSTS
+ *  Published, by bucket of 100
+ *
+ *****************/
+
 const getAllPostsUrils = async (lang: string) => {
-  const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/posts?per_page=100&_fields=slug&lang=${lang}`
-  )
-  const posts: Post[] = await res.json()
+  let page = 1
+  let posts = await recursivePostFetch(lang, page)
+
+  while (posts.length % FETCH_PER_PAGE === 0) {
+    page = page + 1
+    const newPosts = await recursivePostFetch(lang, page)
+    posts = posts.concat(newPosts)
+  }
+
   const postUris: Uri[] = posts.map((post: Post) => {
     return {
       params: {
@@ -42,16 +60,39 @@ const getAllPostsUrils = async (lang: string) => {
       }
     }
   })
+
   return postUris
 }
 
-const getAllTagsUrils = async (lang: string) => {
+const recursivePostFetch = async (lang: string, page: number) => {
   const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/tags?per_page=100&_fields=slug,count&lang=${lang}`
+    import.meta.env.WORDPRESS_REST_API_URL +
+      `/posts?per_page=${FETCH_PER_PAGE}&_fields=slug&lang=${lang}${
+        page > 1 ? '&page=' + page : ''
+      }`
   )
-  const tags: Tag[] = await res.json()
-  const tagsUris: Uri[] = []
+  const posts: Post[] = await res.json()
+  return posts
+}
 
+/*****************
+ *
+ *  Tags
+ *  With pagination sub pages, by bucket of 100
+ *
+ *****************/
+
+const getAllTagsUrils = async (lang: string) => {
+  let page = 1
+  let tags = await recursiveTagsFetch(lang, page)
+
+  while (tags.length % FETCH_PER_PAGE === 0) {
+    page = page + 1
+    const newTags = await recursiveTagsFetch(lang, page)
+    tags = tags.concat(newTags)
+  }
+
+  const tagsUris: Uri[] = []
   tags.map((tag: Tag) => {
     tagsUris.push({
       params: {
@@ -72,14 +113,35 @@ const getAllTagsUrils = async (lang: string) => {
   return tagsUris
 }
 
-const getAllCategoriesUrils = async (lang: string) => {
+const recursiveTagsFetch = async (lang: string, page: number) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/categories?per_page=100&_fields=slug,count&lang=${lang}`
+      `/tags?per_page=${FETCH_PER_PAGE}&_fields=slug,count&lang=${lang}${
+        page > 1 ? '&page=' + page : ''
+      }`
   )
-  const categories: Category[] = await res.json()
-  const categoriesUris: Uri[] = []
+  const tags: Tag[] = await res.json()
+  return tags
+}
 
+/*****************
+ *
+ *  Categories
+ *  With pagination sub pages, by bucket of 100
+ *
+ *****************/
+
+const getAllCategoriesUrils = async (lang: string) => {
+  let page = 1
+  let categories = await recursiveCategoriesFetch(lang, page)
+
+  while (categories.length % FETCH_PER_PAGE === 0) {
+    page = page + 1
+    const newCategories = await recursiveCategoriesFetch(lang, page)
+    categories = categories.concat(newCategories)
+  }
+
+  const categoriesUris: Uri[] = []
   categories.map((category: Category) => {
     categoriesUris.push({
       params: {
@@ -98,4 +160,15 @@ const getAllCategoriesUrils = async (lang: string) => {
   })
 
   return categoriesUris
+}
+
+const recursiveCategoriesFetch = async (lang: string, page: number) => {
+  const res = await fetch(
+    import.meta.env.WORDPRESS_REST_API_URL +
+      `/categories?per_page=${FETCH_PER_PAGE}&_fields=slug,count&lang=${lang}${
+        page > 1 ? '&page=' + page : ''
+      }`
+  )
+  const categories: Category[] = await res.json()
+  return categories
 }
