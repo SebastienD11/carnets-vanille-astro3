@@ -1,4 +1,5 @@
 import { getCategoryBySlug, type Category } from './category'
+import { getPageBySlug } from './page'
 import { getPostBySlug, type Post } from './post'
 import { getTagBySlug, type Tag } from './tag'
 
@@ -24,6 +25,13 @@ export async function getResourceByUri(uri: string, lang: string): Promise<any> 
       console.timeEnd('timer_uri')
       return tag
     }
+  }
+
+  const page = await getPageBySlug(newUri, lang)
+
+  if (page) {
+    console.timeEnd('timer_uri')
+    return page
   }
 
   // Note: In my personnal implementation, my categories doesn't have /category in the uri (thanks to some custom Yoast configruation)

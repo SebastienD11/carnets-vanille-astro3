@@ -1,0 +1,9 @@
+---
+import type { Page } from '../api/page'
+
+const page: Page = Astro.props.node
+---
+
+<h1>{page.title.rendered}</h1>
+
+<article set:html={page.content.rendered} />

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro'
 import Category from '../templates/Category.astro'
 import Tag from '../templates/Tag.astro'
 import Post from '../templates/Post.astro'
+import Page from '../templates/Page.astro'
 import { getResourceByUri } from '../api/getByUrl'
 import { getAllUris } from '../api/getAllUrls'
 import { buildSeo } from '../utils/seo'
@@ -26,7 +27,7 @@ function resolveContentTemplate(type: string | null) {
       template = Post
       break
     case 'page':
-      template = Post
+      template = Page
       break
     case 'category':
       template = Category

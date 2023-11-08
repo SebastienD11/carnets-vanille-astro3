@@ -1,5 +1,6 @@
 import { POSTS_PER_PAGE } from '../constant'
 import type { Category } from './category'
+import type { Page } from './page'
 import type { Post } from './post'
 import type { Tag } from './tag'
 
@@ -24,16 +25,57 @@ export async function getAllUris(lang: string = 'fr') {
   console.log('================')
   console.time('timer_urls')
 
+  const pages = await getAllPagesUrils(lang)
   const posts = await getAllPostsUrils(lang)
   const tags = await getAllTagsUrils(lang)
   const categories = await getAllCategoriesUrils(lang)
 
-  let uris: any[] = posts
+  let uris: any[] = pages
+  uris = uris.concat(posts)
   uris = uris.concat(tags)
   uris = uris.concat(categories)
   console.timeEnd('timer_urls')
 
   return uris
+}
+
+/*****************
+ *
+ *  PAGES
+ *  Published, by bucket of 100
+ *
+ *****************/
+
+const getAllPagesUrils = async (lang: string) => {
+  let page = 1
+  let pages = await recursivePageFetch(lang, page)
+
+  while (pages.length % FETCH_PER_PAGE === 0) {
+    page = page + 1
+    const newPages = await recursivePageFetch(lang, page)
+    pages = pages.concat(newPages)
+  }
+
+  const pagesUris: Uri[] = pages.map((page: Page) => {
+    return {
+      params: {
+        uri: page.slug
+      }
+    }
+  })
+
+  return pagesUris
+}
+
+const recursivePageFetch = async (lang: string, page: number) => {
+  const res = await fetch(
+    import.meta.env.WORDPRESS_REST_API_URL +
+      `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug&lang=${lang}${
+        page > 1 ? '&page=' + page : ''
+      }`
+  )
+  const pages: Page[] = await res.json()
+  return pages
 }
 
 /*****************

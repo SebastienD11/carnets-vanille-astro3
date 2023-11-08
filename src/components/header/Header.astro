@@ -1,11 +1,50 @@
 ---
+import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
 import ThemeIcon from '../theme/Icon.astro'
 import LanguagePicker from '../theme/LanguagePicker.astro'
 import Logo from './Logo.astro'
+
+// WP does not have a Menu Items built in. We could easily make it happen by adding doing some modification on the WP side through our theme or a plugin, but for now we'll hard code our menu.
+const lang = getLangFromUrl(Astro.url)
+const translatePath = useTranslatedPath(lang)
+const primaryMenu = [
+  {
+    lang: 'fr',
+    items: [
+      {
+        title: 'De Saint-Malo',
+        slug: 'saint-malo'
+      },
+      {
+        title: 'Au Québec',
+        slug: 'quebec'
+      },
+      {
+        title: 'Et d’ailleurs',
+        slug: 'decouvrir-le-monde'
+      }
+    ]
+  },
+  {
+    lang: 'en',
+    items: []
+  }
+]
+
+const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
 ---
 
 <header>
   <Logo />
   <ThemeIcon />
   <LanguagePicker />
+  {
+    primaryMenuForLang?.map((item) => {
+      return (
+        <a href={translatePath(item.slug)} class="">
+          {item.title}
+        </a>
+      )
+    })
+  }
 </header>
