@@ -1,4 +1,7 @@
 ---
+import '@wordpress/block-library/build-style/common.css'
+import '@wordpress/block-library/build-style/style.css'
+import '@wordpress/block-library/build-style/theme.css'
 import type { Post } from '../api/post'
 import type { Tag as TagType } from '../api/tag'
 import type { Category as CategoryType } from '../api/category'
@@ -46,4 +49,4 @@ const post: Post = Astro.props.node
   height={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.height}
 />
 
-<article set:html={post.content.rendered} />
+<article class="prose prose-stone mx-auto" set:html={post.content.rendered} />
