@@ -8,6 +8,9 @@ const translatePath = useTranslatedPath(lang)
 const category: Category = Astro.props.category
 ---
 
-<a class="rounded-sm bg-framboise p-2 text-black" href={translatePath('/' + category.slug)}>
+<a
+  class="rounded bg-framboise p-2 py-1 text-sm text-black"
+  href={translatePath('/' + category.slug)}
+>
   {category.name}
 </a>

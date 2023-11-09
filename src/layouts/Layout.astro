@@ -3,6 +3,7 @@ import Header from '../components/header/Header.astro'
 import '@fontsource-variable/mulish'
 import { getLangFromUrl } from '../i18n/utils'
 import Seo from '../components/head/seo.astro'
+import LanguagePicker from '../components/theme/LanguagePicker.astro'
 
 interface Props {
   seo: string
@@ -37,6 +38,8 @@ const lang = getLangFromUrl(Astro.url)
   >
     <Header />
     <slot />
-    <style is:global></style>
+    <footer class="mt-32">
+      <LanguagePicker />
+    </footer>
   </body>
 </html>

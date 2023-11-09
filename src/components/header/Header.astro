@@ -1,7 +1,6 @@
 ---
 import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
 import ThemeIcon from '../theme/Icon.astro'
-import LanguagePicker from '../theme/LanguagePicker.astro'
 import Logo from './Logo.astro'
 
 // WP does not have a Menu Items built in. We could easily make it happen by adding doing some modification on the WP side through our theme or a plugin, but for now we'll hard code our menu.
@@ -34,17 +33,20 @@ const primaryMenu = [
 const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
 ---
 
-<header>
-  <Logo />
-  <ThemeIcon />
-  <LanguagePicker />
-  {
-    primaryMenuForLang?.map((item) => {
-      return (
-        <a href={translatePath(item.slug)} class="">
-          {item.title}
-        </a>
-      )
-    })
-  }
+<ThemeIcon />
+<header class="mb-12 space-y-8">
+  <div class="flex items-center justify-center">
+    <Logo />
+  </div>
+  <div class="flex items-center justify-center gap-8">
+    {
+      primaryMenuForLang?.map((item) => {
+        return (
+          <a href={translatePath(item.slug)} class="font-bold uppercase hover:underline">
+            {item.title}
+          </a>
+        )
+      })
+    }
+  </div>
 </header>

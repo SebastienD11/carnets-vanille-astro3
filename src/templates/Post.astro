@@ -12,37 +12,28 @@ import parseHtml from '../utils/parser'
 const post: Post = Astro.props.node
 ---
 
-<h1>{post.title.rendered}</h1>
-<!-- 
-  Display tags links if post has terms
-  ['wp:term'][1] refers to tag 
--->
-<div class="flex gap-4">
-  {post._embedded['wp:term'][1]?.map((tag: TagType) => <BadgeTag tag={tag} />)}
+<div class="mb-12 space-y-2">
+  <h1 class="text-center text-2xl">{post.title.rendered}</h1>
+
+  <p class="text-center text-sm italic">
+    Posted on <time datetime={post.date}>{new Date(post.date).toLocaleDateString()}</time>
+  </p>
+  <!-- 
+    Display tags and categories links if post has terms
+    ['wp:term'][1] refers to tag 
+  -->
+  <div class="flex items-center justify-center gap-4">
+    {post._embedded['wp:term'][1]?.map((tag: TagType) => <BadgeTag tag={tag} />)}
+    {
+      post._embedded['wp:term'][0]?.map((category: CategoryType) => (
+        <BadgeCategory category={category} />
+      ))
+    }
+  </div>
 </div>
 
-<!-- 
-  Display categories links if post has terms
-  ['wp:term'][0] refers to tag 
--->
-<div class="flex gap-4">
-  {
-    post._embedded['wp:term'][0]?.map((category: CategoryType) => (
-      <BadgeCategory category={category} />
-    ))
-  }
-</div>
-
-<!-- Only show date if post is a Post -->
-{
-  post.type === 'post' ? (
-    <p class="post-details">
-      Posted on <time datetime={post.date}>{new Date(post.date).toLocaleDateString()}</time>
-    </p>
-  ) : null
-}
 <img
-  class="featured-image"
+  class="mx-auto mb-12 h-auto max-w-full rounded lg:max-w-prose"
   src={post._embedded['wp:featuredmedia'][0]?.source_url}
   srcset={post._embedded['wp:featuredmedia'][0]?.source_url}
   alt={post._embedded['wp:featuredmedia'][0]?.alt_text}
@@ -50,4 +41,7 @@ const post: Post = Astro.props.node
   height={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.height}
 />
 
-<article class="prose prose-stone mx-auto" set:html={parseHtml(post.content.rendered)} />
+<article
+  class="prose prose-stone mx-auto dark:prose-invert"
+  set:html={parseHtml(post.content.rendered)}
+/>

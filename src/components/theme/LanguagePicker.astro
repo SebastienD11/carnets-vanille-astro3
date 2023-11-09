@@ -5,7 +5,7 @@ const currentLang = getLangFromUrl(Astro.url)
 const translatePath = useTranslatedPath(currentLang)
 ---
 
-<ul>
+<ul class="flex items-center justify-center gap-4">
   {
     Object.entries(languages).map(([lang, label]) => (
       <li>
