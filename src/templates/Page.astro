@@ -3,10 +3,11 @@ import '@wordpress/block-library/build-style/common.css'
 import '@wordpress/block-library/build-style/style.css'
 import '@wordpress/block-library/build-style/theme.css'
 import type { Page } from '../api/page'
+import parseHtml from '../utils/parser'
 
 const page: Page = Astro.props.node
 ---
 
 <h1>{page.title.rendered}</h1>
 
-<article class="prose prose-stone mx-auto" set:html={page.content.rendered} />
+<article class="prose prose-stone mx-auto" set:html={parseHtml(page.content.rendered)} />

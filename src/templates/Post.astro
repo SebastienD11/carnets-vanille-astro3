@@ -7,6 +7,7 @@ import type { Tag as TagType } from '../api/tag'
 import type { Category as CategoryType } from '../api/category'
 import BadgeTag from '../components/tag/badgeTag.astro'
 import BadgeCategory from '../components/category/badgeCategory.astro'
+import parseHtml from '../utils/parser'
 
 const post: Post = Astro.props.node
 ---
@@ -49,4 +50,4 @@ const post: Post = Astro.props.node
   height={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.height}
 />
 
-<article class="prose prose-stone mx-auto" set:html={post.content.rendered} />
+<article class="prose prose-stone mx-auto" set:html={parseHtml(post.content.rendered)} />
