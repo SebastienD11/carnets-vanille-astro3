@@ -1,8 +1,6 @@
 ---
-import Card from './post/card.astro'
-
+import Grid from './post/grid.astro'
 import { getLangFromUrl, useTranslations } from '../i18n/utils'
-import type { Post } from '../api/post'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -10,11 +8,4 @@ const t = useTranslations(lang)
 const { posts } = Astro.props
 ---
 
-<h2 class="text-2xl font-extrabold">{t('index.recentsPost.title')}</h2>
-<div class="grid grid-cols-3 gap-4">
-  {
-    posts.map((post: Post) => {
-      return <Card post={post} />
-    })
-  }
-</div>
+<Grid posts={posts} />

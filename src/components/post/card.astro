@@ -6,17 +6,18 @@ const translatePath = useTranslatedPath(lang)
 const { post } = Astro.props
 ---
 
-<article>
-  <a class="" href={translatePath(`/${post.slug}`)} aria-label={post.title}>
-    <h3>{post.title.rendered}</h3>
-    <section>
-      <img
-        src={post._embedded['wp:featuredmedia'][0]?.source_url}
-        srcset={post._embedded['wp:featuredmedia'][0]?.source_url}
-        alt={post._embedded['wp:featuredmedia'][0]?.alt_text}
-        width={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.width}
-        height={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.height}
-      />
-    </section>
-  </a>
-</article>
+<a
+  class="group flex flex-col gap-4 hover:underline"
+  href={translatePath(`/${post.slug}`)}
+  aria-label={post.title}
+>
+  <img
+    src={post._embedded['wp:featuredmedia'][0]?.source_url}
+    srcset={post._embedded['wp:featuredmedia'][0]?.source_url}
+    alt={post._embedded['wp:featuredmedia'][0]?.alt_text}
+    width={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.width}
+    height={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.height}
+    class="h-auto w-full rounded transition-shadow duration-300 group-hover:shadow-lg"
+  />
+  <h3 class="text-base font-bold">{post.title.rendered}</h3>
+</a>

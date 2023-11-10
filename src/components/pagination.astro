@@ -7,7 +7,7 @@ const { total, perPage, currentPage, baseUrl } = Astro.props
 const totalPages = Math.ceil(total / perPage)
 ---
 
-<ul class="mt-16 flex flex-row justify-center gap-4">
+<ul class="flex flex-row justify-center gap-4">
   {
     [...Array(totalPages).keys()].map((page) => {
       const pageNumber = page + 1

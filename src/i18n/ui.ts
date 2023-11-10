@@ -9,9 +9,13 @@ export const defaultLang = 'fr'
 
 export const ui = {
   en: {
-    'index.recentsPost.title': 'Recent Post'
+    'index.recentsPost.title': 'Recent Posts',
+    'tag.grid.title': 'Tag: ',
+    'category.grid.title': 'Category: '
   },
   fr: {
-    'index.recentsPost.title': 'Articles récents'
+    'index.recentsPost.title': 'Articles récents',
+    'tag.grid.title': 'Tag : ',
+    'category.grid.title': 'Catégorie : '
   }
 } as const

@@ -1,14 +1,14 @@
 ---
-import Card from '../components/post/card.astro'
+import Grid from '../components/post/grid.astro'
 import type { Tag } from '../api/tag'
-import type { Post } from '../api/post'
 import { getPosts } from '../api/post'
-import { getLangFromUrl } from '../i18n/utils'
+import { getLangFromUrl, useTranslations } from '../i18n/utils'
 import { getPageNumberInUrl } from '../utils/pagination'
 import { POSTS_PER_PAGE } from '../constant'
 import Pagination from '../components/pagination.astro'
 
 const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 const node: Tag = Astro.props.node
 
 // Handle Pagination & Filters
@@ -18,19 +18,13 @@ const filters = `&tags=${node?.id}&per_page=${POSTS_PER_PAGE}&page=${page}`
 const posts = await getPosts(lang, filters)
 ---
 
-<h1>{node.name} - Archive</h1>
-
-<div class="grid grid-cols-3 gap-4">
-  {
-    posts.map((post: Post) => {
-      return <Card post={post} />
-    })
-  }
+<div class="space-y-8">
+  <h1 class="text-xl font-bold">{t('tag.grid.title')} {node.name}</h1>
+  <Grid posts={posts} />
+  <Pagination
+    total={node.count}
+    perPage={POSTS_PER_PAGE}
+    currentPage={page}
+    baseUrl={`/tag/${node.slug}`}
+  />
 </div>
-
-<Pagination
-  total={node.count}
-  perPage={POSTS_PER_PAGE}
-  currentPage={page}
-  baseUrl={`/tag/${node.slug}`}
-/>
