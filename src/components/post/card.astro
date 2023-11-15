@@ -1,9 +1,12 @@
 ---
+import { getMediaById } from '../../api/media'
 import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
+import { Image } from 'astro:assets'
 
 const lang = getLangFromUrl(Astro.url)
 const translatePath = useTranslatedPath(lang)
 const { post } = Astro.props
+const featuredImage = await getMediaById(post.featured_media, lang)
 ---
 
 <a
@@ -11,13 +14,16 @@ const { post } = Astro.props
   href={translatePath(`/${post.slug}`)}
   aria-label={post.title}
 >
-  <img
-    src={post._embedded['wp:featuredmedia'][0]?.source_url}
-    srcset={post._embedded['wp:featuredmedia'][0]?.source_url}
-    alt={post._embedded['wp:featuredmedia'][0]?.alt_text}
-    width={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.width}
-    height={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.height}
-    class="h-auto w-full rounded transition-shadow duration-300 group-hover:shadow-lg"
-  />
+  {
+    featuredImage && (
+      <Image
+        src={featuredImage.source_url}
+        alt={featuredImage.alt_text}
+        width={featuredImage.media_details.width}
+        height={featuredImage.media_details.height}
+        class="h-auto w-full rounded transition-shadow duration-300 group-hover:shadow-lg"
+      />
+    )
+  }
   <h3 class="text-base font-bold">{post.title.rendered}</h3>
 </a>

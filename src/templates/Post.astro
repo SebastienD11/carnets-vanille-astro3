@@ -2,14 +2,19 @@
 import '@wordpress/block-library/build-style/common.css'
 import '@wordpress/block-library/build-style/style.css'
 import '@wordpress/block-library/build-style/theme.css'
+import { Image } from 'astro:assets'
 import type { Post } from '../api/post'
 import type { Tag as TagType } from '../api/tag'
 import type { Category as CategoryType } from '../api/category'
 import BadgeTag from '../components/tag/badgeTag.astro'
 import BadgeCategory from '../components/category/badgeCategory.astro'
 import parseHtml from '../utils/parser'
+import { getMediaById } from '../api/media'
+import { getLangFromUrl } from '../i18n/utils'
 
+const lang = getLangFromUrl(Astro.url)
 const post: Post = Astro.props.node
+const featuredImage = await getMediaById(post.featured_media, lang)
 ---
 
 <div class="mb-12 space-y-2">
@@ -32,14 +37,17 @@ const post: Post = Astro.props.node
   </div>
 </div>
 
-<img
-  class="mx-auto mb-12 h-auto max-w-full rounded lg:max-w-prose"
-  src={post._embedded['wp:featuredmedia'][0]?.source_url}
-  srcset={post._embedded['wp:featuredmedia'][0]?.source_url}
-  alt={post._embedded['wp:featuredmedia'][0]?.alt_text}
-  width={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.width}
-  height={post._embedded['wp:featuredmedia'][0]?.mediaDetails?.height}
-/>
+{
+  featuredImage && (
+    <Image
+      src={featuredImage.source_url}
+      alt={featuredImage.alt_text}
+      width={featuredImage.media_details.width}
+      height={featuredImage.media_details.height}
+      class="mx-auto mb-12 h-auto max-w-full rounded lg:max-w-prose"
+    />
+  )
+}
 
 <article
   class="prose prose-stone mx-auto dark:prose-invert"

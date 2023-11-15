@@ -9,6 +9,9 @@ export default defineConfig({
   output: 'static',
   adapter: vercelStatic(),
   integrations: [tailwind()],
+  image: {
+    domains: ['carnetsvanille.com']
+  },
   vite: {
     plugins: [basicSsl()]
   }
