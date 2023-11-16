@@ -9,12 +9,8 @@ import type { Category as CategoryType } from '../api/category'
 import BadgeTag from '../components/tag/badgeTag.astro'
 import BadgeCategory from '../components/category/badgeCategory.astro'
 import parseHtml from '../utils/parser'
-import { getMediaById } from '../api/media'
-import { getLangFromUrl } from '../i18n/utils'
 
-const lang = getLangFromUrl(Astro.url)
 const post: Post = Astro.props.node
-const featuredImage = await getMediaById(post.featured_media, lang)
 ---
 
 <div class="mb-12 space-y-2">
@@ -38,12 +34,12 @@ const featuredImage = await getMediaById(post.featured_media, lang)
 </div>
 
 {
-  featuredImage && (
+  post._embedded['wp:featuredmedia'][0]?.source_url && (
     <Image
-      src={featuredImage.source_url}
-      alt={featuredImage.alt_text}
-      width={featuredImage.media_details.width}
-      height={featuredImage.media_details.height}
+      src={post._embedded['wp:featuredmedia'][0]?.source_url}
+      alt={post._embedded['wp:featuredmedia'][0]?.alt_text}
+      width={post._embedded['wp:featuredmedia'][0]?.media_details.width}
+      height={post._embedded['wp:featuredmedia'][0]?.media_details.height}
       class="mx-auto mb-12 h-auto max-w-full rounded lg:max-w-prose"
     />
   )
