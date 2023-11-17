@@ -50,7 +50,7 @@ const getAllPagesUrils = async (lang: string) => {
   let page = 1
   let pages = await recursivePageFetch(lang, page)
 
-  while (pages.length % FETCH_PER_PAGE === 0) {
+  while (pages.length > 0 && pages.length % FETCH_PER_PAGE === 0) {
     page = page + 1
     const newPages = await recursivePageFetch(lang, page)
     pages = pages.concat(newPages)
@@ -89,7 +89,7 @@ const getAllPostsUrils = async (lang: string) => {
   let page = 1
   let posts = await recursivePostFetch(lang, page)
 
-  while (posts.length % FETCH_PER_PAGE === 0) {
+  while (posts.length > 0 && posts.length % FETCH_PER_PAGE === 0) {
     page = page + 1
     const newPosts = await recursivePostFetch(lang, page)
     posts = posts.concat(newPosts)
@@ -128,7 +128,7 @@ const getAllTagsUrils = async (lang: string) => {
   let page = 1
   let tags = await recursiveTagsFetch(lang, page)
 
-  while (tags.length % FETCH_PER_PAGE === 0) {
+  while (tags.length > 0 && tags.length % FETCH_PER_PAGE === 0) {
     page = page + 1
     const newTags = await recursiveTagsFetch(lang, page)
     tags = tags.concat(newTags)
@@ -177,7 +177,7 @@ const getAllCategoriesUrils = async (lang: string) => {
   let page = 1
   let categories = await recursiveCategoriesFetch(lang, page)
 
-  while (categories.length % FETCH_PER_PAGE === 0) {
+  while (categories.length > 0 && categories.length % FETCH_PER_PAGE === 0) {
     page = page + 1
     const newCategories = await recursiveCategoriesFetch(lang, page)
     categories = categories.concat(newCategories)

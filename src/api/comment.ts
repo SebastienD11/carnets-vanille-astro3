@@ -5,7 +5,7 @@ export async function getCommentsForPost(postId: number, lang: string = 'fr') {
 
   let comments = await getRecursiveCommentsForPost(postId, lang, page)
 
-  while (comments.length % FETCH_PER_PAGE === 0) {
+  while (comments.length > 0 && comments.length % FETCH_PER_PAGE === 0) {
     page = page + 1
     const newComments = await getRecursiveCommentsForPost(postId, lang, page)
     comments = comments.concat(newComments)
