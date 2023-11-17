@@ -26,6 +26,14 @@ export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
   return posts
 }
 
+export async function getRelatedPostById(id: Post['id'], lang: string): Promise<Post | null> {
+  const res = await fetch(
+    import.meta.env.WORDPRESS_REST_API_URL + `/posts/${id}?_embed=wp:featuredmedia&lang=${lang}`
+  )
+  const post: Post = await res.json()
+  return post
+}
+
 export type Post = {
   id: number
   date: string
@@ -55,7 +63,6 @@ export type Post = {
   format: string
   categories: number[]
   tags: number[]
-  acf: []
   yoast_head: string
   _embedded: {
     'wp:term': any // Todo, type this
@@ -66,4 +73,11 @@ export type Post = {
     locale: string
     href: string
   }[]
+  acf: {
+    color: string
+    mailerlite: string
+    author_description: string
+    related_posts: Post[]
+    display_banner: boolean
+  }
 }

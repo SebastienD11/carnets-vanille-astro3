@@ -10,11 +10,13 @@ import BadgeTag from '../components/tag/badgeTag.astro'
 import PostComments from '../components/post/postComments.astro'
 import BadgeCategory from '../components/category/badgeCategory.astro'
 import parseHtml from '../utils/parser'
-import { getLangFromUrl } from '../i18n/utils'
+import { getLangFromUrl, useTranslations } from '../i18n/utils'
 import { getCommentsForPost } from '../api/comment'
 import FormattedDate from '../components/formatedDate.astro'
+import RelatedPost from '../components/post/relatedPost.astro'
 
 const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 const post: Post = Astro.props.node
 const comments = await getCommentsForPost(post.id, lang)
 ---
@@ -55,5 +57,18 @@ const comments = await getCommentsForPost(post.id, lang)
   class="prose prose-stone mx-auto dark:prose-invert"
   set:html={parseHtml(post.content.rendered)}
 />
+
+{
+  post.acf.related_posts.length > 0 && (
+    <div class="prose prose-stone mx-auto my-12 dark:prose-invert">
+      <h3 class="mb-8 text-center">{t('post.relatedPost.title')}</h3>
+      <div class="grid grid-cols-3 gap-8">
+        {post.acf.related_posts.map((postId) => (
+          <RelatedPost postId={postId} />
+        ))}
+      </div>
+    </div>
+  )
+}
 
 <PostComments comments={comments} />

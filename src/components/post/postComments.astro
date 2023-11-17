@@ -1,15 +1,18 @@
 ---
 import { type Comments } from '../../api/comment'
+import { getLangFromUrl, useTranslations } from '../../i18n/utils'
 import FormattedDate from '../formatedDate.astro'
 
 const { comments } = Astro.props
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 ---
 
 <div class="prose prose-stone mx-auto dark:prose-invert">
   {
     comments && (
       <div class="space-y-4">
-        <h3 class="mb-8 text-center">Comments</h3>
+        <h3 class="mb-8 text-center">{t('post.comments.title')}</h3>
         {comments.map((comment: Comments) => (
           <div class="flex flex-col gap-2">
             <div set:html={comment.content.rendered} />
