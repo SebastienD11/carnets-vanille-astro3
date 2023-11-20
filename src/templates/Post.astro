@@ -7,7 +7,7 @@ import type { Post } from '../api/post'
 import type { Tag as TagType } from '../api/tag'
 import type { Category as CategoryType } from '../api/category'
 import BadgeTag from '../components/tag/badgeTag.astro'
-import PostComments from '../components/post/postComments.astro'
+import CommentList from '../components/post/commentList.astro'
 import BadgeCategory from '../components/category/badgeCategory.astro'
 import parseHtml from '../utils/parser'
 import { getLangFromUrl, useTranslations } from '../i18n/utils'
@@ -71,4 +71,4 @@ const comments = await getCommentsForPost(post.id, lang)
   )
 }
 
-<PostComments comments={comments} />
+<CommentList comments={comments} />

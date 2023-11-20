@@ -1,0 +1,28 @@
+---
+import { type Comment as CommentType } from '../../api/comment'
+import { getLangFromUrl, useTranslations } from '../../i18n/utils'
+import Comment from './comment.astro'
+
+const { comments } = Astro.props
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+---
+
+<div class="prose prose-stone mx-auto dark:prose-invert prose-p:mt-0">
+  {
+    comments && (
+      <div class="space-y-4">
+        <h3 class="mb-8 text-center">{t('post.comments.title')}</h3>
+        {comments.map((comment: CommentType) => (
+          <Fragment>
+            <Comment comment={comment} />
+            {comment.children &&
+              comment.children.map((comment: CommentType) => (
+                <Comment className="ml-8" comment={comment} />
+              ))}
+          </Fragment>
+        ))}
+      </div>
+    )
+  }
+</div>
