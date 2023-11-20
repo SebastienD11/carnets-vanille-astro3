@@ -57,6 +57,7 @@ export type Post = {
   }
   author: number
   featured_media: number
+  featured_media_data: any
   comment_status: string
   sticky: boolean
   template: string

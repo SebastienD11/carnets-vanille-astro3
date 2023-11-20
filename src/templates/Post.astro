@@ -42,12 +42,16 @@ const comments = await getCommentsForPost(post.id, lang)
 </div>
 
 {
-  post._embedded['wp:featuredmedia'][0]?.source_url && (
+  post.featured_media_data[0] && (
     <Image
-      src={post._embedded['wp:featuredmedia'][0]?.source_url}
-      alt={post._embedded['wp:featuredmedia'][0]?.alt_text}
-      width={post._embedded['wp:featuredmedia'][0]?.media_details.width}
-      height={post._embedded['wp:featuredmedia'][0]?.media_details.height}
+      src={post.featured_media_data[0]}
+      alt={
+        post.featured_media_data['alt_text']
+          ? post.featured_media_data['alt_text']
+          : post.title.rendered
+      }
+      width={post.featured_media_data[1]}
+      height={post.featured_media_data[2]}
       class="mx-auto mb-12 h-auto max-w-full rounded lg:max-w-prose"
     />
   )
