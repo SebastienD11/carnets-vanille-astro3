@@ -2,8 +2,7 @@ import type { Media } from './media'
 
 export async function getPostBySlug(slug: string, lang: string): Promise<Post | null> {
   const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL +
-      `/posts/?slug=${slug}&_embed=wp:term,wp:featuredmedia&lang=${lang}`
+    import.meta.env.WORDPRESS_REST_API_URL + `/posts/?slug=${slug}&_embed=wp:term&lang=${lang}`
   )
   const post: Post[] = await res.json()
 
@@ -18,7 +17,7 @@ export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
 
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/posts/?_embed=wp:term,wp:featuredmedia&lang=${lang}${filter ? filter : ''}`
+      `/posts/?_embed=wp:term&lang=${lang}${filter ? filter : ''}`
   )
   const posts: Post[] = await res.json()
   console.timeEnd('timer_post_by_query')
@@ -27,9 +26,7 @@ export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
 }
 
 export async function getRelatedPostById(id: Post['id'], lang: string): Promise<Post | null> {
-  const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/posts/${id}?_embed=wp:featuredmedia&lang=${lang}`
-  )
+  const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/posts/${id}?&lang=${lang}`)
   const post: Post = await res.json()
   return post
 }
@@ -67,7 +64,6 @@ export type Post = {
   yoast_head: string
   _embedded: {
     'wp:term': any // Todo, type this
-    'wp:featuredmedia': Media[]
   }
   wpml_current_locale: string
   wpml_translations: {
