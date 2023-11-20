@@ -1,5 +1,3 @@
-import type { Media } from './media'
-
 export async function getPostBySlug(slug: string, lang: string): Promise<Post | null> {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL + `/posts/?slug=${slug}&_embed=wp:term&lang=${lang}`
