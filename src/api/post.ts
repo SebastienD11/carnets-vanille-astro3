@@ -1,10 +1,28 @@
+import fs from 'node:fs'
+import { CACHE_FOLDER } from '../constant'
 export async function getPostBySlug(slug: string, lang: string): Promise<Post | null> {
-  const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/posts/?slug=${slug}&_embed=wp:term&lang=${lang}`
-  )
-  const post: Post[] = await res.json()
+  if (fs.existsSync(`${CACHE_FOLDER}/${lang}/posts.json`)) {
+    const raw = JSON.parse(fs.readFileSync(`${CACHE_FOLDER}/${lang}/posts.json`).toString())
+    return raw.find((post: Post) => post.slug === slug)
+  } else {
+    const res = await fetch(
+      import.meta.env.WORDPRESS_REST_API_URL + `/posts/?slug=${slug}&_embed=wp:term&lang=${lang}`
+    )
+    const post: Post[] = await res.json()
 
-  return post.length > 0 ? post[0] : null
+    return post.length > 0 ? post[0] : null
+  }
+}
+
+export async function getPostById(id: number, lang: string): Promise<Post | null> {
+  if (fs.existsSync(`${CACHE_FOLDER}/${lang}/posts.json`)) {
+    const raw = JSON.parse(fs.readFileSync(`${CACHE_FOLDER}/${lang}/posts.json`).toString())
+    return raw.find((post: Post) => post.id === id)
+  } else {
+    const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/posts/${id}?lang=${lang}`)
+    const post: Post = await res.json()
+    return post || null
+  }
 }
 
 export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
@@ -15,18 +33,12 @@ export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
 
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/posts/?_embed=wp:term&lang=${lang}${filter ? filter : ''}`
+      `/posts/?_fields=id&lang=${lang}${filter ? filter : ''}`
   )
   const posts: Post[] = await res.json()
   console.timeEnd('timer_post_by_query')
 
   return posts
-}
-
-export async function getRelatedPostById(id: Post['id'], lang: string): Promise<Post | null> {
-  const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/posts/${id}?&lang=${lang}`)
-  const post: Post = await res.json()
-  return post
 }
 
 export type Post = {
