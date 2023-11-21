@@ -3,10 +3,8 @@ import { cacheExist, getCache, writeCache } from '../utils/cache'
 
 export async function getPostBySlug(slug: string, lang: string): Promise<Post | null> {
   if (cacheExist(`${CACHE_FOLDER}/${lang}/posts/${slug}.json`)) {
-    console.log('Cache Exists')
     return getCache(`${CACHE_FOLDER}/${lang}/posts/${slug}.json`)
   } else {
-    console.log('Cache Does Not Exists')
     const res = await fetch(
       import.meta.env.WORDPRESS_REST_API_URL + `/posts/?slug=${slug}&_embed=wp:term&lang=${lang}`
     )

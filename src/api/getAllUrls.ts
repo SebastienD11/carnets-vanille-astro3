@@ -31,10 +31,8 @@ export async function getAllUris(lang: string = 'fr') {
   // Posts
   let posts: Post[] = []
   if (cacheExist(`${CACHE_FOLDER}/${lang}/postsUri.json`)) {
-    console.log('Cache Exist')
     posts = getCache(`${CACHE_FOLDER}/${lang}/postsUri.json`)
   } else {
-    console.log('Cache Does not exist')
     posts = await getAllPostsUrils(lang)
     writeCache(`${CACHE_FOLDER}/${lang}/`, 'postsUris', posts)
   }
