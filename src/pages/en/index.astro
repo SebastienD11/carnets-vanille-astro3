@@ -8,12 +8,15 @@ import { getSEObyUrl } from '../../api/yoast'
 const lang = getLangFromUrl(Astro.url)
 const postsBySlug = await getPosts(lang)
 let posts: Post[] = []
-postsBySlug.map(
-  async (post) =>
-    await getPostBySlug(post.slug, lang).then((post: Post | null) => {
-      if (post) posts.push(post)
-    })
+await Promise.all(
+  postsBySlug.map(
+    async (post) =>
+      await getPostBySlug(post.slug, lang).then((post: Post | null) => {
+        if (post) posts.push(post)
+      })
+  )
 )
+
 const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
 
 Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
