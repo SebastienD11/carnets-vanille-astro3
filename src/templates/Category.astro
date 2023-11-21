@@ -13,7 +13,7 @@ const node: Category = Astro.props.node
 
 // Handle Pagination & Filters
 const page = getPageNumberInUrl(Astro.url)
-const filters = `&categories=${node?.id}&per_page=${POSTS_PER_PAGE}&page=${page}`
+const filters = `&categories=${node?.id}&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=${page}`
 const postsBySlug = await getPosts(lang, filters)
 let posts: Post[] = []
 await Promise.all(

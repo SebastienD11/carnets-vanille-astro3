@@ -4,9 +4,11 @@ import IndexPosts from '../components/indexPosts.astro'
 import { getPostBySlug, getPosts, type Post } from '../api/post'
 import { getLangFromUrl } from '../i18n/utils'
 import { getSEObyUrl } from '../api/yoast'
+import { POSTS_PER_PAGE } from '../constant'
 
 const lang = getLangFromUrl(Astro.url)
-const postsBySlug = await getPosts(lang)
+const filters = `&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=1`
+const postsBySlug = await getPosts(lang, filters)
 let posts: Post[] = []
 await Promise.all(
   postsBySlug.map(

@@ -1,5 +1,6 @@
 ---
 import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
+import FormattedDate from '../../components/formatedDate.astro'
 import { Image } from 'astro:assets'
 
 const lang = getLangFromUrl(Astro.url)
@@ -28,4 +29,10 @@ const { post } = Astro.props
     )
   }
   <h3 class="my-0 text-base font-bold">{post.title.rendered}</h3>
+  <p class="text-center text-sm italic">
+    Published on <FormattedDate date={post.date} />
+  </p>
+  <p class="text-center text-sm italic">
+    Modified on <FormattedDate date={post.modified} />
+  </p>
 </a>
