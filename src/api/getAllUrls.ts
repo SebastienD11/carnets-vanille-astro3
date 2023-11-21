@@ -29,11 +29,12 @@ export async function getAllUris(lang: string = 'fr') {
   const pages = await getAllPagesUrils(lang)
 
   // Posts
-  let postUris = await getAllPostsUrils(lang)
+  const postUris = await getAllPostsUrils(lang)
 
   // Tags
-  let tagsUris = await getAllTagsUrils(lang)
+  const tagsUris = await getAllTagsUrils(lang)
 
+  // Categories
   const categories = await getAllCategoriesUrils(lang)
 
   let uris: any[] = pages
@@ -198,15 +199,25 @@ const recursiveTagsFetch = async (lang: string, page: number) => {
  *****************/
 
 const getAllCategoriesUrils = async (lang: string) => {
-  let page = 1
-  let categories = await recursiveCategoriesFetch(lang, page)
+  let categories: Category[] = []
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/categoriesUris.json`)) {
+    categories = getCache(`${CACHE_FOLDER}/${lang}/categoriesUris.json`)
+    return buildCategoriesUris(categories)
+  } else {
+    let page = 1
+    let categories = await recursiveCategoriesFetch(lang, page)
+    while (categories.length > 0 && categories.length % FETCH_PER_PAGE === 0) {
+      page = page + 1
+      const newCategories = await recursiveCategoriesFetch(lang, page)
+      categories = categories.concat(newCategories)
+    }
 
-  while (categories.length > 0 && categories.length % FETCH_PER_PAGE === 0) {
-    page = page + 1
-    const newCategories = await recursiveCategoriesFetch(lang, page)
-    categories = categories.concat(newCategories)
+    writeCache(`${CACHE_FOLDER}/${lang}/`, 'categoriesUris', categories)
+    return buildCategoriesUris(categories)
   }
+}
 
+const buildCategoriesUris = (categories: Category[]) => {
   const categoriesUris: Uri[] = []
   categories.map((category: Category) => {
     categoriesUris.push({
@@ -224,14 +235,13 @@ const getAllCategoriesUrils = async (lang: string) => {
       pages = pages - 1
     }
   })
-
   return categoriesUris
 }
 
 const recursiveCategoriesFetch = async (lang: string, page: number) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/categories?per_page=${FETCH_PER_PAGE}&_fields=slug,count&lang=${lang}${
+      `/categories?per_page=${FETCH_PER_PAGE}&_fields=slug,id,count&lang=${lang}${
         page > 1 ? '&page=' + page : ''
       }`
   )
