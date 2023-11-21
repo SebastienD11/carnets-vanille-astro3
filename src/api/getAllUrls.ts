@@ -1,5 +1,5 @@
-import fs from 'node:fs'
 import { CACHE_FOLDER, POSTS_PER_PAGE } from '../constant'
+import { cacheExist, getCache, writeCache } from '../utils/cache'
 import type { Category } from './category'
 import type { Page } from './page'
 import type { Post } from './post'
@@ -30,13 +30,13 @@ export async function getAllUris(lang: string = 'fr') {
 
   // Posts
   let posts: Post[] = []
-  if (cacheExist(`${CACHE_FOLDER}/${lang}/posts.json`)) {
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/postsUri.json`)) {
     console.log('Cache Exist')
-    posts = getCache(`${CACHE_FOLDER}/${lang}/posts.json`)
+    posts = getCache(`${CACHE_FOLDER}/${lang}/postsUri.json`)
   } else {
     console.log('Cache Does not exist')
     posts = await getAllPostsUrils(lang)
-    writeCache('posts', lang, posts)
+    writeCache(`${CACHE_FOLDER}/${lang}/`, 'postsUris', posts)
   }
 
   const postUris: Uri[] = posts.map((post: Post) => {
@@ -90,7 +90,7 @@ const getAllPagesUrils = async (lang: string) => {
 const recursivePageFetch = async (lang: string, page: number) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug&lang=${lang}${
+      `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug,id&lang=${lang}${
         page > 1 ? '&page=' + page : ''
       }`
   )
@@ -121,7 +121,7 @@ const getAllPostsUrils = async (lang: string) => {
 const recursivePostFetch = async (lang: string, page: number) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/posts?per_page=${FETCH_PER_PAGE}&_embed=wp:term&lang=${lang}${
+      `/posts?per_page=${FETCH_PER_PAGE}&_fields=slug,id&lang=${lang}${
         page > 1 ? '&page=' + page : ''
       }`
   )
@@ -225,20 +225,4 @@ const recursiveCategoriesFetch = async (lang: string, page: number) => {
   )
   const categories: Category[] = await res.json()
   return categories
-}
-
-const writeCache = (type: string, lang: string, data: any) => {
-  if (!fs.existsSync(`${CACHE_FOLDER}/${lang}`)) {
-    fs.mkdirSync(`${CACHE_FOLDER}/${lang}`, { recursive: true })
-  }
-
-  fs.writeFileSync(`${CACHE_FOLDER}/${lang}/${type}.json`, JSON.stringify(data))
-}
-
-const cacheExist = (path: string) => {
-  return fs.existsSync(path)
-}
-
-const getCache = (path: string) => {
-  return JSON.parse(fs.readFileSync(path).toString())
 }

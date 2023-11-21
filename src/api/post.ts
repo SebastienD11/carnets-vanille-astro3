@@ -1,28 +1,33 @@
-import fs from 'node:fs'
 import { CACHE_FOLDER } from '../constant'
+import { cacheExist, getCache, writeCache } from '../utils/cache'
+
 export async function getPostBySlug(slug: string, lang: string): Promise<Post | null> {
-  if (fs.existsSync(`${CACHE_FOLDER}/${lang}/posts.json`)) {
-    const raw = JSON.parse(fs.readFileSync(`${CACHE_FOLDER}/${lang}/posts.json`).toString())
-    return raw.find((post: Post) => post.slug === slug)
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/posts/${slug}.json`)) {
+    console.log('Cache Exists')
+    return getCache(`${CACHE_FOLDER}/${lang}/posts/${slug}.json`)
   } else {
+    console.log('Cache Does Not Exists')
     const res = await fetch(
       import.meta.env.WORDPRESS_REST_API_URL + `/posts/?slug=${slug}&_embed=wp:term&lang=${lang}`
     )
     const post: Post[] = await res.json()
 
-    return post.length > 0 ? post[0] : null
+    if (post.length > 0) {
+      writeCache(`${CACHE_FOLDER}/${lang}/posts/`, post[0].slug, post[0])
+      return post[0]
+    }
+
+    return null
   }
 }
 
 export async function getPostById(id: number, lang: string): Promise<Post | null> {
-  if (fs.existsSync(`${CACHE_FOLDER}/${lang}/posts.json`)) {
-    const raw = JSON.parse(fs.readFileSync(`${CACHE_FOLDER}/${lang}/posts.json`).toString())
-    return raw.find((post: Post) => post.id === id)
-  } else {
-    const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/posts/${id}?lang=${lang}`)
-    const post: Post = await res.json()
-    return post || null
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/postsUris.json`)) {
+    const raw = getCache(`${CACHE_FOLDER}/${lang}/postsUris.json`)
+    const post = raw.find((post: Post) => post.id === id)
+    return getPostBySlug(post.slug, lang)
   }
+  return null
 }
 
 export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
@@ -33,7 +38,7 @@ export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
 
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/posts/?_fields=id&lang=${lang}${filter ? filter : ''}`
+      `/posts/?_fields=id,slug&lang=${lang}${filter ? filter : ''}`
   )
   const posts: Post[] = await res.json()
   console.timeEnd('timer_post_by_query')

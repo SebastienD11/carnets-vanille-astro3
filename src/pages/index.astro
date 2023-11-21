@@ -1,16 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import IndexPosts from '../components/indexPosts.astro'
-import { getPostById, getPosts, type Post } from '../api/post'
+import { getPostBySlug, getPosts, type Post } from '../api/post'
 import { getLangFromUrl } from '../i18n/utils'
 import { getSEObyUrl } from '../api/yoast'
 
 const lang = getLangFromUrl(Astro.url)
-const postsById = await getPosts(lang)
+const postsBySlug = await getPosts(lang)
 let posts: Post[] = []
-postsById.map(
+postsBySlug.map(
   async (post) =>
-    await getPostById(post.id, lang).then((post) => {
+    await getPostBySlug(post.slug, lang).then((post: Post | null) => {
       if (post) posts.push(post)
     })
 )
