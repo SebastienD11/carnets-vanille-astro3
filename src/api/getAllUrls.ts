@@ -29,28 +29,16 @@ export async function getAllUris(lang: string = 'fr') {
   const pages = await getAllPagesUrils(lang)
 
   // Posts
-  let posts: Post[] = []
-  if (cacheExist(`${CACHE_FOLDER}/${lang}/postsUri.json`)) {
-    posts = getCache(`${CACHE_FOLDER}/${lang}/postsUri.json`)
-  } else {
-    posts = await getAllPostsUrils(lang)
-    writeCache(`${CACHE_FOLDER}/${lang}/`, 'postsUris', posts)
-  }
+  let postUris = await getAllPostsUrils(lang)
 
-  const postUris: Uri[] = posts.map((post: Post) => {
-    return {
-      params: {
-        uri: post.slug
-      }
-    }
-  })
+  // Tags
+  let tagsUris = await getAllTagsUrils(lang)
 
-  const tags = await getAllTagsUrils(lang)
   const categories = await getAllCategoriesUrils(lang)
 
   let uris: any[] = pages
   uris = uris.concat(postUris)
-  uris = uris.concat(tags)
+  uris = uris.concat(tagsUris)
   uris = uris.concat(categories)
   console.timeEnd('timer_urls')
 
@@ -103,17 +91,24 @@ const recursivePageFetch = async (lang: string, page: number) => {
  *
  *****************/
 
-const getAllPostsUrils = async (lang: string) => {
-  let page = 1
-  let posts = await recursivePostFetch(lang, page)
+const getAllPostsUrils = async (lang: string): Promise<Uri[]> => {
+  let posts: Post[] = []
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/postsUris.json`)) {
+    posts = getCache(`${CACHE_FOLDER}/${lang}/postsUris.json`)
+    return builtPostsUris(posts)
+  } else {
+    let page = 1
+    let posts = await recursivePostFetch(lang, page)
 
-  while (posts.length > 0 && posts.length % FETCH_PER_PAGE === 0) {
-    page = page + 1
-    const newPosts = await recursivePostFetch(lang, page)
-    posts = posts.concat(newPosts)
+    while (posts.length > 0 && posts.length % FETCH_PER_PAGE === 0) {
+      page = page + 1
+      const newPosts = await recursivePostFetch(lang, page)
+      posts = posts.concat(newPosts)
+    }
+
+    writeCache(`${CACHE_FOLDER}/${lang}/`, 'postsUris', posts)
+    return builtPostsUris(posts)
   }
-
-  return posts
 }
 
 const recursivePostFetch = async (lang: string, page: number) => {
@@ -127,6 +122,16 @@ const recursivePostFetch = async (lang: string, page: number) => {
   return posts
 }
 
+const builtPostsUris = (posts: Post[]) => {
+  return posts.map((post: Post) => {
+    return {
+      params: {
+        uri: post.slug
+      }
+    }
+  })
+}
+
 /*****************
  *
  *  Tags
@@ -135,15 +140,25 @@ const recursivePostFetch = async (lang: string, page: number) => {
  *****************/
 
 const getAllTagsUrils = async (lang: string) => {
-  let page = 1
-  let tags = await recursiveTagsFetch(lang, page)
+  let tags: Tag[] = []
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/tagsUris.json`)) {
+    tags = getCache(`${CACHE_FOLDER}/${lang}/tagsUris.json`)
+    return buildTagsUris(tags)
+  } else {
+    let page = 1
+    let tags = await recursiveTagsFetch(lang, page)
+    while (tags.length > 0 && tags.length % FETCH_PER_PAGE === 0) {
+      page = page + 1
+      const newTags = await recursiveTagsFetch(lang, page)
+      tags = tags.concat(newTags)
+    }
 
-  while (tags.length > 0 && tags.length % FETCH_PER_PAGE === 0) {
-    page = page + 1
-    const newTags = await recursiveTagsFetch(lang, page)
-    tags = tags.concat(newTags)
+    writeCache(`${CACHE_FOLDER}/${lang}/`, 'tagsUris', tags)
+    return buildTagsUris(tags)
   }
+}
 
+const buildTagsUris = (tags: Tag[]) => {
   const tagsUris: Uri[] = []
   tags.map((tag: Tag) => {
     tagsUris.push({
@@ -161,14 +176,13 @@ const getAllTagsUrils = async (lang: string) => {
       pages = pages - 1
     }
   })
-
   return tagsUris
 }
 
 const recursiveTagsFetch = async (lang: string, page: number) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/tags?per_page=${FETCH_PER_PAGE}&_fields=slug,count&lang=${lang}${
+      `/tags?per_page=${FETCH_PER_PAGE}&_fields=slug,id,count&lang=${lang}${
         page > 1 ? '&page=' + page : ''
       }`
   )

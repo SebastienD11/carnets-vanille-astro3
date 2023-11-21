@@ -16,11 +16,13 @@ const page = getPageNumberInUrl(Astro.url)
 const filters = `&tags=${node?.id}&per_page=${POSTS_PER_PAGE}&page=${page}`
 const postsBySlug = await getPosts(lang, filters)
 let posts: Post[] = []
-postsBySlug.map(
-  async (post) =>
-    await getPostBySlug(post.slug, lang).then((post: Post | null) => {
-      if (post) posts.push(post)
-    })
+await Promise.all(
+  postsBySlug.map(
+    async (post) =>
+      await getPostBySlug(post.slug, lang).then((post: Post | null) => {
+        if (post) posts.push(post)
+      })
+  )
 )
 ---
 
