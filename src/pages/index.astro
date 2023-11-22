@@ -20,8 +20,6 @@ await Promise.all(
 )
 
 const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
-
-Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
 ---
 
 <Layout seo={seo}>
