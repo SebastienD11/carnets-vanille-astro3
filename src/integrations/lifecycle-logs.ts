@@ -1,13 +1,6 @@
 import ansis from 'ansis'
 import type { AstroIntegration } from 'astro'
 
-// Create a new dateTimeFormat object
-const dateTimeFormat = new Intl.DateTimeFormat([], {
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit'
-})
-
 export const lifecycleLogs = () => {
   const hooks = [
     `astro:config:setup`,
@@ -30,13 +23,8 @@ export const lifecycleLogs = () => {
 
   // loop over the hooks list and add the name and log
   for (const hook of hooks) {
-    integration.hooks[hook] = () => {
-      // 👀 Get a new date string
-      const date = dateTimeFormat.format(new Date())
-
-      // log with kleur colours and formatting
-      console.log(`${ansis.gray(date)} ${ansis.yellow('[lifecycle-log]')} ${ansis.green(hook)}
-        `)
+    integration.hooks[hook] = ({ logger }) => {
+      logger.info(`${ansis.yellow('[lifecycle-log]')} ${ansis.green(hook)}`)
     }
   }
 

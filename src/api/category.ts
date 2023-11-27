@@ -1,10 +1,22 @@
-export async function getCategoryBySlug(slug: string, lang: string): Promise<Category | null> {
-  const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/categories/?slug=${slug}&lang=${lang}`
-  )
-  const category: Category[] = await res.json()
+import { CACHE_FOLDER } from '../constant'
+import { cacheExist, getCache, writeCache } from '../utils/cache'
 
-  return category.length > 0 ? category[0] : null
+export async function getCategoryBySlug(slug: string, lang: string): Promise<Category | null> {
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/categories/${slug}.json`)) {
+    return getCache(`${CACHE_FOLDER}/${lang}/categories/${slug}.json`)
+  } else {
+    const res = await fetch(
+      import.meta.env.WORDPRESS_REST_API_URL + `/categories/?slug=${slug}&lang=${lang}`
+    )
+    const category: Category[] = await res.json()
+
+    if (category.length > 0) {
+      writeCache(`${CACHE_FOLDER}/${lang}/categories/`, category[0].slug, category[0])
+      return category[0]
+    }
+
+    return null
+  }
 }
 
 export type Category = {

@@ -29,17 +29,11 @@ export async function getPostById(id: number, lang: string): Promise<Post | null
 }
 
 export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
-  console.log('====================================')
-  console.log('Fetch Posts for query: ' + lang + ' ' + filter)
-  console.log('================')
-  console.time('timer_post_by_query')
-
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
       `/posts/?_fields=id,slug&lang=${lang}${filter ? filter : ''}`
   )
   const posts: Post[] = await res.json()
-  console.timeEnd('timer_post_by_query')
 
   return posts
 }

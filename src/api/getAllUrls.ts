@@ -5,7 +5,7 @@ import type { Page } from './page'
 import type { Post } from './post'
 import type { Tag } from './tag'
 
-type Uri = {
+export type Uri = {
   params: {
     uri: string
   }
@@ -21,11 +21,6 @@ const FETCH_PER_PAGE = 100 // Lower this number if it causes connection issues t
  *****************/
 
 export async function getAllUris(lang: string = 'fr') {
-  console.log('====================================')
-  console.log('Fetch all URIS for lang : ' + lang)
-  console.log('================')
-  console.time('timer_urls')
-
   const pages = await getAllPagesUrils(lang)
 
   // Posts
@@ -41,7 +36,6 @@ export async function getAllUris(lang: string = 'fr') {
   uris = uris.concat(postUris)
   uris = uris.concat(tagsUris)
   uris = uris.concat(categories)
-  console.timeEnd('timer_urls')
 
   return uris
 }
