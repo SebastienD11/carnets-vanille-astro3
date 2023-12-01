@@ -1,7 +1,7 @@
 ---
 import Grid from '../components/post/grid.astro'
 import type { Tag } from '../api/tag'
-import { getPosts } from '../api/post'
+import { getPostBySlug, getPosts, type Post } from '../api/post'
 import { getLangFromUrl, useTranslations } from '../i18n/utils'
 import { getPageNumberInUrl } from '../utils/pagination'
 import { POSTS_PER_PAGE } from '../constant'
@@ -13,9 +13,17 @@ const node: Tag = Astro.props.node
 
 // Handle Pagination & Filters
 const page = getPageNumberInUrl(Astro.url)
-const filters = `&tags=${node?.id}&per_page=${POSTS_PER_PAGE}&page=${page}`
-
-const posts = await getPosts(lang, filters)
+const filters = `&tags=${node?.id}&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=${page}`
+const postsBySlug = await getPosts(lang, filters)
+let posts: Post[] = []
+await Promise.all(
+  postsBySlug.map(
+    async (post) =>
+      await getPostBySlug(post.slug, lang).then((post: Post | null) => {
+        if (post) posts.push(post)
+      })
+  )
+)
 ---
 
 <div class="space-y-8">

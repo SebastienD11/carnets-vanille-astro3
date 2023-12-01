@@ -1,15 +1,25 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import IndexPosts from '../../components/indexPosts.astro'
-import { getPosts } from '../../api/post'
+import { getPostBySlug, getPosts, type Post } from '../../api/post'
 import { getLangFromUrl } from '../../i18n/utils'
 import { getSEObyUrl } from '../../api/yoast'
+import { POSTS_PER_PAGE } from '../../constant'
 
 const lang = getLangFromUrl(Astro.url)
-const posts = await getPosts(lang)
-const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
+const filters = `&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=1`
+const postsBySlug = await getPosts(lang, filters)
+let posts: Post[] = []
+await Promise.all(
+  postsBySlug.map(
+    async (post) =>
+      await getPostBySlug(post.slug, lang).then((post: Post | null) => {
+        if (post) posts.push(post)
+      })
+  )
+)
 
-Astro.response.headers.set('Cache-Control', 'max-age=600, must-revalidate')
+const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
 ---
 
 <Layout seo={seo}>

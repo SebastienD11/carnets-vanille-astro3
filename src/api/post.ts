@@ -1,32 +1,41 @@
-export async function getPostBySlug(slug: string, lang: string): Promise<Post | null> {
-  const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/posts/?slug=${slug}&_embed=wp:term&lang=${lang}`
-  )
-  const post: Post[] = await res.json()
+import { CACHE_FOLDER } from '../constant'
+import { cacheExist, getCache, writeCache } from '../utils/cache'
 
-  return post.length > 0 ? post[0] : null
+export async function getPostBySlug(slug: string, lang: string): Promise<Post | null> {
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/posts/${slug}.json`)) {
+    return getCache(`${CACHE_FOLDER}/${lang}/posts/${slug}.json`)
+  } else {
+    const res = await fetch(
+      import.meta.env.WORDPRESS_REST_API_URL + `/posts/?slug=${slug}&_embed=wp:term&lang=${lang}`
+    )
+    const post: Post[] = await res.json()
+
+    if (post.length > 0) {
+      writeCache(`${CACHE_FOLDER}/${lang}/posts/`, post[0].slug, post[0])
+      return post[0]
+    }
+
+    return null
+  }
+}
+
+export async function getPostById(id: number, lang: string): Promise<Post | null> {
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/postsUris.json`)) {
+    const raw = getCache(`${CACHE_FOLDER}/${lang}/postsUris.json`)
+    const post = raw.find((post: Post) => post.id === id)
+    return getPostBySlug(post.slug, lang)
+  }
+  return null
 }
 
 export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
-  console.log('====================================')
-  console.log('Fetch Posts for query: ' + lang + ' ' + filter)
-  console.log('================')
-  console.time('timer_post_by_query')
-
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/posts/?_embed=wp:term&lang=${lang}${filter ? filter : ''}`
+      `/posts/?_fields=id,slug&lang=${lang}${filter ? filter : ''}`
   )
   const posts: Post[] = await res.json()
-  console.timeEnd('timer_post_by_query')
 
   return posts
-}
-
-export async function getRelatedPostById(id: Post['id'], lang: string): Promise<Post | null> {
-  const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/posts/${id}?&lang=${lang}`)
-  const post: Post = await res.json()
-  return post
 }
 
 export type Post = {

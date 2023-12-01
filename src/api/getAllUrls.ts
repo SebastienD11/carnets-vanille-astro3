@@ -1,10 +1,11 @@
-import { POSTS_PER_PAGE } from '../constant'
+import { CACHE_FOLDER, POSTS_PER_PAGE } from '../constant'
+import { cacheExist, getCache, writeCache } from '../utils/cache'
 import type { Category } from './category'
 import type { Page } from './page'
 import type { Post } from './post'
 import type { Tag } from './tag'
 
-type Uri = {
+export type Uri = {
   params: {
     uri: string
   }
@@ -20,21 +21,21 @@ const FETCH_PER_PAGE = 100 // Lower this number if it causes connection issues t
  *****************/
 
 export async function getAllUris(lang: string = 'fr') {
-  console.log('====================================')
-  console.log('Fetch all URIS for lang : ' + lang)
-  console.log('================')
-  console.time('timer_urls')
-
   const pages = await getAllPagesUrils(lang)
-  const posts = await getAllPostsUrils(lang)
-  const tags = await getAllTagsUrils(lang)
+
+  // Posts
+  const postUris = await getAllPostsUrils(lang)
+
+  // Tags
+  const tagsUris = await getAllTagsUrils(lang)
+
+  // Categories
   const categories = await getAllCategoriesUrils(lang)
 
   let uris: any[] = pages
-  uris = uris.concat(posts)
-  uris = uris.concat(tags)
+  uris = uris.concat(postUris)
+  uris = uris.concat(tagsUris)
   uris = uris.concat(categories)
-  console.timeEnd('timer_urls')
 
   return uris
 }
@@ -70,7 +71,7 @@ const getAllPagesUrils = async (lang: string) => {
 const recursivePageFetch = async (lang: string, page: number) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug&lang=${lang}${
+      `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug,id&lang=${lang}${
         page > 1 ? '&page=' + page : ''
       }`
   )
@@ -85,36 +86,45 @@ const recursivePageFetch = async (lang: string, page: number) => {
  *
  *****************/
 
-const getAllPostsUrils = async (lang: string) => {
-  let page = 1
-  let posts = await recursivePostFetch(lang, page)
+const getAllPostsUrils = async (lang: string): Promise<Uri[]> => {
+  let posts: Post[] = []
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/postsUris.json`)) {
+    posts = getCache(`${CACHE_FOLDER}/${lang}/postsUris.json`)
+    return builtPostsUris(posts)
+  } else {
+    let page = 1
+    let posts = await recursivePostFetch(lang, page)
 
-  while (posts.length > 0 && posts.length % FETCH_PER_PAGE === 0) {
-    page = page + 1
-    const newPosts = await recursivePostFetch(lang, page)
-    posts = posts.concat(newPosts)
+    while (posts.length > 0 && posts.length % FETCH_PER_PAGE === 0) {
+      page = page + 1
+      const newPosts = await recursivePostFetch(lang, page)
+      posts = posts.concat(newPosts)
+    }
+
+    writeCache(`${CACHE_FOLDER}/${lang}/`, 'postsUris', posts)
+    return builtPostsUris(posts)
   }
+}
 
-  const postUris: Uri[] = posts.map((post: Post) => {
+const recursivePostFetch = async (lang: string, page: number) => {
+  const res = await fetch(
+    import.meta.env.WORDPRESS_REST_API_URL +
+      `/posts?per_page=${FETCH_PER_PAGE}&_fields=slug,id&lang=${lang}${
+        page > 1 ? '&page=' + page : ''
+      }`
+  )
+  const posts: Post[] = await res.json()
+  return posts
+}
+
+const builtPostsUris = (posts: Post[]) => {
+  return posts.map((post: Post) => {
     return {
       params: {
         uri: post.slug
       }
     }
   })
-
-  return postUris
-}
-
-const recursivePostFetch = async (lang: string, page: number) => {
-  const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL +
-      `/posts?per_page=${FETCH_PER_PAGE}&_fields=slug&lang=${lang}${
-        page > 1 ? '&page=' + page : ''
-      }`
-  )
-  const posts: Post[] = await res.json()
-  return posts
 }
 
 /*****************
@@ -125,15 +135,25 @@ const recursivePostFetch = async (lang: string, page: number) => {
  *****************/
 
 const getAllTagsUrils = async (lang: string) => {
-  let page = 1
-  let tags = await recursiveTagsFetch(lang, page)
+  let tags: Tag[] = []
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/tagsUris.json`)) {
+    tags = getCache(`${CACHE_FOLDER}/${lang}/tagsUris.json`)
+    return buildTagsUris(tags)
+  } else {
+    let page = 1
+    let tags = await recursiveTagsFetch(lang, page)
+    while (tags.length > 0 && tags.length % FETCH_PER_PAGE === 0) {
+      page = page + 1
+      const newTags = await recursiveTagsFetch(lang, page)
+      tags = tags.concat(newTags)
+    }
 
-  while (tags.length > 0 && tags.length % FETCH_PER_PAGE === 0) {
-    page = page + 1
-    const newTags = await recursiveTagsFetch(lang, page)
-    tags = tags.concat(newTags)
+    writeCache(`${CACHE_FOLDER}/${lang}/`, 'tagsUris', tags)
+    return buildTagsUris(tags)
   }
+}
 
+const buildTagsUris = (tags: Tag[]) => {
   const tagsUris: Uri[] = []
   tags.map((tag: Tag) => {
     tagsUris.push({
@@ -151,14 +171,13 @@ const getAllTagsUrils = async (lang: string) => {
       pages = pages - 1
     }
   })
-
   return tagsUris
 }
 
 const recursiveTagsFetch = async (lang: string, page: number) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/tags?per_page=${FETCH_PER_PAGE}&_fields=slug,count&lang=${lang}${
+      `/tags?per_page=${FETCH_PER_PAGE}&_fields=slug,id,count&lang=${lang}${
         page > 1 ? '&page=' + page : ''
       }`
   )
@@ -174,15 +193,25 @@ const recursiveTagsFetch = async (lang: string, page: number) => {
  *****************/
 
 const getAllCategoriesUrils = async (lang: string) => {
-  let page = 1
-  let categories = await recursiveCategoriesFetch(lang, page)
+  let categories: Category[] = []
+  if (cacheExist(`${CACHE_FOLDER}/${lang}/categoriesUris.json`)) {
+    categories = getCache(`${CACHE_FOLDER}/${lang}/categoriesUris.json`)
+    return buildCategoriesUris(categories)
+  } else {
+    let page = 1
+    let categories = await recursiveCategoriesFetch(lang, page)
+    while (categories.length > 0 && categories.length % FETCH_PER_PAGE === 0) {
+      page = page + 1
+      const newCategories = await recursiveCategoriesFetch(lang, page)
+      categories = categories.concat(newCategories)
+    }
 
-  while (categories.length > 0 && categories.length % FETCH_PER_PAGE === 0) {
-    page = page + 1
-    const newCategories = await recursiveCategoriesFetch(lang, page)
-    categories = categories.concat(newCategories)
+    writeCache(`${CACHE_FOLDER}/${lang}/`, 'categoriesUris', categories)
+    return buildCategoriesUris(categories)
   }
+}
 
+const buildCategoriesUris = (categories: Category[]) => {
   const categoriesUris: Uri[] = []
   categories.map((category: Category) => {
     categoriesUris.push({
@@ -200,14 +229,13 @@ const getAllCategoriesUrils = async (lang: string) => {
       pages = pages - 1
     }
   })
-
   return categoriesUris
 }
 
 const recursiveCategoriesFetch = async (lang: string, page: number) => {
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/categories?per_page=${FETCH_PER_PAGE}&_fields=slug,count&lang=${lang}${
+      `/categories?per_page=${FETCH_PER_PAGE}&_fields=slug,id,count&lang=${lang}${
         page > 1 ? '&page=' + page : ''
       }`
   )
