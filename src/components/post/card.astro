@@ -5,7 +5,7 @@ import { Image } from 'astro:assets'
 
 const lang = getLangFromUrl(Astro.url)
 const translatePath = useTranslatedPath(lang)
-const { post } = Astro.props
+const { post, isRelatedPost } = Astro.props
 ---
 
 <a
@@ -23,6 +23,9 @@ const { post } = Astro.props
             : post.title.rendered
         }
         width={post.featured_media_data[1]}
+        widths={[330, 480, 730]}
+        loading={isRelatedPost ? 'lazy' : 'eager'}
+        sizes={`(max-width: 360px) 330px, (max-width: 480px) 480px, (max-width: 480px) 480px, (max-width: 767px) 730px, (max-width: 1279px) 330px, 480px`}
         height={post.featured_media_data[2]}
         class="my-0 h-auto w-full rounded transition-shadow duration-300 group-hover:shadow-lg"
       />

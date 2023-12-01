@@ -8,4 +8,4 @@ const { postId } = Astro.props
 const post = await getPostById(postId, lang)
 ---
 
-{post && <Card post={post} />}
+{post && <Card post={post} isRelatedPost={true} />}
