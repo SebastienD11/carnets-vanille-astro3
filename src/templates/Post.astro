@@ -51,6 +51,9 @@ const comments = await getCommentsForPost(post.id, lang)
           : post.title.rendered
       }
       width={post.featured_media_data[1]}
+      widths={[330, 450, 620, 730]}
+      loading={'eager'}
+      sizes={`(max-width: 360px) 330, (max-width: 480px) 450px, (max-width: 1024px) 730px, 620px`}
       height={post.featured_media_data[2]}
       class="mx-auto mb-12 h-auto max-w-full rounded lg:max-w-prose"
     />
