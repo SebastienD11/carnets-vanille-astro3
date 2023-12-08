@@ -10,6 +10,13 @@ export default defineConfig({
   output: 'static',
   adapter: vercelStatic(),
   integrations: [tailwind(), lifecycleLogs()],
+  i18n: {
+    defaultLocale: 'fr',
+    locales: ['en', 'fr'],
+    routing: {
+      prefixDefaultLocale: false
+    }
+  },
   image: {
     domains: ['carnetsvanille.com']
   },

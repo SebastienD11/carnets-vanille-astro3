@@ -1,11 +1,10 @@
 ---
-import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
+import { getRelativeLocaleUrl } from 'astro:i18n'
 
-const lang = getLangFromUrl(Astro.url)
-const translatePath = useTranslatedPath(lang)
+const lang = Astro.currentLocale as string
 ---
 
-<a href={translatePath('/')}>
+<a href={getRelativeLocaleUrl(lang, '/')}>
   <svg
     width="174"
     height="102"

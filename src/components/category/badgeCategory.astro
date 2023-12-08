@@ -1,16 +1,14 @@
 ---
-import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
 import type { Category } from '../../api/category'
+import { getRelativeLocaleUrl } from 'astro:i18n'
 
-const lang = getLangFromUrl(Astro.url)
-const translatePath = useTranslatedPath(lang)
-
+const lang = Astro.currentLocale as string
 const category: Category = Astro.props.category
 ---
 
 <a
   class="rounded bg-framboise p-2 py-1 text-sm text-black"
-  href={translatePath('/' + category.slug)}
+  href={getRelativeLocaleUrl(lang, '/' + category.slug)}
 >
   {category.name}
 </a>

@@ -1,7 +1,6 @@
 ---
 import Header from '../components/header/Header.astro'
 import '@fontsource-variable/mulish'
-import { getLangFromUrl } from '../i18n/utils'
 import Seo from '../components/head/seo.astro'
 import LanguagePicker from '../components/theme/LanguagePicker.astro'
 
@@ -11,7 +10,7 @@ interface Props {
 
 const { seo } = Astro.props
 
-const lang = getLangFromUrl(Astro.url)
+const lang = Astro.currentLocale as string
 ---
 
 <!doctype html>

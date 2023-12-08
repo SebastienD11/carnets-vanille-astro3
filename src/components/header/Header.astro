@@ -1,11 +1,10 @@
 ---
-import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
+import { getRelativeLocaleUrl } from 'astro:i18n'
 import ThemeIcon from '../theme/Icon.astro'
 import Logo from './Logo.astro'
 
 // WP does not have a Menu Items built in. We could easily make it happen by adding doing some modification on the WP side through our theme or a plugin, but for now we'll hard code our menu.
-const lang = getLangFromUrl(Astro.url)
-const translatePath = useTranslatedPath(lang)
+const lang = Astro.currentLocale as string
 const primaryMenu = [
   {
     lang: 'fr',
@@ -42,7 +41,10 @@ const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
     {
       primaryMenuForLang?.map((item) => {
         return (
-          <a href={translatePath(item.slug)} class="font-bold uppercase hover:underline">
+          <a
+            href={getRelativeLocaleUrl(lang, item.slug)}
+            class="font-bold uppercase hover:underline"
+          >
             {item.title}
           </a>
         )

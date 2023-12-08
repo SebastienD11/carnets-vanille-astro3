@@ -1,13 +1,15 @@
 ---
-import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
 import type { Tag } from '../../api/tag'
+import { getRelativeLocaleUrl } from 'astro:i18n'
 
-const lang = getLangFromUrl(Astro.url)
-const translatePath = useTranslatedPath(lang)
+const lang = Astro.currentLocale as string
 
 const tag: Tag = Astro.props.tag
 ---
 
-<a class="rounded bg-vanille p-2 py-1 text-sm text-black" href={translatePath('/tag/' + tag.slug)}>
+<a
+  class="rounded bg-vanille p-2 py-1 text-sm text-black"
+  href={getRelativeLocaleUrl(lang, '/tag/' + tag.slug)}
+>
   {tag.name}
 </a>

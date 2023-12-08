@@ -1,16 +1,15 @@
 ---
-import { getLangFromUrl, useTranslatedPath } from '../../i18n/utils'
 import FormattedDate from '../../components/formatedDate.astro'
 import { Image } from 'astro:assets'
+import { getRelativeLocaleUrl } from 'astro:i18n'
 
-const lang = getLangFromUrl(Astro.url)
-const translatePath = useTranslatedPath(lang)
+const lang = Astro.currentLocale as string
 const { post, isRelatedPost } = Astro.props
 ---
 
 <a
   class="group flex flex-col gap-4 no-underline hover:underline"
-  href={translatePath(`/${post.slug}`)}
+  href={getRelativeLocaleUrl(lang, `/${post.slug}`)}
   aria-label={post.title}
 >
   {

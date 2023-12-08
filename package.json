@@ -10,18 +10,19 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^6.1.0",
-    "@astrojs/tailwind": "^5.0.2",
-    "@astrojs/vercel": "^5.2.0",
-    "@fontsource-variable/mulish": "^5.0.16",
+    "@astrojs/node": "^7.0.0",
+    "@astrojs/tailwind": "^5.0.3",
+    "@astrojs/upgrade": "^0.2.1",
+    "@astrojs/vercel": "^6.0.1",
+    "@fontsource-variable/mulish": "^5.0.17",
     "@vitejs/plugin-basic-ssl": "^1.0.2",
-    "@wordpress/block-library": "^8.24.0",
+    "@wordpress/block-library": "^8.24.1",
     "ansis": "^2.0.2",
-    "astro": "^3.6.4",
+    "astro": "^4.0.3",
     "prettier": "^3.1.0",
     "prettier-plugin-astro": "^0.12.2",
-    "prettier-plugin-tailwindcss": "^0.5.7",
-    "tailwindcss": "^3.3.5"
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "tailwindcss": "^3.3.6"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10"

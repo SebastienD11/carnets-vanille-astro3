@@ -10,12 +10,12 @@ import BadgeTag from '../components/tag/badgeTag.astro'
 import CommentList from '../components/post/commentList.astro'
 import BadgeCategory from '../components/category/badgeCategory.astro'
 import parseHtml from '../utils/parser'
-import { getLangFromUrl, useTranslations } from '../i18n/utils'
+import { useTranslations } from '../i18n/ui'
 import { getCommentsForPost } from '../api/comment'
 import FormattedDate from '../components/formatedDate.astro'
 import RelatedPost from '../components/post/relatedPost.astro'
 
-const lang = getLangFromUrl(Astro.url)
+const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
 const post: Post = Astro.props.node
 const comments = await getCommentsForPost(post.id, lang)

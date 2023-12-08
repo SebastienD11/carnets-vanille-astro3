@@ -1,11 +1,13 @@
-export const showDefaultLang = false
+// Copy the i18n values from astro config here.
+// It's easier this way for typing than working with the i18n Config from Astro.
+export const locales = ['en', 'fr']
+const defaultLocale = 'fr'
 
-export const languages = {
-  en: 'EN',
-  fr: 'FR'
+export function useTranslations(lang: keyof typeof ui = defaultLocale) {
+  return function t(key: keyof (typeof ui)[typeof defaultLocale]) {
+    return ui[lang][key] || ui[defaultLocale][key]
+  }
 }
-
-export const defaultLang = 'fr'
 
 export const ui = {
   en: {

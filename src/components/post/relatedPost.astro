@@ -1,9 +1,8 @@
 ---
 import { getPostById } from '../../api/post'
-import { getLangFromUrl } from '../../i18n/utils'
 import Card from './card.astro'
 
-const lang = getLangFromUrl(Astro.url)
+const lang = Astro.currentLocale as string
 const { postId } = Astro.props
 const post = await getPostById(postId, lang)
 ---
