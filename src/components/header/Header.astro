@@ -11,15 +11,18 @@ const primaryMenu = [
     items: [
       {
         title: 'De Saint-Malo',
-        slug: 'saint-malo'
+        slug: 'saint-malo',
+        icon: 'triskell'
       },
       {
         title: 'Au Québec',
-        slug: 'quebec'
+        slug: 'quebec',
+        icon: 'erable'
       },
       {
         title: 'Et d’ailleurs',
-        slug: 'decouvrir-le-monde'
+        slug: 'decouvrir-le-monde',
+        icon: 'plane'
       }
     ]
   },
@@ -43,8 +46,10 @@ const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
         return (
           <a
             href={getRelativeLocaleUrl(lang, item.slug)}
-            class="font-bold uppercase hover:underline"
+            class="group relative flex gap-1 text-lg font-bold uppercase"
           >
+            <span class="absolute -right-2 -top-2 hidden h-2 w-2 rounded-full bg-vanille group-hover:block" />
+            <i class={`icon-${item.icon}`} />
             {item.title}
           </a>
         )
