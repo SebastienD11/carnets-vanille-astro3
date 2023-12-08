@@ -1,15 +1,16 @@
 import { defineConfig } from 'astro/config'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import lifecycleLogs from './src/integrations/lifecycle-logs'
-
 import tailwind from '@astrojs/tailwind'
 import vercelStatic from '@astrojs/vercel/static'
+
+import react from '@astrojs/react'
 
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
   adapter: vercelStatic(),
-  integrations: [tailwind(), lifecycleLogs()],
+  integrations: [tailwind(), lifecycleLogs(), react()],
   i18n: {
     defaultLocale: 'fr',
     locales: ['en', 'fr'],
