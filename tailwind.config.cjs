@@ -149,20 +149,20 @@ module.exports = {
           from: { opacity: 1 },
           to: { opacity: 0 }
         },
-        contentShow: {
-          from: { opacity: 0, transform: 'translate(-50%, -48%) scale(0.90)' },
-          to: { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }
+        responsiveMenuShow: {
+          from: { transform: 'translateX(100%)' },
+          to: { transform: 'translateX(0%)' }
         },
-        contentHide: {
-          from: { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
-          to: { opacity: 0, transform: 'translate(-50%, -48%) scale(0.90)' }
+        responsiveMenuHide: {
+          from: { transform: 'translateX(0%)' },
+          to: { transform: 'translateX(100%)' }
         }
       },
       animation: {
-        overlayShow: 'overlayShow 1050ms cubic-bezier(0.16, 1, 0.3, 1)',
-        contentShow: 'contentShow 1050ms cubic-bezier(0.16, 1, 0.3, 1)',
-        overlayHide: 'overlayHide 1050ms cubic-bezier(0.16, 1, 0.3, 1)',
-        contentHide: 'contentHide 1050ms cubic-bezier(0.16, 1, 0.3, 1)'
+        overlayShow: 'overlayShow .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)',
+        responsiveMenuShow: 'responsiveMenuShow .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)',
+        overlayHide: 'overlayHide .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)',
+        responsiveMenuHide: 'responsiveMenuHide .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)'
       }
     }
   },
