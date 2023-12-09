@@ -3,7 +3,7 @@ import Header from '../components/header/Header.astro'
 import '@fontsource-variable/mulish'
 import Seo from '../components/head/seo.astro'
 import LanguagePicker from '../components/theme/LanguagePicker.astro'
-import { ResponsiveCanva } from '../components/responsiveCanva'
+import { ResponsiveMenu } from '../components/ResponsiveMenu'
 
 interface Props {
   seo: string
@@ -39,7 +39,7 @@ const lang = Astro.currentLocale as string
     class="mx-auto bg-stone-50 px-4 py-6 font-mulish text-black md:container dark:bg-stone-900 dark:text-white"
   >
     <Header />
-    <ResponsiveCanva client:idle />
+    <ResponsiveMenu client:idle>Off Canvas Content</ResponsiveMenu>
     <slot />
     <footer class="mt-32">
       <LanguagePicker />
