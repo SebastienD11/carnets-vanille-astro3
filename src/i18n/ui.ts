@@ -11,27 +11,29 @@ export function useTranslations(lang: keyof typeof ui = defaultLocale) {
 
 export const ui = {
   en: {
-    'offCanvas.socialLinks.title': 'Follow me on:',
-    'index.recentsPost.title': 'Recent Posts',
-    'tag.grid.title': 'Tag: ',
     'category.grid.title': 'Category: ',
-    'post.relatedPost.title': 'Related Posts',
+    'index.recentsPost.title': 'Recent Posts',
+    'index.title': 'Welcome',
+    'offCanvas.socialLinks.title': 'Follow me on:',
     'post.comments.title': 'Comments',
+    'post.relatedPost.title': 'Related Posts',
     'socialLinks.facebook.alt': 'Follow me on Facebook',
-    'socialLinks.twitter.alt': 'Follow me on Twitter',
     'socialLinks.instagram.alt': 'Follow me on Instagram',
-    'socialLinks.pinterest.alt': 'Follow me on Pinterest'
+    'socialLinks.pinterest.alt': 'Follow me on Pinterest',
+    'socialLinks.twitter.alt': 'Follow me on Twitter',
+    'tag.grid.title': 'Tag: '
   },
   fr: {
-    'offCanvas.socialLinks.title': 'Suivez-moi sur :',
-    'index.recentsPost.title': 'Articles récents',
-    'tag.grid.title': 'Tag : ',
     'category.grid.title': 'Catégorie : ',
-    'post.relatedPost.title': 'Articles similaires',
+    'index.recentsPost.title': 'Articles récents',
+    'index.title': 'Bienvenue',
+    'offCanvas.socialLinks.title': 'Suivez-moi sur :',
     'post.comments.title': 'Commentaires',
+    'post.relatedPost.title': 'Articles similaires',
     'socialLinks.facebook.alt': 'Suivez-moi sur Facebook',
-    'socialLinks.twitter.alt': 'Suivez-moi sur Twitter',
     'socialLinks.instagram.alt': 'Suivez-moi sur Instagram',
-    'socialLinks.pinterest.alt': 'Suivez-moi sur Pinterest'
+    'socialLinks.pinterest.alt': 'Suivez-moi sur Pinterest',
+    'socialLinks.twitter.alt': 'Suivez-moi sur Twitter',
+    'tag.grid.title': 'Tag : '
   }
 } as const

@@ -4,8 +4,12 @@ import IndexPosts from '../../components/indexPosts.astro'
 import { getPostBySlug, getPosts, type Post } from '../../api/post'
 import { getSEObyUrl } from '../../api/yoast'
 import { POSTS_PER_PAGE } from '../../constant'
+import { getThemeOptions } from '../../api/options'
+import { useTranslations } from '../../i18n/ui'
 
 const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+const glaceOptions = await getThemeOptions(lang)
 const filters = `&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=1`
 const postsBySlug = await getPosts(lang, filters)
 let posts: Post[] = []
@@ -23,6 +27,18 @@ const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
 
 <Layout seo={seo}>
   <main>
+    <span
+      class="mb-2 block text-center text-3xl font-extrabold leading-tight md:text-4xl lg:text-4xl xl:text-5xl"
+      >{t('index.title')}</span
+    >
+    {
+      glaceOptions.home_hero_p && (
+        <div
+          class="prose prose-stone mx-auto mb-8 text-center text-black dark:prose-invert dark:text-white lg:mb-12"
+          set:html={glaceOptions.home_hero_p}
+        />
+      )
+    }
     <IndexPosts posts={posts} />
   </main>
 </Layout>
