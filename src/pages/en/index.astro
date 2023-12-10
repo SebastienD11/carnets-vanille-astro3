@@ -1,11 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import IndexPosts from '../../components/indexPosts.astro'
 import { getPostBySlug, getPosts, type Post } from '../../api/post'
 import { getSEObyUrl } from '../../api/yoast'
 import { POSTS_PER_PAGE } from '../../constant'
 import { getThemeOptions } from '../../api/options'
 import { useTranslations } from '../../i18n/ui'
+import LinkCard, { type Card } from '../../components/linkCard.astro'
+import Grid from '../../components/post/grid.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -26,19 +27,43 @@ const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
 ---
 
 <Layout seo={seo}>
-  <main>
+  <main class="flex flex-col gap-6 lg:gap-12">
     <span
-      class="mb-2 block text-center text-3xl font-extrabold leading-tight md:text-4xl lg:text-4xl xl:text-5xl"
-      >{t('index.title')}</span
+      class="block text-center text-3xl font-extrabold leading-tight md:text-4xl lg:text-4xl xl:text-5xl"
     >
+      {t('index.title')}
+    </span>
     {
       glaceOptions.home_hero_p && (
         <div
-          class="prose prose-stone mx-auto mb-8 text-center text-black dark:prose-invert dark:text-white lg:mb-12"
+          class="prose prose-stone mx-auto !max-w-4xl text-center dark:prose-invert"
           set:html={glaceOptions.home_hero_p}
         />
       )
     }
-    <IndexPosts posts={posts} />
+    {
+      glaceOptions.home_hero_blocs && (
+        <>
+          <div class="mb-12 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8 lg:gap-16 xl:gap-20">
+            {glaceOptions.home_hero_blocs.map((bloc: Card) => {
+              return <LinkCard card={bloc} />
+            })}
+          </div>
+        </>
+      )
+    }
+    {
+      posts.length > 0 && (
+        <>
+          <div class="flex flex-col items-center justify-center md:flex-row">
+            <i class="icon-todo mb-2 block text-4xl md:mb-0 md:mr-2" />
+            <h1 class="inline text-center text-2xl font-extrabold leading-tight lg:text-3xl xl:text-4xl">
+              {t('index.posts.title')}
+            </h1>
+          </div>
+          <Grid posts={posts} />
+        </>
+      )
+    }
   </main>
 </Layout>

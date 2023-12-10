@@ -1,0 +1,36 @@
+---
+type Props = {
+  card: Card
+}
+
+export type Card = {
+  bloc_img: {
+    url: string
+  }
+  bloc_icon: string
+  bloc_text: string
+  bloc_link: {
+    url: string
+    title: string
+    target: string
+  }
+}
+
+const { card }: Props = Astro.props
+---
+
+<a
+  href={card.bloc_link.url}
+  title={card.bloc_link.title}
+  target={card.bloc_link.target}
+  class="relative flex h-48 w-full items-end rounded-lg bg-cover bg-center bg-no-repeat p-4 transition before:absolute before:bottom-0 before:left-0 before:block before:h-1/3 before:w-full before:rounded-b-lg before:bg-gradient-to-t before:from-black before:to-transparent hover:-translate-y-1 hover:shadow-lg md:mb-0 md:h-auto lg:h-64"
+  style={`background-image:url(${card.bloc_img.url})`}
+>
+  <div class="relative text-white">
+    <i class={`icon-${card.bloc_icon} mb-2 block text-4xl text-white`}></i>
+    <div class="relative flex w-full items-center justify-between">
+      <span class="mr-4 text-lg font-bold text-white">{card.bloc_text}</span>
+      <i class="icon-arrow-right text-md text-white"></i>
+    </div>
+  </div>
+</a>

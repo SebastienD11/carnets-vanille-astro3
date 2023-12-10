@@ -12,8 +12,8 @@ export function useTranslations(lang: keyof typeof ui = defaultLocale) {
 export const ui = {
   en: {
     'category.grid.title': 'Category: ',
-    'index.recentsPost.title': 'Recent Posts',
     'index.title': 'Welcome',
+    'index.posts.title': "Carnets Vanille's latest posts",
     'offCanvas.socialLinks.title': 'Follow me on:',
     'post.comments.title': 'Comments',
     'post.relatedPost.title': 'Related Posts',
@@ -25,8 +25,8 @@ export const ui = {
   },
   fr: {
     'category.grid.title': 'Catégorie : ',
-    'index.recentsPost.title': 'Articles récents',
     'index.title': 'Bienvenue',
+    'index.posts.title': 'Mes derniers articles sur Carnets Vanille',
     'offCanvas.socialLinks.title': 'Suivez-moi sur :',
     'post.comments.title': 'Commentaires',
     'post.relatedPost.title': 'Articles similaires',

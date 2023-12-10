@@ -10,7 +10,7 @@ const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
 const t = useTranslations(lang)
 ---
 
-<div class="prose rounded-bl-3xl bg-vanille px-8 pb-8 pt-12 text-sm text-black">
+<div class="prose prose-stone rounded-bl-3xl bg-vanille px-8 pb-8 pt-12 text-sm">
   <div id="off-canvas-additionals-info" class="transition-max-h max-h-96 duration-300 ease-in-out">
     <div set:html={glaceOptions.introduction} />
     <div class="flex items-center gap-2">

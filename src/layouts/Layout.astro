@@ -38,12 +38,12 @@ const lang = Astro.currentLocale as string
   </head>
 
   <body
-    class="mx-auto bg-stone-50 px-4 py-6 font-mulish text-black md:container dark:bg-stone-900 dark:text-white"
+    class="mx-auto bg-stone-50 px-4 py-6 font-mulish md:container dark:bg-stone-900 dark:text-white"
   >
     <Header />
     <div
       id="responsive-menu-toggle"
-      class="fixed right-4 top-4 flex -translate-y-full flex-col items-center gap-4 rounded-full bg-vanille bg-vanille/80 px-1 py-2 text-black opacity-50 shadow-md backdrop-blur transition duration-300 md:hidden"
+      class="fixed right-4 top-4 flex -translate-y-full flex-col items-center gap-4 rounded-full bg-vanille bg-vanille/80 px-1 py-2 text-stone-900 opacity-50 shadow-md backdrop-blur transition duration-300 md:hidden"
     >
       <ResponsiveMenu client:idle>
         <ResponsiveMenuContent />
