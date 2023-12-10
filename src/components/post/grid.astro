@@ -2,10 +2,14 @@
 import Card from './card.astro'
 import type { Post } from '../../api/post'
 
-const { posts } = Astro.props
+type Props = {
+  posts: Post[]
+}
+
+const { posts }: Props = Astro.props
 ---
 
-<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
   {
     posts.map((post: Post) => {
       return <Card post={post} />

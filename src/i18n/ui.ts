@@ -11,10 +11,11 @@ export function useTranslations(lang: keyof typeof ui = defaultLocale) {
 
 export const ui = {
   en: {
+    'card.date.modified': 'Last modified on: ',
     'category.grid.title': 'Category: ',
-    'index.title': 'Welcome',
     'index.posts.title': "Carnets Vanille's latest posts",
-    'offCanvas.socialLinks.title': 'Follow me on:',
+    'index.title': 'Welcome',
+    'offCanvas.socialLinks.title': 'Follow me on ',
     'post.comments.title': 'Comments',
     'post.relatedPost.title': 'Related Posts',
     'socialLinks.facebook.alt': 'Follow me on Facebook',
@@ -24,9 +25,10 @@ export const ui = {
     'tag.grid.title': 'Tag: '
   },
   fr: {
+    'card.date.modified': 'Mise à jour le ',
     'category.grid.title': 'Catégorie : ',
-    'index.title': 'Bienvenue',
     'index.posts.title': 'Mes derniers articles sur Carnets Vanille',
+    'index.title': 'Bienvenue',
     'offCanvas.socialLinks.title': 'Suivez-moi sur :',
     'post.comments.title': 'Commentaires',
     'post.relatedPost.title': 'Articles similaires',
