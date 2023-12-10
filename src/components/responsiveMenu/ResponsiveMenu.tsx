@@ -29,7 +29,7 @@ const Drawer = ({ children, open, onOpenChange }: PropsWithChildren<DrawerProps>
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0" />
-        <Dialog.Content className="fixed right-0 top-0 h-screen w-screen bg-black/80 text-white backdrop-blur focus:outline-none data-[state=closed]:translate-x-full data-[state=open]:-translate-x-0 data-[state=closed]:animate-responsiveMenuHide data-[state=open]:animate-responsiveMenuShow">
+        <Dialog.Content className="fixed right-0 top-0 h-screen w-screen bg-black/90 text-white backdrop-blur focus:outline-none data-[state=closed]:translate-x-full data-[state=open]:-translate-x-0 data-[state=closed]:animate-responsiveMenuHide data-[state=open]:animate-responsiveMenuShow">
           {children}
           <Dialog.Close asChild>
             <button

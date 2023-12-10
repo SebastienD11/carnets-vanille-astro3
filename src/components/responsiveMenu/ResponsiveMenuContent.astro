@@ -1,12 +1,70 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n'
 import { getThemeOptions } from '../../api/options'
+import { primaryMenu } from '../../constant'
+import { useTranslations } from '../../i18n/ui'
 
 const lang = Astro.currentLocale as string
 const glaceOptions = await getThemeOptions(lang)
+const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
+const t = useTranslations(lang)
 ---
 
-<div>
-  <div class="rounded-bl-3xl bg-vanille px-8 pb-8 pt-12">
-    <div class="prose text-sm text-black" set:html={glaceOptions.introduction} />
+<div class="prose rounded-bl-3xl bg-vanille px-8 pb-8 pt-12 text-sm text-black">
+  <div id="off-canvas-additionals-info" class="transition-max-h max-h-96 duration-300 ease-in-out">
+    <div set:html={glaceOptions.introduction} />
+    <div class="flex items-center gap-2">
+      <span>{t('offCanvas.socialLinks.title')}</span>
+      <a href={glaceOptions.facebook} title={t('socialLinks.facebook.alt')}
+        ><i class="icon-facebook h-4 w-4"></i></a
+      >
+      <a href={glaceOptions.instagram} title={t('socialLinks.instagram.alt')}
+        ><i class="icon-instagram h-4 w-4"></i></a
+      >
+      <a href={glaceOptions.pinterest} title={t('socialLinks.pinterest.alt')}
+        ><i class="icon-pinterest h-4 w-4"></i></a
+      >
+      <a href={glaceOptions.twitter} title={t('socialLinks.twitter.alt')}
+        ><i class="icon-twitter h-4 w-4"></i></a
+      >
+    </div>
   </div>
 </div>
+<div id="off-canvas-bottom" class="h-full overflow-y-scroll p-8">
+  <div class="flex flex-col items-start gap-8">
+    {
+      primaryMenuForLang?.map((item) => {
+        return (
+          <a
+            href={getRelativeLocaleUrl(lang, item.slug)}
+            class="group relative flex gap-2 text-xl focus:outline-none"
+          >
+            <span class="absolute -right-2 -top-2 hidden h-2 w-2 rounded-full bg-vanille group-hover:block group-focus:block" />
+            <i class={`icon-${item.icon}`} />
+            {item.title}
+          </a>
+        )
+      })
+    }
+  </div>
+</div>
+
+<!-- <script is:inline>
+  let bottom = document.getElementById('off-canvas-bottom')
+  let additionalInfos = document.getElementById('off-canvas-additionals-info')
+  console.log('bottom', bottom)
+  if (bottom !== null) {
+    bottom.addEventListener('scroll', function () {
+      console.log('scroll')
+      if (bottom !== null && additionalInfos !== null) {
+        if (bottom.scrollTop >= 150) {
+          additionalInfos.classList.remove('max-h-96')
+          additionalInfos.classList.add('max-h-0', 'overflow-y-hidden')
+        } else if (bottom.scrollTop === 0) {
+          additionalInfos.classList.add('max-h-96')
+          additionalInfos.classList.remove('max-h-0', 'overflow-y-hidden')
+        }
+      }
+    })
+  }
+</script> -->

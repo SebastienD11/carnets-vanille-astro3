@@ -2,36 +2,10 @@
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import ThemeIcon from '../theme/Icon.astro'
 import Logo from './Logo.astro'
+import { primaryMenu } from '../../constant'
 
 // WP does not have a Menu Items built in. We could easily make it happen by adding doing some modification on the WP side through our theme or a plugin, but for now we'll hard code our menu.
 const lang = Astro.currentLocale as string
-const primaryMenu = [
-  {
-    lang: 'fr',
-    items: [
-      {
-        title: 'De Saint-Malo',
-        slug: 'saint-malo',
-        icon: 'triskell'
-      },
-      {
-        title: 'Au Québec',
-        slug: 'quebec',
-        icon: 'erable'
-      },
-      {
-        title: 'Et d’ailleurs',
-        slug: 'decouvrir-le-monde',
-        icon: 'plane'
-      }
-    ]
-  },
-  {
-    lang: 'en',
-    items: []
-  }
-]
-
 const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
 ---
 
