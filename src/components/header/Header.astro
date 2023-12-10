@@ -1,6 +1,5 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n'
-import ThemeIcon from '../theme/Icon.astro'
 import Logo from './Logo.astro'
 import { primaryMenu } from '../../constant'
 
@@ -9,7 +8,6 @@ const lang = Astro.currentLocale as string
 const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
 ---
 
-<ThemeIcon />
 <header class="mb-12 space-y-8">
   <div class="flex items-center justify-center">
     <Logo />

@@ -6,11 +6,10 @@ export const ResponsiveMenu = (props: PropsWithChildren) => {
 
   return (
     <>
-      <button
-        className="blle fixed bottom-6 left-1/2 aspect-square -translate-x-1/2 rounded-full bg-vanille/80 p-2 font-bold text-white shadow-md backdrop-blur md:hidden"
-        onClick={() => setOpen(true)}
-      >
-        Menu
+      <button className="p-2 text-sm font-bold" onClick={() => setOpen(true)}>
+        M<br />
+        E<br />
+        N<br />U
       </button>
       <Drawer open={open} onOpenChange={setOpen}>
         {props.children}
