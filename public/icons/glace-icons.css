@@ -2,11 +2,11 @@
   font-family: 'glace';
   src: url('icons/font/glace.eot?25993579');
   src:
-    url('icons/font/glace.eot?25993579#iefix') format('embedded-opentype'),
-    url('icons/font/glace.woff2?25993579') format('woff2'),
-    url('icons/font/glace.woff?25993579') format('woff'),
-    url('icons/font/glace.ttf?25993579') format('truetype'),
-    url('icons/font/glace.svg?25993579#glace') format('svg');
+    url('./font/glace.eot?25993579#iefix') format('embedded-opentype'),
+    url('./font/glace.woff2?25993579') format('woff2'),
+    url('./font/glace.woff?25993579') format('woff'),
+    url('./font/glace.ttf?25993579') format('truetype'),
+    url('./font/glace.svg?25993579#glace') format('svg');
   font-weight: normal;
   font-style: normal;
 }
