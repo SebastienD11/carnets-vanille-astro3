@@ -7,6 +7,9 @@ import { ResponsiveMenu } from '../components/responsiveMenu/ResponsiveMenu'
 import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
 import ToggleThemeIcon from '../components/theme/Icon.astro'
 
+import '../styles/glace-icons.css'
+import '../styles/custom.css'
+
 interface Props {
   seo: string
 }
@@ -33,8 +36,6 @@ const lang = Astro.currentLocale as string
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <!-- CSS -->
-    <link rel="stylesheet" href="/icons/glace.css" />
   </head>
 
   <body

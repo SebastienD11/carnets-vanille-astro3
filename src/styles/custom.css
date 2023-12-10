@@ -1,0 +1,23 @@
+:root {
+  --line-yellow: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='%23fc0' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  --line-yellow-dotted: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='%23fc0' stroke-width='2' stroke-dasharray='2 5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  --line-dark: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='hsl(192, 17%, 35%)' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  --line-dark-dotted: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='hsl(192, 17%, 35%)' stroke-width='2' stroke-dasharray='2 5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  --line-white: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='hsl(0, 0%, 98%)' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  --line-white-dotted: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='hsl(0, 0%, 98%)' stroke-width='2' stroke-dasharray='2 5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/**
+    * Link
+  */
+
+.prose > *:not(.not-prose) a {
+  color: inherit !important;
+  background: var(--line-yellow) bottom left/100% 0.3em repeat-x;
+  text-decoration: none !important;
+  padding-bottom: 0.3em;
+}
+
+.prose > *:not(.not-prose) a:hover {
+  background: var(--line-yellow-dotted) bottom left/100% 0.3em repeat-x;
+}
