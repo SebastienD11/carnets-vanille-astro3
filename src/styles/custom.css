@@ -9,7 +9,7 @@
 
 /**
     * Link
-  */
+*/
 
 .prose > *:not(.not-prose) a {
   color: inherit !important;
@@ -20,4 +20,12 @@
 
 .prose > *:not(.not-prose) a:hover {
   background: var(--line-yellow-dotted) bottom left/100% 0.3em repeat-x;
+}
+
+/**
+    * Pre
+*/
+
+.prose :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply block rounded-md border-2 border-vanille/5 bg-vanille/50 p-3 font-sans text-inherit dark:bg-stone-50 dark:text-stone-900;
 }

@@ -8,7 +8,7 @@ const tag: Tag = Astro.props.tag
 ---
 
 <a
-  class="rounded bg-vanille p-2 py-1 text-sm text-black"
+  class="rounded-full bg-vanille px-4 py-1 text-sm text-black transition hover:-translate-y-1 hover:shadow-lg"
   href={getRelativeLocaleUrl(lang, '/tag/' + tag.slug)}
 >
   {tag.name}

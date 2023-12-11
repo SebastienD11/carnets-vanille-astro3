@@ -21,61 +21,61 @@ const post: Post = Astro.props.node
 const comments = await getCommentsForPost(post.id, lang)
 ---
 
-<div class="mb-12 space-y-2">
-  <h1 class="text-center text-2xl">{post.title.rendered}</h1>
+<div class="flex flex-col gap-8">
+  <div
+    class="relative mx-auto flex aspect-video w-full max-w-screen-md flex-col items-center justify-center gap-4 rounded-lg bg-cover bg-center bg-no-repeat p-12"
+    style={`background-image:url('${post.featured_media_data[0]}')`}
+  >
+    <!-- {
+    post.featured_media_data[0] && (
+      <Image
+        src={post.featured_media_data[0]}
+        alt={
+          post.featured_media_data['alt_text']
+            ? post.featured_media_data['alt_text']
+            : post.title.rendered
+        }
+        width={post.featured_media_data[1]}
+        widths={[330, 450, 620, 730]}
+        sizes={`(max-width: 360px) 330, (max-width: 480px) 450px, (max-width: 1024px) 730px, 620px`}
+        loading={'eager'}
+        height={post.featured_media_data[2]}
+        class="absolute mx-auto mb-12 h-full w-auto rounded lg:max-w-prose"
+      />
+    )
+  } -->
+    <h1
+      class="inline-block text-center text-xl font-extrabold leading-tight text-white drop-shadow-lg md:text-2xl lg:text-3xl xl:text-4xl"
+    >
+      {post.title.rendered}
+    </h1>
 
-  <p class="text-center text-sm italic">
-    <FormattedDate date={post.date} />
-  </p>
-  <!-- 
-    Display tags and categories links if post has terms
-    ['wp:term'][1] refers to tag 
-  -->
-  <div class="flex items-center justify-center gap-4">
-    {post._embedded['wp:term'][1]?.map((tag: TagType) => <BadgeTag tag={tag} />)}
-    {
-      post._embedded['wp:term'][0]?.map((category: CategoryType) => (
-        <BadgeCategory category={category} />
-      ))
-    }
+    <p class="text-center text-sm italic text-white">
+      <FormattedDate date={post.date} />
+    </p>
   </div>
-</div>
 
-{
-  post.featured_media_data[0] && (
-    <Image
-      src={post.featured_media_data[0]}
-      alt={
-        post.featured_media_data['alt_text']
-          ? post.featured_media_data['alt_text']
-          : post.title.rendered
-      }
-      width={post.featured_media_data[1]}
-      widths={[330, 450, 620, 730]}
-      sizes={`(max-width: 360px) 330, (max-width: 480px) 450px, (max-width: 1024px) 730px, 620px`}
-      loading={'eager'}
-      height={post.featured_media_data[2]}
-      class="mx-auto mb-12 h-auto max-w-full rounded lg:max-w-prose"
-    />
-  )
-}
+  <div class="flex flex-wrap items-center justify-center gap-4">
+    {post._embedded['wp:term'][1]?.map((tag: TagType) => <BadgeTag tag={tag} />)}
+  </div>
 
-<article
-  class="prose prose-stone mx-auto dark:prose-invert"
-  set:html={parseHtml(post.content.rendered)}
-/>
+  <article
+    class="prose prose-stone mx-auto dark:prose-invert"
+    set:html={parseHtml(post.content.rendered)}
+  />
 
-{
-  post.acf.related_posts.length > 0 && (
-    <div class="prose prose-stone mx-auto my-12 dark:prose-invert">
-      <h3 class="mb-8 text-center">{t('post.relatedPost.title')}</h3>
-      <div class="grid grid-cols-3 gap-8">
-        {post.acf.related_posts.map((postId) => (
-          <RelatedPost postId={postId} />
-        ))}
+  {
+    post.acf.related_posts.length > 0 && (
+      <div class="prose prose-stone mx-auto my-12 dark:prose-invert">
+        <h3 class="mb-8 text-center">{t('post.relatedPost.title')}</h3>
+        <div class="grid grid-cols-3 gap-8">
+          {post.acf.related_posts.map((postId) => (
+            <RelatedPost postId={postId} />
+          ))}
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
 
-<CommentList comments={comments} />
+  <CommentList comments={comments} />
+</div>
