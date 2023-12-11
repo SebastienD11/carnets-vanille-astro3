@@ -4,7 +4,7 @@
 
 <div
   id="responsive-menu"
-  class="fixed right-0 top-0 z-40 h-screen w-full translate-x-full overflow-y-auto bg-black/90 text-white backdrop-blur transition-transform"
+  class="fixed right-0 top-0 z-40 h-screen w-full translate-x-full overflow-y-auto bg-black/90 text-white backdrop-blur data-[state=closed]:animate-responsiveMenuHide data-[state=open]:animate-responsiveMenuShow"
   tabindex="-1"
   aria-labelledby="responsive-menu"
 >
@@ -27,8 +27,12 @@
     edge: false,
     edgeOffset: '',
     backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
-    onHide: () => {},
-    onShow: () => {},
+    onHide: () => {
+      $targetEl.setAttribute('data-state', 'closed')
+    },
+    onShow: () => {
+      $targetEl.setAttribute('data-state', 'open')
+    },
     onToggle: () => {}
   }
 
