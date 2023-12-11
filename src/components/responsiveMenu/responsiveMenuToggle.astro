@@ -1,0 +1,28 @@
+---
+import ToggleThemeIcon from '../../components/theme/Icon.astro'
+---
+
+<div
+  id="responsive-menu-toggle"
+  class="fixed right-4 top-4 z-10 flex -translate-y-full flex-col items-center gap-4 rounded-full bg-vanille bg-vanille/80 px-1 py-2 text-stone-900 opacity-50 shadow-md backdrop-blur transition duration-300 md:hidden"
+>
+  <button type="button" toggle-drawer class="flex appearance-none flex-col items-center font-bold">
+    <span>M</span>
+    <span>E</span>
+    <span>N</span>
+    <span>U</span>
+  </button>
+  <ToggleThemeIcon color="text-dark" />
+</div>
+<script is:inline>
+  window.addEventListener('scroll', function () {
+    let responsiveMenuToggle = document.getElementById('responsive-menu-toggle')
+    if (window.scrollY >= 50) {
+      responsiveMenuToggle.classList.add('opacity-100', 'translate-y-0')
+      responsiveMenuToggle.classList.remove('opacity-50', '-translate-y-full')
+    } else {
+      responsiveMenuToggle.classList.remove('opacity-100', 'translate-y-0')
+      responsiveMenuToggle.classList.add('opacity-50', '-translate-y-full')
+    }
+  })
+</script>

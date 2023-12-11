@@ -1,0 +1,54 @@
+---
+
+---
+
+<div
+  id="responsive-menu"
+  class="fixed right-0 top-0 z-40 h-screen w-full translate-x-full overflow-y-auto bg-black/90 text-white backdrop-blur transition-transform"
+  tabindex="-1"
+  aria-labelledby="responsive-menu"
+>
+  <slot />
+</div>
+
+<script>
+  import { Drawer } from 'flowbite'
+  import type { DrawerOptions, DrawerInterface } from 'flowbite'
+  import type { InstanceOptions } from 'flowbite'
+
+  // set the drawer menu element
+  const $targetEl: HTMLElement = document.getElementById('responsive-menu')
+
+  // options with default values
+  const options: DrawerOptions = {
+    placement: 'right',
+    backdrop: true,
+    bodyScrolling: false,
+    edge: false,
+    edgeOffset: '',
+    backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
+    onHide: () => {},
+    onShow: () => {},
+    onToggle: () => {}
+  }
+
+  // instance options object
+  const instanceOptions: InstanceOptions = {
+    id: 'responsive-menu',
+    override: true
+  }
+
+  /*
+   * $targetEl (required)
+   * options (optional)
+   * instanceOptions (optional)
+   */
+  const drawer: DrawerInterface = new Drawer($targetEl, options, instanceOptions)
+
+  // Event listener to toggle the drawer
+  document.querySelectorAll('[toggle-drawer]').forEach((el) => {
+    el.addEventListener('click', () => {
+      drawer.toggle()
+    })
+  })
+</script>
