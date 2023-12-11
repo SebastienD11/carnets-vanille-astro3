@@ -6,7 +6,7 @@ export const ResponsiveMenu = (props: PropsWithChildren) => {
 
   return (
     <>
-      <button className="p-2 text-sm font-bold" onClick={() => setOpen(true)}>
+      <button className="relative p-2 text-sm font-bold" onClick={() => setOpen(true)}>
         M<br />
         E<br />
         N<br />U
@@ -27,8 +27,8 @@ const Drawer = ({ children, open, onOpenChange }: PropsWithChildren<DrawerProps>
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0" />
-        <Dialog.Content className="fixed right-0 top-0 h-screen w-screen bg-black/90 text-white backdrop-blur focus:outline-none data-[state=closed]:translate-x-full data-[state=open]:-translate-x-0 data-[state=closed]:animate-responsiveMenuHide data-[state=open]:animate-responsiveMenuShow">
+        <Dialog.Overlay className="fixed inset-0 z-20" />
+        <Dialog.Content className="fixed right-0 top-0 z-20 h-screen w-screen bg-black/90 text-white backdrop-blur focus:outline-none data-[state=closed]:translate-x-full data-[state=open]:-translate-x-0 data-[state=closed]:animate-responsiveMenuHide data-[state=open]:animate-responsiveMenuShow">
           {children}
           <Dialog.Close asChild>
             <button
