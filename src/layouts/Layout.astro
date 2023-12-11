@@ -3,11 +3,12 @@ import Header from '../components/header/Header.astro'
 import '@fontsource-variable/mulish'
 import Seo from '../components/head/seo.astro'
 import LanguagePicker from '../components/theme/LanguagePicker.astro'
-import { ResponsiveMenu } from '../components/responsiveMenu/ResponsiveMenu'
-import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
-import ToggleThemeIcon from '../components/theme/Icon.astro'
 
 import '../styles/custom.css'
+import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDrawer.astro'
+import ResponsiveMenuContent from '../components/responsiveMenu/responsiveMenuContent.astro'
+import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
+import ToggleThemeIcon from '../components/theme/Icon.astro'
 
 interface Props {
   seo: string
@@ -43,27 +44,11 @@ const lang = Astro.currentLocale as string
     class="mx-auto bg-stone-50 px-4 py-6 font-mulish md:container dark:bg-stone-900 dark:text-white"
   >
     <Header />
-    <div
-      id="responsive-menu-toggle"
-      class="fixed right-4 top-4 z-10 flex -translate-y-full flex-col items-center gap-4 rounded-full bg-vanille bg-vanille/80 px-1 py-2 text-stone-900 opacity-50 shadow-md backdrop-blur transition duration-300 md:hidden"
-    >
-      <ResponsiveMenu client:idle>
-        <ResponsiveMenuContent />
-      </ResponsiveMenu>
-      <ToggleThemeIcon color="text-dark" />
-    </div>
-    <script is:inline>
-      window.addEventListener('scroll', function () {
-        let responsiveMenuToggle = document.getElementById('responsive-menu-toggle')
-        if (window.scrollY >= 50) {
-          responsiveMenuToggle.classList.add('opacity-100', 'translate-y-0')
-          responsiveMenuToggle.classList.remove('opacity-50', '-translate-y-full')
-        } else {
-          responsiveMenuToggle.classList.remove('opacity-100', 'translate-y-0')
-          responsiveMenuToggle.classList.add('opacity-50', '-translate-y-full')
-        }
-      })
-    </script>
+    <ResponsiveMenuToggle />
+    <ResponsiveMenuDrawer>
+      <ResponsiveMenuContent />
+    </ResponsiveMenuDrawer>
+
     <slot />
     <footer class="mt-32 flex flex-col items-center gap-4">
       <LanguagePicker />
