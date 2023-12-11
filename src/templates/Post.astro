@@ -14,6 +14,7 @@ import { useTranslations } from '../i18n/ui'
 import { getCommentsForPost } from '../api/comment'
 import FormattedDate from '../components/formatedDate.astro'
 import RelatedPost from '../components/post/relatedPost.astro'
+import SectionTitle from '../components/ui/sectionTitle.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -66,9 +67,11 @@ const comments = await getCommentsForPost(post.id, lang)
 
   {
     post.acf.related_posts.length > 0 && (
-      <div class="prose prose-stone mx-auto my-12 dark:prose-invert">
-        <h3 class="mb-8 text-center">{t('post.relatedPost.title')}</h3>
-        <div class="grid grid-cols-3 gap-8">
+      <div class="mx-auto max-w-screen-md">
+        <SectionTitle as="h3" className="mb-8 text-center">
+          {t('post.relatedPost.title')}
+        </SectionTitle>
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {post.acf.related_posts.map((postId) => (
             <RelatedPost postId={postId} />
           ))}

@@ -1,0 +1,10 @@
+---
+const { as, className } = Astro.props
+const HeadingTag = as || 'span'
+---
+
+<HeadingTag
+  class={`${className} block text-xl font-extrabold leading-tight lg:text-2xl xl:text-3xl`}
+>
+  <slot />
+</HeadingTag>
