@@ -67,9 +67,11 @@ const comments = await getCommentsForPost(post.id, lang)
   {
     post.acf.related_posts.length > 0 && (
       <div class="mx-auto max-w-screen-md">
-        <SectionTitle as="h3" className="mb-8 text-center">
-          {t('post.relatedPost.title')}
-        </SectionTitle>
+        <SectionTitle
+          as="h3"
+          className="mb-8 text-center"
+          title={t('post.relatedPost.title')}
+        ></SectionTitle>
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {post.acf.related_posts.map((postId) => (
             <RelatedPost postId={postId} />

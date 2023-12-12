@@ -13,9 +13,12 @@ const t = useTranslations(lang)
   {
     comments && (
       <div class="space-y-4">
-        <SectionTitle as="h3" className="mb-8 text-center">
-          {t('post.comments.title')}
-        </SectionTitle>
+        <SectionTitle
+          as="h3"
+          className="mb-8"
+          title={`${comments.length} ${t('post.comments.title')}`}
+          subtitle={t('post.comments.subtitle')}
+        />
         {comments.map((comment: CommentType) => (
           <Fragment>
             <Comment comment={comment} />
