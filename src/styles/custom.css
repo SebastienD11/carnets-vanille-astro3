@@ -8,6 +8,14 @@
 }
 
 /**
+    * Prose
+*/
+
+.prose-global {
+  @apply prose prose-stone dark:prose-invert;
+}
+
+/**
     * Link
 */
 

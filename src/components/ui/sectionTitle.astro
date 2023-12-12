@@ -3,7 +3,11 @@ const { as, title, subtitle, className } = Astro.props
 const HeadingTag = as || 'span'
 ---
 
-<div class={`${className} text-center flex items-center flex-col justify-center gap-2`}>
+<div
+  class={`mb-8 text-center flex items-center flex-col justify-center gap-2 ${
+    className ? className : ''
+  }`}
+>
   {
     title && (
       <HeadingTag class="block text-xl font-extrabold leading-tight lg:text-2xl xl:text-3xl">

@@ -1,13 +1,59 @@
 ---
+import { decode } from 'html-entities'
+import { Image } from 'astro:assets'
+import { ADMIN_USER_ID } from '../../constant'
+import { type Comment } from '../../api/comment'
 import FormattedDate from '../formatedDate.astro'
+import authorImage from '../../images/sarah-96x96.png'
+import userImage from '../../images/avatar-96x96.png'
 
-const { comment, className } = Astro.props
+type Props = {
+  comment: Comment
+  className?: string
+}
+
+const { comment, className }: Props = Astro.props
 ---
 
-<div class={`flex flex-col gap-2 rounded border p-2 ${className}`}>
-  <div set:html={comment.content.rendered} />
-  <span class="font-medium">{comment.author_name}</span>
-  <span class="font-medium">
-    <FormattedDate date={comment.date} />
-  </span>
+<div class={`flex items-start justify-start gap-4 ${className}`}>
+  {
+    comment.author === ADMIN_USER_ID ? (
+      <Image
+        src={authorImage}
+        alt="Sarah"
+        width={authorImage.width / 2}
+        densities={[1.5, 2]}
+        loading="lazy"
+      />
+    ) : (
+      <Image
+        src={userImage}
+        alt={comment.author_name}
+        width={userImage.width / 2}
+        densities={[1.5, 2]}
+        loading="lazy"
+      />
+    )
+  }
+  <div class={`flex flex-col gap-2`}>
+    <div class="flex flex-col items-start justify-start gap-1">
+      {
+        comment.author_url ? (
+          <a
+            href={comment.author_url}
+            target="_blank"
+            class="relative grow-0 font-bold after:absolute after:-bottom-px after:left-0 after:block after:w-full after:border after:border-dashed after:border-stone-200"
+            rel="external nofollow ugc"
+          >
+            {decode(comment.author_name)}
+          </a>
+        ) : (
+          <span class="font-bold">{decode(comment.author_name)}</span>
+        )
+      }
+
+      <FormattedDate date={comment.date} className="text-sm text-stone-500" />
+    </div>
+    <div class="prose-global prose-p:!my-0" set:html={comment.content.rendered} />
+  </div>
 </div>

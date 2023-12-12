@@ -29,11 +29,7 @@ await Promise.all(
 <div class="flex flex-col gap-8">
   <div>
     <PageTitle className="mb-2">{tag.name}</PageTitle>
-    {
-      tag.description && (
-        <div class="prose prose-stone dark:prose-invert" set:html={tag.description} />
-      )
-    }
+    {tag.description && <div class="prose-global" set:html={tag.description} />}
   </div>
   <Grid posts={posts} />
   <Pagination

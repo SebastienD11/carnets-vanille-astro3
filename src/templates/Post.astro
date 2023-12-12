@@ -20,7 +20,7 @@ const post: Post = Astro.props.node
 const comments = await getCommentsForPost(post.id, lang)
 ---
 
-<div class="flex flex-col gap-8">
+<div class="flex flex-col gap-12">
   <div class="relative mx-auto w-full max-w-screen-md">
     {
       post.featured_media_data[0] && (
@@ -67,11 +67,7 @@ const comments = await getCommentsForPost(post.id, lang)
   {
     post.acf.related_posts.length > 0 && (
       <div class="mx-auto max-w-screen-md">
-        <SectionTitle
-          as="h3"
-          className="mb-8 text-center"
-          title={t('post.relatedPost.title')}
-        ></SectionTitle>
+        <SectionTitle as="h3" title={t('post.relatedPost.title')} />
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {post.acf.related_posts.map((postId) => (
             <RelatedPost postId={postId} />
