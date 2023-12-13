@@ -4,6 +4,7 @@ import { Image } from 'astro:assets'
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import type { Post } from '../../api/post'
 import { useTranslations } from '../../i18n/ui'
+import { decode } from 'html-entities'
 
 type Props = {
   post: Post
@@ -44,7 +45,7 @@ const { post, isRelatedPost }: Props = Astro.props
         {t('card.date.modified')}
         <FormattedDate date={post.modified} />
       </p>
-      <h3 class="text-lg font-bold md:text-xl">{post.title.rendered}</h3>
+      <h3 class="text-lg font-bold md:text-xl">{decode(post.title.rendered)}</h3>
       {post.excerpt.rendered && <div class="prose-global" set:html={post.excerpt.rendered} />}
     </div>
   </a>

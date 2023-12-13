@@ -13,6 +13,7 @@ import { getCommentsForPost } from '../api/comment'
 import FormattedDate from '../components/formatedDate.astro'
 import RelatedPost from '../components/post/relatedPost.astro'
 import SectionTitle from '../components/ui/sectionTitle.astro'
+import { decode } from 'html-entities'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -46,7 +47,7 @@ const comments = await getCommentsForPost(post.id, lang)
       <h1
         class="inline-block text-center text-xl font-extrabold leading-tight text-white drop-shadow-lg md:text-2xl lg:text-3xl xl:text-4xl"
       >
-        {post.title.rendered}
+        {decode(post.title.rendered)}
       </h1>
 
       <p class="text-center text-sm italic text-white">
