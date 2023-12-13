@@ -1,0 +1,27 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { primaryMenu } from '../../constant'
+
+// WP does not have a Menu Items built in. We could easily make it happen by adding doing some modification on the WP side through our theme or a plugin, but for now we'll hard code our menu.
+const lang = Astro.currentLocale as string
+const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
+---
+
+{
+  primaryMenuForLang && primaryMenuForLang?.length > 0 && (
+    <div class="hidden items-center justify-center gap-8 md:flex">
+      {primaryMenuForLang?.map((item) => {
+        return (
+          <a
+            href={getRelativeLocaleUrl(lang, item.slug)}
+            class="group relative flex gap-1 text-lg font-bold uppercase"
+          >
+            <span class="absolute -right-2 -top-2 hidden h-2 w-2 rounded-full bg-vanille group-hover:block" />
+            <i class={`icon-${item.icon}`} />
+            {item.title}
+          </a>
+        )
+      })}
+    </div>
+  )
+}

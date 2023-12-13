@@ -1,0 +1,11 @@
+---
+import FooterMenu from './FooterMenu.astro'
+import ToggleThemeIcon from '../../components/theme/Icon.astro'
+import LanguagePicker from '../../components/theme/LanguagePicker.astro'
+---
+
+<footer class="mt-32 flex flex-col items-center gap-4">
+  <FooterMenu />
+  <LanguagePicker />
+  <ToggleThemeIcon color="text-black dark:text-white" />
+</footer>

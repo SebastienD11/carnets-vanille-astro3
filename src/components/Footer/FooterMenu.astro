@@ -1,0 +1,25 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { footerMenu } from '../../constant'
+
+// WP does not have a Menu Items built in. We could easily make it happen by adding doing some modification on the WP side through our theme or a plugin, but for now we'll hard code our menu.
+const lang = Astro.currentLocale as string
+const footerMenuForLang = footerMenu.find((item) => item.lang === lang)?.items
+---
+
+{
+  footerMenuForLang && footerMenuForLang.length > 0 && (
+    <div class="flex items-center justify-center gap-3">
+      {footerMenuForLang?.map((item) => {
+        return (
+          <a
+            href={item.slug ? getRelativeLocaleUrl(lang, item.slug) : item.url}
+            class="text-sm text-stone-600 hover:underline dark:text-stone-300"
+          >
+            {item.title}
+          </a>
+        )
+      })}
+    </div>
+  )
+}

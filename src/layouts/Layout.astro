@@ -2,13 +2,12 @@
 import Header from '../components/header/Header.astro'
 import '@fontsource-variable/mulish'
 import Seo from '../components/head/seo.astro'
-import LanguagePicker from '../components/theme/LanguagePicker.astro'
 
 import '../styles/custom.css'
 import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDrawer.astro'
 import ResponsiveMenuContent from '../components/responsiveMenu/responsiveMenuContent.astro'
 import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
-import ToggleThemeIcon from '../components/theme/Icon.astro'
+import Footer from '../components/Footer/Footer.astro'
 
 interface Props {
   seo: string
@@ -48,12 +47,8 @@ const lang = Astro.currentLocale as string
     <ResponsiveMenuDrawer>
       <ResponsiveMenuContent />
     </ResponsiveMenuDrawer>
-
     <slot />
-    <footer class="mt-32 flex flex-col items-center gap-4">
-      <LanguagePicker />
-      <ToggleThemeIcon color="text-black dark:text-white" />
-    </footer>
+    <Footer />
 
     <!-- Light/Dark Toggle -->
     <script is:inline>
