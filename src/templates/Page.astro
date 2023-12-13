@@ -4,10 +4,15 @@ import '@wordpress/block-library/build-style/style.css'
 import '@wordpress/block-library/build-style/theme.css'
 import type { Page } from '../api/page'
 import { parseHtml } from '../utils/parser'
+import { decode } from 'html-entities'
 
 const page: Page = Astro.props.node
 ---
 
-<h1>{page.title.rendered}</h1>
+<div class="mx-auto mb-12 max-w-prose text-base">
+  <h1 class="text-xl font-extrabold leading-tight md:text-2xl lg:text-3xl xl:text-4xl">
+    {page.title.rendered}
+  </h1>
+</div>
 
 <article class="prose prose-stone mx-auto" set:html={parseHtml(page.content.rendered)} />
