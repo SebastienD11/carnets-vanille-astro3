@@ -32,7 +32,7 @@
   >
 </form>
 
-<script>
+<script is:inline>
   async function mailerlite() {
     const response = await fetch('/api/mailerlite')
     const mailerlite = await response.json()
