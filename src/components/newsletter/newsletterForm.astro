@@ -34,7 +34,9 @@
 
 <script is:inline>
   async function mailerlite() {
-    const response = await fetch('/api/mailerlite')
+    const response = await fetch('/api/mailerlite', {
+      method: 'GET'
+    })
     const mailerlite = await response.json()
     console.log(mailerlite)
   }
