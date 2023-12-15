@@ -1,4 +1,6 @@
 ---
+export const prerender = true
+
 import Layout from '../layouts/Layout.astro'
 import { getPostBySlug, getPosts, type Post } from '../api/post'
 import { getSEObyUrl } from '../api/yoast'
@@ -7,6 +9,7 @@ import { getThemeOptions } from '../api/options'
 import { useTranslations } from '../i18n/ui'
 import LinkCard, { type Card } from '../components/linkCard.astro'
 import Grid from '../components/post/grid.astro'
+import NewsletterForm from '../components/newsletter/newsletterForm.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -65,5 +68,6 @@ const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
         </>
       )
     }
+    <NewsletterForm />
   </main>
 </Layout>
