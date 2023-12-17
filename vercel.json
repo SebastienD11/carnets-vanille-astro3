@@ -12,15 +12,10 @@
         {
           "key": "X-Robots-Tag",
           "value": "noindex"
-        }
-      ]
-    },
-    {
-      "source": "/",
-      "headers": [
+        },
         {
           "key": "x-vercel-skip-toolbar",
-          "value": 0
+          "value": "0"
         }
       ]
     }
