@@ -16,10 +16,8 @@
   import type { DrawerOptions, DrawerInterface } from 'flowbite'
   import type { InstanceOptions } from 'flowbite'
 
-  // set the drawer menu element
   const $targetEl: HTMLElement = document.getElementById('responsive-menu')
 
-  // options with default values
   const options: DrawerOptions = {
     placement: 'right',
     backdrop: true,
@@ -36,17 +34,11 @@
     onToggle: () => {}
   }
 
-  // instance options object
   const instanceOptions: InstanceOptions = {
     id: 'responsive-menu',
     override: true
   }
 
-  /*
-   * $targetEl (required)
-   * options (optional)
-   * instanceOptions (optional)
-   */
   const drawer: DrawerInterface = new Drawer($targetEl, options, instanceOptions)
 
   // Event listener to toggle the drawer

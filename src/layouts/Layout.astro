@@ -8,6 +8,7 @@ import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDra
 import ResponsiveMenuContent from '../components/responsiveMenu/responsiveMenuContent.astro'
 import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
 import Footer from '../components/Footer/Footer.astro'
+import NewsletterModal from '../components/newsletter/newsletterModal.astro'
 
 interface Props {
   seo: string
@@ -49,6 +50,7 @@ const lang = Astro.currentLocale as string
     </ResponsiveMenuDrawer>
     <slot />
     <Footer />
+    <NewsletterModal />
 
     <!-- Light/Dark Toggle -->
     <script is:inline>

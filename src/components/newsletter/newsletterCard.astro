@@ -1,0 +1,31 @@
+---
+import { useTranslations } from '../../i18n/ui'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+---
+
+<div
+  class="group flex flex-col items-start justify-between rounded-lg bg-vanille p-4 text-black md:p-8"
+>
+  <img
+    loading="lazy"
+    src="/icon-heart.svg"
+    alt="Inscription a la newsletter"
+    width="110"
+    height="82"
+    class="w-16 md:w-auto"
+  />
+  <p class="mt-4 text-base md:text-xl">
+    {t('newsletter.card.title')}
+  </p>
+  <p class="mt-2 text-base md:text-xl">
+    {t('newsletter.card.subtitle')}
+  </p>
+  <button
+    toggle-newsletter-modal
+    class="mt-4 rounded-lg border-2 border-stone-900 px-8 py-2 text-base font-bold transition duration-300 ease-in-out hover:-translate-y-1 hover:bg-stone-900 hover:text-stone-50 hover:no-underline hover:shadow-lg md:py-4 md:text-xl lg:text-2xl"
+  >
+    {t('newsletter.card.label')}
+  </button>
+</div>

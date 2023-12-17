@@ -15,29 +15,42 @@ export const ui = {
     'category.grid.title': 'Category: ',
     'index.posts.title': "Carnets Vanille's latest posts",
     'index.title': 'Welcome',
+    'newsletter.card.label': 'Subscribe now!',
+    'newsletter.card.subtitle': 'I regularly send out my good tips and discoveries!',
+    'newsletter.card.title': 'Would you like to receive information about Saint-Malo or Quebec?',
     'offCanvas.socialLinks.title': 'Follow me on ',
-    'post.comments.title': 'Comments',
     'post.comments.subtitle': "Leave me a comment, i'll reply as soon as possible!",
+    'post.comments.title': 'Comments',
     'post.relatedPost.title': 'Related Posts',
     'socialLinks.facebook.alt': 'Follow me on Facebook',
     'socialLinks.instagram.alt': 'Follow me on Instagram',
     'socialLinks.pinterest.alt': 'Follow me on Pinterest',
     'socialLinks.twitter.alt': 'Follow me on Twitter',
-    'tag.grid.title': 'Tag: '
+    'tag.grid.title': 'Tag: ',
+    'newsletter.header.title': 'Subscribe to my newsletters!',
+    'newsletter.header.subtitle':
+      'Are you interested in Brittany?<br />Or do you want to find out more about Quebec?<br />Maybe both? The choice is yours!'
   },
   fr: {
     'card.date.modified': 'Mise à jour le ',
     'category.grid.title': 'Catégorie : ',
     'index.posts.title': 'Mes derniers articles sur Carnets Vanille',
     'index.title': 'Bienvenue',
+    'newsletter.card.label': 'Abonnez-vous !',
+    'newsletter.card.subtitle': 'J’envoie régulièrement mes bons plans et découvertes !',
+    'newsletter.card.title':
+      'Vous souhaitez recevoir des informations sur Saint-Malo ou sur le Québec ?',
     'offCanvas.socialLinks.title': 'Suivez-moi sur :',
-    'post.comments.title': 'Commentaires',
     'post.comments.subtitle': 'N’hésitez pas à me laisser un commentaire !',
+    'post.comments.title': 'Commentaires',
     'post.relatedPost.title': 'Articles similaires',
     'socialLinks.facebook.alt': 'Suivez-moi sur Facebook',
     'socialLinks.instagram.alt': 'Suivez-moi sur Instagram',
     'socialLinks.pinterest.alt': 'Suivez-moi sur Pinterest',
     'socialLinks.twitter.alt': 'Suivez-moi sur Twitter',
-    'tag.grid.title': 'Tag : '
+    'tag.grid.title': 'Tag : ',
+    'newsletter.header.title': 'Abonnez-vous à mes carnets d’actualités !',
+    'newsletter.header.subtitle':
+      'C’est la Bretagne qui vous intéresse ?<br />Ou au contraire, vous voulez en savoir plus sur le Québec ?<br />Les 2 peut-être ? À vous de choisir !'
   }
 } as const

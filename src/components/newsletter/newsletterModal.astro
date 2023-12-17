@@ -1,0 +1,72 @@
+---
+import { useTranslations } from '../../i18n/ui'
+import NewsletterForm from './newsletterForm.astro'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+---
+
+<div
+  id="newsletter-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-full max-h-full w-full !items-end overflow-y-auto overflow-x-hidden md:inset-0 md:!items-center md:!justify-center"
+>
+  <div
+    class="relative max-h-full w-full max-w-2xl rounded-none bg-stone-50 p-4 text-stone-900 shadow-lg dark:bg-stone-900 dark:text-stone-50 md:rounded"
+  >
+    <header class="p-6 pb-8 lg:p-12 lg:pb-8">
+      <h2
+        class="mb-4 flex flex-col items-center justify-center gap-4 text-center text-3xl font-bold"
+      >
+        {t('newsletter.header.title')}
+      </h2>
+
+      <p class="text-center text-gray-700" set:html={t('newsletter.header.subtitle')} />
+
+      <button aria-label="Close modal" toggle-newsletter-modal class="absolute right-0 top-0 p-2">
+        <i class="icon-close text-xl"></i>
+      </button>
+    </header>
+    <NewsletterForm />
+  </div>
+</div>
+
+<script>
+  import { Modal } from 'flowbite'
+  import type { ModalOptions, ModalInterface } from 'flowbite'
+  import type { InstanceOptions } from 'flowbite'
+
+  const $targetEl: HTMLElement = document.querySelector('#newsletter-modal')
+
+  const modalOptions: ModalOptions = {
+    placement: undefined,
+    backdrop: 'dynamic',
+    backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
+    closable: true,
+    onHide: () => {
+      $targetEl.setAttribute('data-state', 'closed')
+    },
+    onShow: () => {
+      $targetEl.setAttribute('data-state', 'open')
+    },
+    onToggle: () => {}
+  }
+
+  const instanceOptions: InstanceOptions = {
+    id: 'newsletter-modal',
+    override: true
+  }
+
+  const modal: ModalInterface = new Modal($targetEl, modalOptions, instanceOptions)
+
+  // Event listener to toggle the drawer
+  document.querySelectorAll('[toggle-newsletter-modal]').forEach((el) => {
+    el.addEventListener('click', () => {
+      modal.toggle()
+    })
+  })
+
+  // Dev only
+  modal.show()
+</script>

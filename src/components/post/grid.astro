@@ -1,17 +1,20 @@
 ---
 import Card from './card.astro'
 import type { Post } from '../../api/post'
+import NewsletterCard from '../newsletter/newsletterCard.astro'
 
 type Props = {
   posts: Post[]
 }
 
 const { posts }: Props = Astro.props
+const newsleterCardPosition = Math.round(Math.random() * posts.length) || 1
 ---
 
 <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
   {
-    posts.map((post: Post) => {
+    posts.map((post: Post, index: number) => {
+      if (index === newsleterCardPosition) return <NewsletterCard />
       return <Card post={post} />
     })
   }
