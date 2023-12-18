@@ -1,8 +1,15 @@
 ---
 import { useTranslations } from '../../i18n/ui'
+import { getThemeOptions } from '../../api/options'
+
+type mlGroup = {
+  value: string
+  label: string
+}
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
+const glaceOptions = await getThemeOptions(lang)
 ---
 
 <form>
@@ -35,6 +42,30 @@ const t = useTranslations(lang)
         {t('newsletter.form.email')}
       </label>
     </div>
+    {
+      glaceOptions.available_groups_for_newsletter.length > 0 && (
+        <div class="flex flex-col gap-4">
+          {glaceOptions.available_groups_for_newsletter.map((group: mlGroup) => (
+            <>
+              <div class="flex cursor-pointer items-center gap-1">
+                <input
+                  id={group.value}
+                  type="checkbox"
+                  value={group.value}
+                  class="h-4 w-4 cursor-pointer rounded border-stone-500 bg-stone-900 text-stone-50 focus:ring-2"
+                />
+                <label
+                  for={group.value}
+                  class="ms-2 cursor-pointer text-sm font-medium text-stone-900"
+                >
+                  {group.label}
+                </label>
+              </div>
+            </>
+          ))}
+        </div>
+      )
+    }
   </div>
 
   <button
