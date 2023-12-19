@@ -1,6 +1,7 @@
 ---
 import { useTranslations } from '../../i18n/ui'
 import { getThemeOptions } from '../../api/options'
+import { ADMIN_EMAIL } from '../../constant'
 
 type mlGroup = {
   value: string
@@ -12,12 +13,13 @@ const t = useTranslations(lang)
 const glaceOptions = await getThemeOptions(lang)
 ---
 
-<form>
-  <div class="mb-6 grid gap-6 md:grid-cols-2">
+<form id="newsletter-form" class="flex flex-col gap-6">
+  <div class="grid gap-6 md:grid-cols-2">
     <div class="relative">
       <input
         type="text"
         id="firstName"
+        name="firstName"
         class="peer block w-full appearance-none border-0 border-b-2 border-stone-900 bg-stone-900/5 px-2.5 pb-2.5 pt-5 text-sm text-gray-900 focus:outline-none focus:ring-0"
         placeholder=" "
       />
@@ -32,6 +34,7 @@ const glaceOptions = await getThemeOptions(lang)
       <input
         type="email"
         id="emailAddress"
+        name="emailAddress"
         class="peer block w-full appearance-none border-0 border-b-2 border-stone-900 bg-stone-900/5 px-2.5 pb-2.5 pt-5 text-sm text-gray-900 focus:outline-none focus:ring-0"
         placeholder=" "
       />
@@ -50,6 +53,7 @@ const glaceOptions = await getThemeOptions(lang)
               <div class="flex cursor-pointer items-center gap-1">
                 <input
                   id={group.value}
+                  name="groups"
                   type="checkbox"
                   value={group.value}
                   class="h-4 w-4 cursor-pointer rounded border-stone-500 bg-stone-900 text-stone-50 focus:ring-2"
@@ -68,21 +72,88 @@ const glaceOptions = await getThemeOptions(lang)
     }
   </div>
 
+  <p id="newsletter-form-error" class="hidden gap-2 rounded bg-red-500 p-4 text-white">
+    {t('newsletter.form.error')}
+    <a href={`mailto:${ADMIN_EMAIL}`} class="inline underline" target="_blank">{ADMIN_EMAIL}</a>
+  </p>
+
   <button
+    type="submit"
     class="flex w-full items-center justify-center rounded bg-stone-900 px-4 py-4 text-center !font-bold text-white transition hover:-translate-y-1 hover:shadow-lg md:px-16"
   >
-    {t('newsletter.form.submit')}
+    <span>
+      {t('newsletter.form.submit')}
+    </span>
+    <span class="hidden">
+      {t('newsletter.form.loading')}
+    </span>
   </button>
 </form>
 
 <script is:inline>
-  async function mailerlite() {
-    const response = await fetch('/api/mailerlite', {
-      method: 'GET'
+  const newsletterForm = document.querySelector('#newsletter-form')
+  const newsletterFormSubmitBtn = newsletterForm.querySelector('button[type="submit"]')
+  newsletterForm.addEventListener('submit', newsletterOnSubmit)
+
+  async function newsletterOnSubmit(event) {
+    event.preventDefault()
+    disabledForm()
+
+    if (!validateForm()) {
+      console.error('form is not valid')
+      enabledForm()
+      return
+    }
+
+    const formData = JSON.stringify({
+      firstName: newsletterForm.firstName.value,
+      email: newsletterForm.emailAddress.value,
+      groups: getGroups(),
+      cv_source: 'newsletterModal'
     })
-    const mailerlite = await response.json()
-    console.log(mailerlite)
+
+    await fetch('/api/mailerlite', {
+      method: 'POST',
+      body: formData
+    }).then((response) => {
+      if (response.status === 200) {
+        newsletterForm.reset()
+        enabledForm()
+        console.error(response)
+      } else {
+        newsletterForm.querySelector('#newsletter-form-error').classList.toggle('hidden')
+        console.error('error on submit')
+        enabledForm()
+      }
+    })
   }
 
-  mailerlite()
+  function validateForm() {
+    if (!newsletterForm.firstName.value) return false
+    if (!newsletterForm.emailAddress.value) return false
+    if (getGroups().length === 0) return false
+    return true
+  }
+
+  function getGroups() {
+    const groups = []
+    for (var i = 0; i < newsletterForm.groups.length; i++) {
+      if (newsletterForm.groups[i].checked) {
+        groups.push(newsletterForm.groups[i].value)
+      }
+    }
+    return groups
+  }
+
+  function disabledForm() {
+    newsletterFormSubmitBtn.disabled = true
+    newsletterFormSubmitBtn.querySelector('span:first-child').classList.toggle('hidden')
+    newsletterFormSubmitBtn.querySelector('span:last-child').classList.toggle('hidden')
+  }
+
+  function enabledForm() {
+    newsletterFormSubmitBtn.disabled = false
+    newsletterFormSubmitBtn.querySelector('span:first-child').classList.toggle('hidden')
+    newsletterFormSubmitBtn.querySelector('span:last-child').classList.toggle('hidden')
+  }
 </script>

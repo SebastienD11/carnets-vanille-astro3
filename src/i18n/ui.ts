@@ -23,6 +23,9 @@ export const ui = {
     'newsletter.form.email': 'Your email address',
     'newsletter.form.firstName': 'Your name',
     'newsletter.form.submit': 'Subscribe',
+    'newsletter.form.loading': 'Sending...',
+    'newsletter.form.error':
+      'At least one fields is missing or incorrect. If something feels wrong, please contact me directly at : ',
     'newsletter.header.subtitle':
       'Are you interested in Brittany?<br />Or do you want to find out more about Quebec?<br />Maybe both? The choice is yours!',
     'newsletter.header.title': 'Subscribe to my newsletters!',
@@ -50,6 +53,9 @@ export const ui = {
     'newsletter.form.email': 'Votre adresse mail',
     'newsletter.form.firstName': 'Votre nom',
     'newsletter.form.submit': "Je m'abonne !",
+    'newsletter.form.loading': 'En cours...',
+    'newsletter.form.error':
+      'Au moins un champ est manquant ou incorrect. Si quelque chose ne va pas, veuillez me contacter directement à : ',
     'newsletter.header.subtitle':
       'C’est la Bretagne qui vous intéresse ?<br />Ou au contraire, vous voulez en savoir plus sur le Québec ?<br />Les 2 peut-être ? À vous de choisir !',
     'newsletter.header.title': 'Abonnez-vous à mes carnets d’actualités !',
