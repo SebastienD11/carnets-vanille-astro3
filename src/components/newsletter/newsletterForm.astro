@@ -77,6 +77,10 @@ const glaceOptions = await getThemeOptions(lang)
     <a href={`mailto:${ADMIN_EMAIL}`} class="inline underline" target="_blank">{ADMIN_EMAIL}</a>
   </p>
 
+  <p id="newsletter-form-success" class="hidden gap-2 rounded bg-green-500 p-4 text-white">
+    {t('newsletter.form.success')}
+  </p>
+
   <button
     type="submit"
     class="flex w-full items-center justify-center rounded bg-stone-900 px-4 py-4 text-center !font-bold text-white transition hover:-translate-y-1 hover:shadow-lg md:px-16"
@@ -105,27 +109,34 @@ const glaceOptions = await getThemeOptions(lang)
       return
     }
 
-    const formData = JSON.stringify({
-      firstName: newsletterForm.firstName.value,
+    const params = {
       email: newsletterForm.emailAddress.value,
-      groups: getGroups(),
-      cv_source: 'newsletterModal'
-    })
+      fields: {
+        cv_source: 'newsletterModal',
+        name: newsletterForm.firstName.value
+      },
+      groups: getGroups()
+    }
 
     await fetch('/api/mailerlite', {
       method: 'POST',
-      body: formData
-    }).then((response) => {
-      if (response.status === 200) {
-        newsletterForm.reset()
-        enabledForm()
-        console.error(response)
-      } else {
-        newsletterForm.querySelector('#newsletter-form-error').classList.toggle('hidden')
-        console.error('error on submit')
-        enabledForm()
-      }
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
     })
+      .then((response) => {
+        if (response.status === 200) {
+          newsletterForm.querySelector('#newsletter-form-error').classList.add('hidden')
+          newsletterForm.querySelector('#newsletter-form-success').classList.remove('hidden')
+        } else {
+          newsletterForm.querySelector('#newsletter-form-error').classList.remove('hidden')
+          console.error('error on submit')
+        }
+      })
+      .finally(() => {
+        enabledForm()
+      })
   }
 
   function validateForm() {

@@ -26,6 +26,7 @@ export const ui = {
     'newsletter.form.loading': 'Sending...',
     'newsletter.form.error':
       'At least one fields is missing or incorrect. If something feels wrong, please contact me directly at : ',
+    'newsletter.form.success': 'Thank you :) Be sure to monitor your inbox to not miss anything!',
     'newsletter.header.subtitle':
       'Are you interested in Brittany?<br />Or do you want to find out more about Quebec?<br />Maybe both? The choice is yours!',
     'newsletter.header.title': 'Subscribe to my newsletters!',
@@ -56,6 +57,8 @@ export const ui = {
     'newsletter.form.loading': 'En cours...',
     'newsletter.form.error':
       'Au moins un champ est manquant ou incorrect. Si quelque chose ne va pas, veuillez me contacter directement à : ',
+    'newsletter.form.success':
+      'Merci :) Surveillez votre boîte de réception pour ne rien manquer !',
     'newsletter.header.subtitle':
       'C’est la Bretagne qui vous intéresse ?<br />Ou au contraire, vous voulez en savoir plus sur le Québec ?<br />Les 2 peut-être ? À vous de choisir !',
     'newsletter.header.title': 'Abonnez-vous à mes carnets d’actualités !',
