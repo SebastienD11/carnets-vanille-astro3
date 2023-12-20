@@ -149,6 +149,14 @@ module.exports = {
           from: { opacity: 1 },
           to: { opacity: 0 }
         },
+        fadeIn: {
+          from: { opacity: 0, transform: 'translateY(16px)' },
+          to: { opacity: 1, transform: 'translateY(0)' }
+        },
+        fadeOut: {
+          from: { opacity: 1, transform: 'translateY(0)' },
+          to: { opacity: 0.6, transform: 'translateY(16px)' }
+        },
         responsiveMenuShow: {
           from: { transform: 'translateX(100%)' },
           to: { transform: 'translateX(0%)' }
@@ -162,7 +170,9 @@ module.exports = {
         overlayShow: 'overlayShow .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)',
         responsiveMenuShow: 'responsiveMenuShow .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)',
         overlayHide: 'overlayHide .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)',
-        responsiveMenuHide: 'responsiveMenuHide .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)'
+        responsiveMenuHide: 'responsiveMenuHide .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)',
+        fadeIn: 'fadeIn .3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)',
+        fadeOut: 'fadeOut 3s cubic-bezier(0.33333, 0.66667, 0.66667, 1)'
       }
     }
   },

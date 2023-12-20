@@ -10,7 +10,7 @@ const t = useTranslations(lang)
   id="newsletter-modal"
   tabindex="-1"
   aria-hidden="true"
-  class="fixed left-0 right-0 top-0 z-50 hidden h-full max-h-full w-full !items-end overflow-y-auto overflow-x-hidden md:inset-0 md:!items-center md:!justify-center"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-full max-h-full w-full !items-end overflow-y-auto overflow-x-hidden data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn md:inset-0 md:!items-center md:!justify-center"
 >
   <div
     class="relative h-full max-h-full w-full max-w-full overflow-auto rounded-none bg-vanille p-6 text-stone-900 shadow-lg md:h-auto md:max-w-2xl md:rounded"
