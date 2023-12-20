@@ -133,6 +133,7 @@ const glaceOptions = await getThemeOptions(lang)
           newsletterForm.querySelector('#newsletter-form-error').classList.add('hidden')
           newsletterForm.querySelector('#newsletter-form-success').classList.remove('hidden')
         } else {
+          // Todo: Better error handling with a nice console error ?
           newsletterForm.querySelector('#newsletter-form-error').classList.remove('hidden')
         }
       })
