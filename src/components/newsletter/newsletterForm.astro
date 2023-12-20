@@ -102,6 +102,7 @@ const glaceOptions = await getThemeOptions(lang)
   async function newsletterOnSubmit(event) {
     event.preventDefault()
     disabledForm()
+    newsletterForm.querySelector('#newsletter-form-success').classList.add('hidden')
 
     if (!validateForm()) {
       console.error('form is not valid')
