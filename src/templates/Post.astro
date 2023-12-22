@@ -4,9 +4,8 @@ import '@wordpress/block-library/build-style/style.css'
 import '@wordpress/block-library/build-style/theme.css'
 import { Image } from 'astro:assets'
 import type { Post } from '../api/post'
-import type { Tag as TagType } from '../api/tag'
-import BadgeTag from '../components/tag/badgeTag.astro'
 import CommentList from '../components/post/commentList.astro'
+import ShareButtons from '../components/post/shareButtons.astro'
 import { parseHtml } from '../utils/parser'
 import { useTranslations } from '../i18n/ui'
 import { getCommentsForPost } from '../api/comment'
@@ -14,6 +13,8 @@ import FormattedDate from '../components/formatedDate.astro'
 import RelatedPost from '../components/post/relatedPost.astro'
 import SectionTitle from '../components/ui/sectionTitle.astro'
 import { decode } from 'html-entities'
+import TagList from '../components/post/tagList.astro'
+import AuthorCard from '../components/post/authorCard.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -56,14 +57,31 @@ const comments = await getCommentsForPost(post.id, lang)
     </div>
   </div>
 
-  <div class="flex flex-wrap items-center justify-center gap-4">
-    {post._embedded['wp:term'][1]?.map((tag: TagType) => <BadgeTag tag={tag} />)}
-  </div>
+  <TagList post={post} />
 
   <article
     class="prose prose-stone mx-auto dark:prose-invert"
     set:html={parseHtml(post.content.rendered)}
   />
+
+  <div class="mx-auto max-w-screen-md">
+    <SectionTitle as="h3" title={t('post.footer.title')} subtitle={t('post.footer.subtitle')} />
+    <div class="flex flex-col gap-4">
+      <ShareButtons post={post} />
+      <p class="text-center text-stone-500 dark:text-stone-300">
+        {
+          post.modified !== post.date && (
+            <>
+              {t('post.footer.date_modified')}
+              <FormattedDate date={post.modified} />
+            </>
+          )
+        }
+      </p>
+      <TagList post={post} />
+    </div>
+  </div>
+  <AuthorCard />
 
   {
     post.acf.related_posts.length > 0 && (

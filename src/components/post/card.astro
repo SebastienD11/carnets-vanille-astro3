@@ -18,7 +18,7 @@ const { post, isRelatedPost }: Props = Astro.props
 
 <article>
   <a
-    class="group block overflow-hidden rounded-lg border bg-white no-underline transition-shadow transition-transform hover:-translate-y-1 hover:no-underline hover:shadow-lg dark:border-stone-800 dark:bg-stone-800"
+    class="group block overflow-hidden rounded-lg border bg-white no-underline transition hover:-translate-y-1 hover:no-underline hover:shadow-lg dark:border-stone-800 dark:bg-stone-800"
     href={getRelativeLocaleUrl(lang, `/${post.slug}`)}
     aria-label={post.title}
   >

@@ -1,0 +1,15 @@
+---
+import type { Post } from '../../api/post'
+import type { Tag } from '../../api/tag'
+import BadgeTag from '../tag/badgeTag.astro'
+
+type Props = {
+  post: Post
+}
+
+const { post } = Astro.props
+---
+
+<div class="flex flex-wrap items-center justify-center gap-4">
+  {post._embedded['wp:term'][1]?.map((tag: Tag) => <BadgeTag tag={tag} />)}
+</div>

@@ -33,11 +33,17 @@ export const ui = {
     'offCanvas.socialLinks.title': 'Follow me on ',
     'post.comments.subtitle': "Leave me a comment, i'll reply as soon as possible!",
     'post.comments.title': 'Comments',
+    'post.footer.comment': 'Leave a comment',
+    'post.footer.date_modified': 'Last modified on:',
+    'post.footer.title': 'Did you enjoy this article?',
+    'post.footer.subtitle': 'Share it with your friends!',
     'post.relatedPost.title': 'Related Posts',
     'socialLinks.facebook.alt': 'Follow me on Facebook',
+    'socialLinks.facebook.share': 'Share',
     'socialLinks.instagram.alt': 'Follow me on Instagram',
     'socialLinks.pinterest.alt': 'Follow me on Pinterest',
     'socialLinks.twitter.alt': 'Follow me on Twitter',
+    'socialLinks.twitter.share': 'Share',
     'tag.grid.title': 'Tag: '
   },
   fr: {
@@ -65,11 +71,17 @@ export const ui = {
     'offCanvas.socialLinks.title': 'Suivez-moi sur :',
     'post.comments.subtitle': 'N’hésitez pas à me laisser un commentaire !',
     'post.comments.title': 'Commentaires',
+    'post.footer.comment': 'Ecrire un commentaire',
+    'post.footer.date_modified': 'Article mis à jour le : ',
+    'post.footer.title': 'Est-ce que cet article vous a plu ?',
+    'post.footer.subtitle': 'Partagez-le avec vos amis !',
     'post.relatedPost.title': 'Articles similaires',
     'socialLinks.facebook.alt': 'Suivez-moi sur Facebook',
+    'socialLinks.facebook.share': 'Partager',
     'socialLinks.instagram.alt': 'Suivez-moi sur Instagram',
     'socialLinks.pinterest.alt': 'Suivez-moi sur Pinterest',
     'socialLinks.twitter.alt': 'Suivez-moi sur Twitter',
+    'socialLinks.twitter.share': 'Partager',
     'tag.grid.title': 'Tag : '
   }
 } as const

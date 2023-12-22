@@ -1,0 +1,23 @@
+---
+import { getThemeOptions } from '../../api/options'
+import { Image } from 'astro:assets'
+import authorImage from '../../images/sarah-carnets-vanille.png'
+
+const lang = Astro.currentLocale as string
+const glaceOptions = await getThemeOptions(lang)
+---
+
+{
+  glaceOptions.author_description && (
+    <div class="mx-auto flex max-w-screen-md flex-col items-center rounded-lg bg-vanille md:flex-row md:justify-between">
+      <Image
+        src={authorImage}
+        alt="Sarah - Carnets Vanille"
+        width={authorImage.width}
+        densities={[1.5, 2]}
+        loading="lazy"
+      />
+      <div class="prose prose-stone mx-auto p-6" set:html={glaceOptions.author_description} />
+    </div>
+  )
+}
