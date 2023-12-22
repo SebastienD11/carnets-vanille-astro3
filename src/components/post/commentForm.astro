@@ -1,0 +1,49 @@
+---
+import { useTranslations } from '../../i18n/ui'
+import InputText from '../ui/inputs/text.astro'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+---
+
+<form id="comment-form" class="flex flex-col gap-8">
+  <div class="grid grid-cols-2 gap-8">
+    <InputText required id="firstName" name="firstName" label={t('post.comments.form.firstName')} />
+    <InputText required id="email" name="email" label={t('post.comments.form.email')} />
+  </div>
+  <div>
+    <InputText id="website" name="website" label={t('post.comments.form.website')} />
+  </div>
+  <div>
+    <label for="comment" class="sr-only">{t('post.comments.form.comment')}</label>
+    <textarea
+      name="comment"
+      id="comment"
+      rows="4"
+      class="peer block w-full appearance-none border-0 border-b-2 border-stone-900 bg-stone-900/5 px-2.5 pb-2.5 pt-5 text-sm text-gray-900 placeholder:text-stone-500 focus:outline-none focus:ring-0 dark:border-stone-600 dark:bg-stone-600/40 dark:text-stone-50 dark:placeholder:text-stone-300"
+      placeholder={t('post.comments.form.comment')}
+      required></textarea>
+  </div>
+  <button
+    type="submit"
+    class="flex w-full items-center justify-center rounded bg-stone-900 px-4 py-4 text-center !font-bold text-white transition hover:-translate-y-1 hover:shadow-lg md:px-16"
+  >
+    <span>
+      {t('post.comments.form.submit')}
+    </span>
+    <span class="hidden">
+      {t('post.comments.form.submit')}
+    </span>
+  </button>
+</form>
+
+<script is:inline>
+  const commentForm = document.querySelector('#comment-form')
+  const commentFormSubmitBtn = commentForm.querySelector('button[type="submit"]')
+  commentForm.addEventListener('submit', commentOnSubmit)
+
+  async function commentOnSubmit(event) {
+    event.preventDefault()
+    alert(commentForm.comment.value)
+  }
+</script>

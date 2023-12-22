@@ -15,6 +15,7 @@ import SectionTitle from '../components/ui/sectionTitle.astro'
 import { decode } from 'html-entities'
 import TagList from '../components/post/tagList.astro'
 import AuthorCard from '../components/post/authorCard.astro'
+import CommentForm from '../components/post/commentForm.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -96,5 +97,19 @@ const comments = await getCommentsForPost(post.id, lang)
     )
   }
 
-  <CommentList comments={comments} />
+  {
+    post.comment_status === 'open' && (
+      <div id="comments" class="mx-auto flex max-w-screen-md flex-col gap-24">
+        <CommentList comments={comments} />
+        <div>
+          <SectionTitle
+            as="h3"
+            title={`${t('post.comments.form.title')}`}
+            subtitle={t('post.comments.form.subtitle')}
+          />
+          <CommentForm />
+        </div>
+      </div>
+    )
+  }
 </div>

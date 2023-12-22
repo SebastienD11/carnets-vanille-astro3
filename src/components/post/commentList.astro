@@ -9,27 +9,25 @@ const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
 ---
 
-<div id="comments" class="mx-auto max-w-screen-md">
-  {
-    comments && (
-      <Fragment>
-        <SectionTitle
-          as="h3"
-          title={`${comments.length} ${t('post.comments.title')}`}
-          subtitle={t('post.comments.subtitle')}
-        />
-        <div class="flex flex-col gap-12">
-          {comments.map((comment: CommentType) => (
-            <div class="relative flex flex-col gap-6 before:absolute before:left-[26px] before:top-[60px] before:z-0 before:block before:h-[calc(100%-60px)] before:w-px before:bg-vanille">
-              <Comment comment={comment} />
-              {comment.children &&
-                comment.children.map((comment: CommentType) => (
-                  <Comment className="ml-16" comment={comment} />
-                ))}
-            </div>
-          ))}
-        </div>
-      </Fragment>
-    )
-  }
-</div>
+{
+  comments && (
+    <Fragment>
+      <SectionTitle
+        as="h3"
+        title={`${comments.length} ${t('post.comments.title')}`}
+        subtitle={t('post.comments.subtitle')}
+      />
+      <div class="flex flex-col gap-12">
+        {comments.map((comment: CommentType) => (
+          <div class="relative flex flex-col gap-6 before:absolute before:left-[26px] before:top-[60px] before:z-0 before:block before:h-[calc(100%-60px)] before:w-px before:bg-vanille">
+            <Comment comment={comment} />
+            {comment.children &&
+              comment.children.map((comment: CommentType) => (
+                <Comment className="ml-16" comment={comment} />
+              ))}
+          </div>
+        ))}
+      </div>
+    </Fragment>
+  )
+}
