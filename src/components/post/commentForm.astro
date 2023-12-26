@@ -5,6 +5,7 @@ import InputEmail from '../ui/form/email.astro'
 import InputSubmit from '../ui/form/submit.astro'
 import FormErrors from '../ui/form/error.astro'
 import Textarea from '../ui/form/textarea.astro'
+import { ADMIN_EMAIL } from '../../constant'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -16,7 +17,10 @@ const t = useTranslations(lang)
   onsubmit="formSubmit(event, postComment)"
   novalidate
 >
-  <FormErrors requiredFieldsError={t('post.comments.form.errors.fields')} />
+  <FormErrors
+    requiredFieldsError={t('post.comments.form.errors.fields')}
+    callbackError={t('post.comments.form.errors.callback') + ADMIN_EMAIL}
+  />
   <div class="grid grid-cols-2 gap-8">
     <InputText required id="firstName" name="firstName" label={t('post.comments.form.firstName')} />
     <InputEmail required id="email" name="email" label={t('post.comments.form.email')} />
@@ -35,8 +39,7 @@ const t = useTranslations(lang)
 </form>
 
 <script is:inline>
-  function postComment() {
-    const commentForm = document.querySelector('#comment-form')
-    alert(commentForm.comment.value)
+  async function postComment(form) {
+    return Promise.reject()
   }
 </script>

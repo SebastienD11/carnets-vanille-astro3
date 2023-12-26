@@ -1,9 +1,13 @@
 ---
 type Props = {
   requiredFieldsError: string
+  callbackError: string
 }
 
-const { requiredFieldsError }: Props = Astro.props
+const { requiredFieldsError, callbackError }: Props = Astro.props
 ---
 
-<p error-required-fields class="hidden text-center text-rose-700">{requiredFieldsError}</p>
+<div class="flex flex-col gap-4">
+  <p error-required-fields class="hidden text-center text-rose-700">{requiredFieldsError}</p>
+  <p error-callback class="hidden text-center text-rose-700">{callbackError}</p>
+</div>
