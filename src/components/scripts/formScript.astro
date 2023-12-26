@@ -11,12 +11,12 @@
     // Form Validation
     if (!isFormValid(form)) {
       toggleSubmitState(form)
-      form.querySelector('[error-fields]').classList.remove('hidden')
+      form.querySelector('[error-required-fields]').classList.remove('hidden')
       return false
     }
 
     // The validation pass, we hide the fields error message if it was displayed
-    form.querySelector('[error-fields]').classList.add('hidden')
+    form.querySelector('[error-required-fields]').classList.add('hidden')
 
     // When everything is right, call the callback
     // callback().then(() => {

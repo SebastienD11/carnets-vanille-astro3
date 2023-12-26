@@ -1,0 +1,9 @@
+---
+type Props = {
+  requiredFieldsError: string
+}
+
+const { requiredFieldsError }: Props = Astro.props
+---
+
+<p error-required-fields class="hidden text-center text-rose-700">{requiredFieldsError}</p>

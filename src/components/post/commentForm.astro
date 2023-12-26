@@ -3,6 +3,7 @@ import { useTranslations } from '../../i18n/ui'
 import InputText from '../ui/form/text.astro'
 import InputEmail from '../ui/form/email.astro'
 import InputSubmit from '../ui/form/submit.astro'
+import FormErrors from '../ui/form/error.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -14,9 +15,7 @@ const t = useTranslations(lang)
   onsubmit="formSubmit(event, postComment)"
   novalidate
 >
-  <p error-fields class="hidden text-center text-rose-700">
-    {t('post.comments.form.errors.fields')}
-  </p>
+  <FormErrors requiredFieldsError={t('post.comments.form.errors.fields')} />
   <div class="grid grid-cols-2 gap-8">
     <InputText required id="firstName" name="firstName" label={t('post.comments.form.firstName')} />
     <InputEmail required id="email" name="email" label={t('post.comments.form.email')} />
