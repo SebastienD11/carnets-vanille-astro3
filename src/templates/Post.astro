@@ -107,7 +107,7 @@ const comments = await getCommentsForPost(post.id, lang)
             title={`${t('post.comments.form.title')}`}
             subtitle={t('post.comments.form.subtitle')}
           />
-          <CommentForm />
+          <CommentForm postId={post.id} />
         </div>
       </div>
     )

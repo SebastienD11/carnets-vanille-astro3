@@ -20,10 +20,13 @@
 
     // When everything is right, call the callback
     callback(form)
-      .then(() => {
-        console.log(form)
+      .then((res) => {
+        console.log(res.statusText)
+        // Todo: Display a success message
+        // Todo : Reset the form
       })
-      .catch(() => {
+      .catch((res) => {
+        console.error(res.statusText)
         form.querySelector('[error-callback]').classList.remove('hidden')
       })
       .finally(() => {

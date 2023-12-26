@@ -7,7 +7,12 @@ import FormErrors from '../ui/form/error.astro'
 import Textarea from '../ui/form/textarea.astro'
 import { ADMIN_EMAIL } from '../../constant'
 
+type Props = {
+  postId: string
+}
+
 const lang = Astro.currentLocale as string
+const { postId }: Props = Astro.props
 const t = useTranslations(lang)
 ---
 
@@ -17,6 +22,7 @@ const t = useTranslations(lang)
   onsubmit="formSubmit(event, postComment)"
   novalidate
 >
+  <input hidden required type="text" name="postId" value={postId} />
   <FormErrors
     requiredFieldsError={t('post.comments.form.errors.fields')}
     callbackError={t('post.comments.form.errors.callback') + ADMIN_EMAIL}
@@ -40,6 +46,25 @@ const t = useTranslations(lang)
 
 <script is:inline>
   async function postComment(form) {
-    return Promise.reject()
+    const data = {
+      post: form.postId.value,
+      author_name: form.firstName.value,
+      author_email: form.email.value,
+      content: form.comment.value
+    }
+
+    const response = await fetch('/api/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    if (response.ok) {
+      return Promise.resolve(response)
+    } else {
+      return Promise.reject(response)
+    }
   }
 </script>
