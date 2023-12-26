@@ -4,11 +4,13 @@ import '@fontsource-variable/mulish'
 import Seo from '../components/head/seo.astro'
 
 import '../styles/custom.css'
-import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDrawer.astro'
-import ResponsiveMenuContent from '../components/responsiveMenu/responsiveMenuContent.astro'
-import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
 import Footer from '../components/Footer/Footer.astro'
+import FormScript from '../components/scripts/formScript.astro'
 import NewsletterModal from '../components/newsletter/newsletterModal.astro'
+import ResponsiveMenuContent from '../components/responsiveMenu/responsiveMenuContent.astro'
+import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDrawer.astro'
+import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
+import ThemeColorScript from '../components/scripts/themeColor.astro'
 
 interface Props {
   seo: string
@@ -50,39 +52,8 @@ const lang = Astro.currentLocale as string
     </ResponsiveMenuDrawer>
     <slot />
     <Footer />
+    <FormScript />
+    <ThemeColorScript />
     <NewsletterModal />
-
-    <!-- Light/Dark Toggle -->
-    <script is:inline>
-      const theme = (() => {
-        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-          return localStorage.getItem('theme')
-        }
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark'
-        }
-        return 'light'
-      })()
-
-      if (theme === 'light') {
-        document.documentElement.classList.remove('dark')
-      } else {
-        document.documentElement.classList.add('dark')
-      }
-
-      window.localStorage.setItem('theme', theme)
-
-      const handleToggleClick = () => {
-        const element = document.documentElement
-        element.classList.toggle('dark')
-
-        const isDark = element.classList.contains('dark')
-        localStorage.setItem('theme', isDark ? 'dark' : 'light')
-      }
-
-      document
-        .querySelectorAll('[theme-toggle]')
-        .forEach((toggle) => toggle.addEventListener('click', handleToggleClick))
-    </script>
   </body>
 </html>

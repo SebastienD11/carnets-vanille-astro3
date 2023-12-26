@@ -1,0 +1,58 @@
+---
+
+---
+
+<script is:inline>
+  async function formSubmit(event, callback) {
+    event.preventDefault()
+    const form = event.target
+    toggleSubmitState(form)
+
+    // Form Validation
+    if (!isFormValid(form)) {
+      toggleSubmitState(form)
+      form.querySelector('[error-fields]').classList.remove('hidden')
+      return false
+    }
+
+    // The validation pass, we hide the fields error message if it was displayed
+    form.querySelector('[error-fields]').classList.add('hidden')
+
+    // When everything is right, call the callback
+    // callback().then(() => {
+    // submitButtonElts.forEach((elt) => {
+    //   elt.classList.toggle('hidden')
+    // })
+    // })
+  }
+
+  function isFormValid(form) {
+    const requiredFields = Array.from(form.querySelectorAll('[required]'))
+
+    const invalidFields = requiredFields.filter((field) => {
+      if (field.type === 'email') {
+        const isEmail = field.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
+        field.classList.toggle('border-rose-700', !isEmail)
+        return !isEmail
+      } else {
+        const isEmpty = !field.value.trim()
+        field.classList.toggle('border-rose-700', isEmpty)
+        return isEmpty
+      }
+    })
+
+    return invalidFields.length === 0
+  }
+
+  function toggleSubmitState(form) {
+    // Toggle the submit button disabled attribute
+    const submitButton = form.querySelector('[type="submit"]')
+    submitButton.toggleAttribute('disabled')
+
+    // Toggle submit button loading state
+    const submitButtonElts = submitButton.querySelectorAll('span')
+    submitButtonElts.forEach((elt) => {
+      elt.classList.toggle('hidden')
+    })
+  }
+</script>

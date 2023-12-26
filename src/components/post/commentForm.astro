@@ -1,15 +1,25 @@
 ---
 import { useTranslations } from '../../i18n/ui'
-import InputText from '../ui/inputs/text.astro'
+import InputText from '../ui/form/text.astro'
+import InputEmail from '../ui/form/email.astro'
+import InputSubmit from '../ui/form/submit.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
 ---
 
-<form id="comment-form" class="flex flex-col gap-8">
+<form
+  id="comment-form"
+  class="flex flex-col gap-8"
+  onsubmit="formSubmit(event, postComment)"
+  novalidate
+>
+  <p error-fields class="hidden text-center text-rose-700">
+    {t('post.comments.form.errors.fields')}
+  </p>
   <div class="grid grid-cols-2 gap-8">
     <InputText required id="firstName" name="firstName" label={t('post.comments.form.firstName')} />
-    <InputText required id="email" name="email" label={t('post.comments.form.email')} />
+    <InputEmail required id="email" name="email" label={t('post.comments.form.email')} />
   </div>
   <div>
     <InputText id="website" name="website" label={t('post.comments.form.website')} />
@@ -24,26 +34,12 @@ const t = useTranslations(lang)
       placeholder={t('post.comments.form.comment')}
       required></textarea>
   </div>
-  <button
-    type="submit"
-    class="flex w-full items-center justify-center rounded bg-stone-900 px-4 py-4 text-center !font-bold text-white transition hover:-translate-y-1 hover:shadow-lg md:px-16"
-  >
-    <span>
-      {t('post.comments.form.submit')}
-    </span>
-    <span class="hidden">
-      {t('post.comments.form.submit')}
-    </span>
-  </button>
+  <InputSubmit label={t('post.comments.form.submit')} />
 </form>
 
 <script is:inline>
-  const commentForm = document.querySelector('#comment-form')
-  const commentFormSubmitBtn = commentForm.querySelector('button[type="submit"]')
-  commentForm.addEventListener('submit', commentOnSubmit)
-
-  async function commentOnSubmit(event) {
-    event.preventDefault()
+  function postComment() {
+    const commentForm = document.querySelector('#comment-form')
     alert(commentForm.comment.value)
   }
 </script>
