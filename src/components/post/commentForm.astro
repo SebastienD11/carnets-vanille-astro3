@@ -4,6 +4,7 @@ import InputText from '../ui/form/text.astro'
 import InputEmail from '../ui/form/email.astro'
 import InputSubmit from '../ui/form/submit.astro'
 import FormErrors from '../ui/form/error.astro'
+import Textarea from '../ui/form/textarea.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -23,16 +24,13 @@ const t = useTranslations(lang)
   <div>
     <InputText id="website" name="website" label={t('post.comments.form.website')} />
   </div>
-  <div>
-    <label for="comment" class="sr-only">{t('post.comments.form.comment')}</label>
-    <textarea
-      name="comment"
-      id="comment"
-      rows="4"
-      class="peer block w-full appearance-none border-0 border-b-2 border-stone-900 bg-stone-900/5 px-2.5 pb-2.5 pt-5 text-sm text-gray-900 placeholder:text-stone-500 focus:outline-none focus:ring-0 dark:border-stone-600 dark:bg-stone-600/40 dark:text-stone-50 dark:placeholder:text-stone-300"
-      placeholder={t('post.comments.form.comment')}
-      required></textarea>
-  </div>
+  <Textarea
+    required
+    id="comment"
+    name="comment"
+    label={t('post.comments.form.comment')}
+    placeholder={t('post.comments.form.comment')}
+  />
   <InputSubmit label={t('post.comments.form.submit')} />
 </form>
 
