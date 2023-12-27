@@ -8,6 +8,8 @@ const { requiredFieldsError, callbackError }: Props = Astro.props
 ---
 
 <div class="flex flex-col gap-4">
-  <p error-required-fields class="hidden text-center text-rose-700">{requiredFieldsError}</p>
-  <p error-callback class="hidden text-center text-rose-700">{callbackError}</p>
+  <p error-required-fields class="text-md hidden text-center font-bold text-rose-700">
+    {requiredFieldsError}
+  </p>
+  <p error-callback class="text-md hidden text-center font-bold text-rose-700">{callbackError}</p>
 </div>

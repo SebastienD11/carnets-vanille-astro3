@@ -36,6 +36,8 @@ export const ui = {
     'post.comments.form.comment': 'Write a comment',
     'post.comments.form.email': 'Email',
     'post.comments.form.errors.fields': 'Oups, at least one of the required field is incorrect!',
+    'post.comments.form.success':
+      'Thank you for your comment! Your comment has been sent and will be displayed after validation.',
     'post.comments.form.errors.callback':
       'Oups, sometthing went wrong. Please, contact me directly at:',
     'post.comments.form.firstName': 'First Name',
@@ -84,6 +86,8 @@ export const ui = {
     'post.comments.title': 'Commentaires',
     'post.comments.form.comment': 'Ecrire un commentaire',
     'post.comments.form.email': 'Email',
+    'post.comments.form.success':
+      'Merci ! Votre commentaire a bien été envoyé et sera affiché après validation.',
     'post.comments.form.errors.fields': 'Oups, au moins un des champs obligatoires est incorrect !',
     'post.comments.form.errors.callback':
       "Oups, il y a eu un problème. Veuillez me contacter directement à l'adresse suivante : ",

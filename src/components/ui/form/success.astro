@@ -1,0 +1,9 @@
+---
+type Props = {
+  message: string
+}
+
+const { message }: Props = Astro.props
+---
+
+<p success-message class="text-md hidden text-center font-bold text-emerald-600">{message}</p>
