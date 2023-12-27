@@ -21,12 +21,7 @@ const mailerliteGroup = MAILERLITE_GROUPS.find((group) => group.id === newslette
 const glaceOptions = await getThemeOptions(lang)
 ---
 
-<form
-  id="comment-form"
-  class="flex flex-col gap-8"
-  onsubmit="formSubmit(event, postComment)"
-  novalidate
->
+<form class="flex flex-col gap-8" onsubmit="formSubmit(event, postComment)" novalidate>
   <input hidden required type="text" name="postId" value={postId} />
   <FormErrors
     requiredFieldsError={t('post.comments.form.errors.fields')}

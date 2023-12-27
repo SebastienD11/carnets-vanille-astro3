@@ -13,7 +13,7 @@ const t = useTranslations(lang)
   class="fixed left-0 right-0 top-0 z-50 hidden h-full max-h-full w-full !items-end overflow-y-auto overflow-x-hidden data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn md:inset-0 md:!items-center md:!justify-center"
 >
   <div
-    class="relative h-full max-h-full w-full max-w-full overflow-auto rounded-none bg-vanille p-6 text-stone-900 shadow-lg md:h-auto md:max-w-2xl md:rounded"
+    class="relative h-full max-h-full w-full max-w-full overflow-auto rounded-none bg-stone-50 p-6 text-stone-900 shadow-lg dark:bg-stone-900 dark:text-stone-50 md:h-auto md:max-w-2xl md:rounded"
   >
     <header class="p-6 pb-8 lg:p-12 lg:pb-8">
       <div class="flex flex-col items-center gap-4">
@@ -28,7 +28,7 @@ const t = useTranslations(lang)
         <h2 class="flex flex-col items-center justify-center gap-4 text-center text-3xl font-bold">
           {t('newsletter.header.title')}
         </h2>
-        <p class="text-center text-stone-900" set:html={t('newsletter.header.subtitle')} />
+        <p class="text-center" set:html={t('newsletter.header.subtitle')} />
       </div>
       <button
         aria-label="Close modal"
@@ -39,7 +39,7 @@ const t = useTranslations(lang)
       </button>
     </header>
     <NewsletterForm />
-    <p class="mt-8 text-center text-sm text-stone-900" set:html={t('newsletter.footer.copy')} />
+    <p class="mt-8 text-center text-sm" set:html={t('newsletter.footer.copy')} />
   </div>
 </div>
 

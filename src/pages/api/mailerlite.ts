@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request }) => {
     let error
     let res
 
-    await mailerlite.subscribers
+    const response = await mailerlite.subscribers
       .createOrUpdate(body)
       .then((response) => {
         res = response.data.data

@@ -2,6 +2,11 @@
 import { useTranslations } from '../../i18n/ui'
 import { getThemeOptions } from '../../api/options'
 import { ADMIN_EMAIL } from '../../constant'
+import InputText from '../ui/form/text.astro'
+import InputEmail from '../ui/form/email.astro'
+import FormErrors from '../ui/form/error.astro'
+import FormSuccess from '../ui/form/success.astro'
+import InputSubmit from '../ui/form/submit.astro'
 
 type mlGroup = {
   value: string
@@ -13,38 +18,16 @@ const t = useTranslations(lang)
 const glaceOptions = await getThemeOptions(lang)
 ---
 
-<form id="newsletter-form" class="flex flex-col gap-6">
-  <div class="grid gap-6 md:grid-cols-2">
-    <div class="relative">
-      <input
-        type="text"
-        id="firstName"
-        name="firstName"
-        class="peer block w-full appearance-none border-0 border-b-2 border-stone-900 bg-stone-900/5 px-2.5 pb-2.5 pt-5 text-sm text-gray-900 focus:outline-none focus:ring-0"
-        placeholder=" "
-      />
-      <label
-        for="firstName"
-        class="absolute start-2.5 top-4 z-10 origin-[0] -translate-y-4 scale-75 transform text-sm text-stone-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-4 peer-focus:scale-75"
-      >
-        {t('newsletter.form.firstName')}
-      </label>
-    </div>
-    <div class="relative">
-      <input
-        type="email"
-        id="emailAddress"
-        name="emailAddress"
-        class="peer block w-full appearance-none border-0 border-b-2 border-stone-900 bg-stone-900/5 px-2.5 pb-2.5 pt-5 text-sm text-gray-900 focus:outline-none focus:ring-0"
-        placeholder=" "
-      />
-      <label
-        for="emailAddress"
-        class="absolute start-2.5 top-4 z-10 origin-[0] -translate-y-4 scale-75 transform text-sm text-stone-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-4 peer-focus:scale-75"
-      >
-        {t('newsletter.form.email')}
-      </label>
-    </div>
+<form onsubmit="formSubmit(event, postMailerlite)" class="flex flex-col gap-8" novalidate>
+  <FormSuccess message={t('newsletter.form.success')} />
+  <FormErrors
+    requiredFieldsError={t('newsletter.form.error.fields')}
+    callbackError={'callback error' + ADMIN_EMAIL}
+  />
+  <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+    <InputText required id="firstName" name="firstName" label={t('newsletter.form.firstName')} />
+    <InputEmail required id="email" name="email" label={t('newsletter.form.email')} />
+
     {
       glaceOptions.available_groups_for_newsletter.length > 0 && (
         <div class="flex flex-col gap-4">
@@ -58,10 +41,7 @@ const glaceOptions = await getThemeOptions(lang)
                   value={group.value}
                   class="h-4 w-4 cursor-pointer rounded border-stone-500 bg-stone-900 text-stone-50 focus:ring-2"
                 />
-                <label
-                  for={group.value}
-                  class="ms-2 cursor-pointer text-sm font-medium text-stone-900"
-                >
+                <label for={group.value} class="ms-2 cursor-pointer text-sm font-medium ">
                   {group.label}
                 </label>
               </div>
@@ -71,111 +51,42 @@ const glaceOptions = await getThemeOptions(lang)
       )
     }
   </div>
-
-  <p id="newsletter-form-error" class="hidden gap-2 rounded bg-red-500 p-4 text-white">
-    {t('newsletter.form.error')}
-    <a href={`mailto:${ADMIN_EMAIL}`} class="inline underline" target="_blank">{ADMIN_EMAIL}</a>
-  </p>
-
-  <p id="newsletter-form-success" class="hidden gap-2 rounded bg-green-500 p-4 text-white">
-    {t('newsletter.form.success')}
-  </p>
-
-  <button
-    type="submit"
-    class="flex w-full items-center justify-center rounded bg-stone-900 px-4 py-4 text-center !font-bold text-white transition hover:-translate-y-1 hover:shadow-lg md:px-16"
-  >
-    <span>
-      {t('newsletter.form.submit')}
-    </span>
-    <span class="hidden">
-      {t('newsletter.form.loading')}
-    </span>
-  </button>
+  <InputSubmit label={t('newsletter.form.submit')} />
 </form>
 
 <script is:inline>
-  const newsletterForm = document.querySelector('#newsletter-form')
-  const newsletterFormSubmitBtn = newsletterForm.querySelector('button[type="submit"]')
-  newsletterForm.addEventListener('submit', newsletterOnSubmit)
-
-  async function newsletterOnSubmit(event) {
-    event.preventDefault()
-    disabledForm()
-    newsletterForm.querySelector('#newsletter-form-success').classList.add('hidden')
-
-    if (!validateForm()) {
-      console.error('form is not valid')
-      newsletterForm.querySelector('#newsletter-form-error').classList.remove('hidden')
-      enabledForm()
-      return
+  function getGroups(form) {
+    const groups = []
+    for (var i = 0; i < form.groups.length; i++) {
+      if (form.groups[i].checked) {
+        groups.push(form.groups[i].value)
+      }
     }
+    return groups
+  }
 
+  async function postMailerlite(form) {
     const params = {
-      email: newsletterForm.emailAddress.value,
+      email: form.email.value,
       fields: {
         cv_source: 'newsletterModal',
-        name: newsletterForm.firstName.value
+        name: form.firstName.value
       },
-      groups: getGroups()
+      groups: getGroups(form)
     }
 
-    await fetch('/api/mailerlite', {
+    const response = await fetch('/api/mailerlite', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(params)
     })
-      .then((response) => {
-        if (response.status === 200) {
-          resetForm()
-          newsletterForm.querySelector('#newsletter-form-error').classList.add('hidden')
-          newsletterForm.querySelector('#newsletter-form-success').classList.remove('hidden')
-        } else {
-          // Todo: Better error handling with a nice console error ?
-          newsletterForm.querySelector('#newsletter-form-error').classList.remove('hidden')
-        }
-      })
-      .finally(() => {
-        enabledForm()
-      })
-  }
 
-  function validateForm() {
-    if (!newsletterForm.firstName.value) return false
-    if (!newsletterForm.emailAddress.value) return false
-    if (getGroups().length === 0) return false
-    return true
-  }
-
-  function getGroups() {
-    const groups = []
-    for (var i = 0; i < newsletterForm.groups.length; i++) {
-      if (newsletterForm.groups[i].checked) {
-        groups.push(newsletterForm.groups[i].value)
-      }
+    if (!response.ok) {
+      return Promise.reject(response)
+    } else {
+      return Promise.resolve(response)
     }
-    return groups
-  }
-
-  function disabledForm() {
-    newsletterFormSubmitBtn.disabled = true
-    newsletterFormSubmitBtn.querySelector('span:first-child').classList.toggle('hidden')
-    newsletterFormSubmitBtn.querySelector('span:last-child').classList.toggle('hidden')
-  }
-
-  function enabledForm() {
-    newsletterFormSubmitBtn.disabled = false
-    newsletterFormSubmitBtn.querySelector('span:first-child').classList.toggle('hidden')
-    newsletterFormSubmitBtn.querySelector('span:last-child').classList.toggle('hidden')
-  }
-
-  function resetForm() {
-    newsletterForm.firstName.value = null
-    newsletterForm.emailAddress.value = null
-    newsletterForm.groups.forEach((group) => {
-      group.checked = false
-    })
   }
 </script>
