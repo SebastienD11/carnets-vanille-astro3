@@ -3,19 +3,20 @@ import '@wordpress/block-library/build-style/common.css'
 import '@wordpress/block-library/build-style/style.css'
 import '@wordpress/block-library/build-style/theme.css'
 import { Image } from 'astro:assets'
-import type { Post } from '../api/post'
-import CommentList from '../components/post/commentList.astro'
-import ShareButtons from '../components/post/shareButtons.astro'
+import { decode } from 'html-entities'
+import { getCommentsForPost } from '../api/comment'
 import { parseHtml } from '../utils/parser'
 import { useTranslations } from '../i18n/ui'
-import { getCommentsForPost } from '../api/comment'
+import AuthorCard from '../components/post/authorCard.astro'
+import BannerEbookSample from '../components/ebook/bannerEbookSample.astro'
+import CommentForm from '../components/post/commentForm.astro'
+import CommentList from '../components/post/commentList.astro'
 import FormattedDate from '../components/formatedDate.astro'
 import RelatedPost from '../components/post/relatedPost.astro'
 import SectionTitle from '../components/ui/sectionTitle.astro'
-import { decode } from 'html-entities'
+import ShareButtons from '../components/post/shareButtons.astro'
 import TagList from '../components/post/tagList.astro'
-import AuthorCard from '../components/post/authorCard.astro'
-import CommentForm from '../components/post/commentForm.astro'
+import type { Post } from '../api/post'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -65,7 +66,7 @@ const comments = await getCommentsForPost(post.id, lang)
     set:html={parseHtml(post.content.rendered)}
   />
 
-  <div class="mx-auto max-w-screen-md">
+  <div class="mx-auto w-full max-w-screen-md">
     <SectionTitle as="h3" title={t('post.footer.title')} subtitle={t('post.footer.subtitle')} />
     <div class="flex flex-col gap-4">
       <ShareButtons post={post} />
@@ -80,13 +81,14 @@ const comments = await getCommentsForPost(post.id, lang)
         }
       </p>
       <TagList post={post} />
+      <BannerEbookSample />
     </div>
   </div>
   <AuthorCard />
 
   {
     post.acf.related_posts.length > 0 && (
-      <div class="mx-auto max-w-screen-md">
+      <div class="mx-auto w-full  max-w-screen-md">
         <SectionTitle as="h3" title={t('post.relatedPost.title')} />
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {post.acf.related_posts.map((postId) => (

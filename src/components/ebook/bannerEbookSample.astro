@@ -1,0 +1,64 @@
+---
+import ebookImage from '../../images/banner-samble-ebook-image.png'
+import InputText from '../ui/form/text.astro'
+import InputEmail from '../ui/form/email.astro'
+import InputSubmit from '../ui/form/submit.astro'
+import FormErrors from '../ui/form/error.astro'
+import FormSuccess from '../ui/form/success.astro'
+import { useTranslations } from '../../i18n/ui'
+import { getThemeOptions } from '../../api/options'
+import { ADMIN_EMAIL } from '../../constant'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+const glaceOptions = await getThemeOptions(lang)
+---
+
+<div class="not-prose relative w-full gap-4 rounded-lg border border-vanille bg-beige text-black md:flex md:items-stretch">
+  <div class="h-48 bg-cover bg-bottom bg-no-repeat md:h-auto md:w-1/3 md:bg-right" style={`background-image: url('${ebookImage.src}');`}></div>
+  <div class="space-y-4 p-4 text-center md:w-2/3 md:text-left">
+    <h3 class="text-xl font-extrabold leading-normal">
+      {t('ebook.banner.sample.title')}
+    </h3>
+    <p>
+      {t('ebook.banner.sample.subtitle')}
+    </p>
+    <form onsubmit="formSubmit(event, postFreeEbook)" novalidate>
+      <div class="grid gap-2">
+        <FormErrors requiredFieldsError={t('form.error.fields')} callbackError={t('form.error.generic') + ADMIN_EMAIL} />
+        <FormSuccess message={t('ebook.banner.sample.success')} />
+        <InputText required id="firstName" name="firstName" label={t('form.input.firstName')} />
+        <InputEmail required id="email" name="email" label={t('form.input.email')} />
+        <InputSubmit label={t('ebook.banner.sample.submit')} />
+        <input type="hidden" name="mailerLiteGroupId" value={glaceOptions.mailerlite_group_id_for_ebook} />
+      </div>
+    </form>
+  </div>
+</div>
+
+<script is:inline>
+  async function postFreeEbook(form) {
+    const params = {
+      email: form.email.value,
+      fields: {
+        cv_source: 'Banner Free Ebook',
+        name: form.firstName.value
+      },
+      groups: [form.mailerLiteGroupId.value]
+    }
+
+    const mailerliteResponse = await fetch('/api/mailerlite', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+    })
+
+    if (!mailerliteResponse.ok) {
+      return Promise.reject(mailerliteResponse)
+    }
+
+    return Promise.resolve(mailerliteResponse)
+  }
+</script>
