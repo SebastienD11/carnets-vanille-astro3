@@ -26,30 +26,9 @@ const comments = await getCommentsForPost(post.id, lang)
 
 <div class="flex flex-col gap-12">
   <div class="relative mx-auto w-full max-w-screen-md">
-    {
-      post.featured_media_data[0] && (
-        <Image
-          src={post.featured_media_data[0]}
-          alt={
-            post.featured_media_data['alt_text']
-              ? post.featured_media_data['alt_text']
-              : post.title.rendered
-          }
-          width={post.featured_media_data[1]}
-          widths={[330, 450, 768]}
-          sizes={`(max-width: 360px) 330, (max-width: 480px) 450px, (max-width: 1024px) 768px, 768px`}
-          loading={'eager'}
-          height={post.featured_media_data[2]}
-          class="mx-auto h-auto w-full rounded-lg"
-        />
-      )
-    }
-    <div
-      class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4"
-    >
-      <h1
-        class="inline-block text-center text-xl font-extrabold leading-tight text-white drop-shadow-lg md:text-2xl lg:text-3xl xl:text-4xl"
-      >
+    {post.featured_media_data[0] && <Image src={post.featured_media_data[0]} alt={post.featured_media_data['alt_text'] ? post.featured_media_data['alt_text'] : post.title.rendered} width={post.featured_media_data[1]} widths={[330, 450, 768]} sizes={`(max-width: 360px) 330, (max-width: 480px) 450px, (max-width: 1024px) 768px, 768px`} loading={'eager'} height={post.featured_media_data[2]} class="mx-auto h-auto w-full rounded-lg" />}
+    <div class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4">
+      <h1 class="inline-block text-center text-xl font-extrabold leading-tight text-white drop-shadow-lg md:text-2xl lg:text-3xl xl:text-4xl">
         {decode(post.title.rendered)}
       </h1>
 
@@ -61,10 +40,7 @@ const comments = await getCommentsForPost(post.id, lang)
 
   <TagList post={post} />
 
-  <article
-    class="prose prose-stone mx-auto dark:prose-invert"
-    set:html={parseHtml(post.content.rendered)}
-  />
+  <article class="prose prose-stone mx-auto dark:prose-invert" set:html={parseHtml(post.content.rendered)} />
 
   <div class="mx-auto w-full max-w-screen-md">
     <SectionTitle as="h3" title={t('post.footer.title')} subtitle={t('post.footer.subtitle')} />
@@ -104,11 +80,7 @@ const comments = await getCommentsForPost(post.id, lang)
       <div id="comments" class="mx-auto flex w-full max-w-screen-md flex-col gap-24">
         <CommentList comments={comments} />
         <div>
-          <SectionTitle
-            as="h3"
-            title={`${t('post.comments.form.title')}`}
-            subtitle={t('post.comments.form.subtitle')}
-          />
+          <SectionTitle as="h3" title={`${t('post.comments.form.title')}`} subtitle={t('post.comments.form.subtitle')} />
           <CommentForm postId={post.id} newsletterGroupId={post.acf.mailerlite} />
         </div>
       </div>
