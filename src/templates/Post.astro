@@ -99,7 +99,7 @@ const comments = await getCommentsForPost(post.id, lang)
 
   {
     post.comment_status === 'open' && (
-      <div id="comments" class="mx-auto flex max-w-screen-md flex-col gap-24">
+      <div id="comments" class="mx-auto flex w-full max-w-screen-md flex-col gap-24">
         <CommentList comments={comments} />
         <div>
           <SectionTitle
