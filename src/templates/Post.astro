@@ -107,7 +107,7 @@ const comments = await getCommentsForPost(post.id, lang)
             title={`${t('post.comments.form.title')}`}
             subtitle={t('post.comments.form.subtitle')}
           />
-          <CommentForm postId={post.id} />
+          <CommentForm postId={post.id} newsletterGroupId={post.acf.mailerlite} />
         </div>
       </div>
     )

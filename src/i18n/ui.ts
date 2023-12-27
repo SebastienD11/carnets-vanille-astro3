@@ -42,6 +42,9 @@ export const ui = {
       'Oups, sometthing went wrong. Please, contact me directly at:',
     'post.comments.form.firstName': 'First Name',
     'post.comments.form.loading': 'Sending...',
+    'post.comments.form.newsletter': 'I want to subscribe to the newsletter ',
+    'post.comments.form.newsletter.ebook':
+      'and will receive a <strong>free sample</strong> of my e-book on Saint-Malo.',
     'post.comments.form.submit': 'Submit',
     'post.comments.form.subtitle': "I'll reply as soon as possible!",
     'post.comments.form.title': 'Add your own comment :)',
@@ -92,6 +95,9 @@ export const ui = {
     'post.comments.form.errors.callback':
       "Oups, il y a eu un problème. Veuillez me contacter directement à l'adresse suivante : ",
     'post.comments.form.firstName': 'Prénom',
+    'post.comments.form.newsletter': 'Je m’inscris aux carnets d’actualités pour découvrir ',
+    'post.comments.form.newsletter.ebook':
+      'et vais recevoir un <strong>ebook gratuit</strong> sur Saint-Malo et ses environs.',
     'post.comments.form.loading': 'En cours...',
     'post.comments.form.submit': 'Envoyer',
     'post.comments.form.subtitle': 'J’y répondrai au plus vite !',

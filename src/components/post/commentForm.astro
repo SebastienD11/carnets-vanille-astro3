@@ -6,15 +6,19 @@ import InputSubmit from '../ui/form/submit.astro'
 import FormErrors from '../ui/form/error.astro'
 import FormSuccess from '../ui/form/success.astro'
 import Textarea from '../ui/form/textarea.astro'
-import { ADMIN_EMAIL } from '../../constant'
+import { ADMIN_EMAIL, MAILERLITE_GROUPS } from '../../constant'
+import { getThemeOptions } from '../../api/options'
 
 type Props = {
   postId: number
+  newsletterGroupId?: string
 }
 
 const lang = Astro.currentLocale as string
-const { postId }: Props = Astro.props
+const { postId, newsletterGroupId }: Props = Astro.props
 const t = useTranslations(lang)
+const mailerliteGroup = MAILERLITE_GROUPS.find((group) => group.id === newsletterGroupId)
+const glaceOptions = await getThemeOptions(lang)
 ---
 
 <form
@@ -43,11 +47,32 @@ const t = useTranslations(lang)
     label={t('post.comments.form.comment')}
     placeholder={t('post.comments.form.comment')}
   />
+  {
+    mailerliteGroup && (
+      <div class="">
+        <input
+          type="checkbox"
+          name="mailerlite_group_id"
+          id="mailerlite_group_id"
+          value={mailerliteGroup.id}
+          class="relative top-0.5 mr-1 inline"
+        />
+        <label for="mailerlite_group_id">
+          {t('post.comments.form.newsletter')}
+          <strong>{mailerliteGroup.name}</strong>
+          {glaceOptions.free_ebook_comments_mailerlite_group === mailerliteGroup.id && (
+            <span set:html={t('post.comments.form.newsletter.ebook')} />
+          )}
+        </label>
+      </div>
+    )
+  }
   <InputSubmit label={t('post.comments.form.submit')} />
 </form>
 
 <script is:inline>
   async function postComment(form) {
+    // Post Comment
     const data = {
       post: form.postId.value,
       author_name: form.firstName.value,
@@ -55,7 +80,7 @@ const t = useTranslations(lang)
       content: form.comment.value
     }
 
-    const response = await fetch('/api/comments', {
+    const responseComment = await fetch('/api/comments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -63,10 +88,34 @@ const t = useTranslations(lang)
       body: JSON.stringify(data)
     })
 
-    if (response.ok) {
-      return Promise.resolve(response)
-    } else {
-      return Promise.reject(response)
+    if (!responseComment.ok) {
+      return Promise.reject(responseComment)
     }
+
+    // Post mailerLite
+    if (form.mailerlite_group_id.checked) {
+      const params = {
+        email: form.email.value,
+        fields: {
+          cv_source: 'articleComment',
+          name: form.firstName.value
+        },
+        groups: [form.mailerlite_group_id.value]
+      }
+
+      const mailerliteResponse = await fetch('/api/mailerlite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+      })
+
+      if (!mailerliteResponse.ok) {
+        return Promise.reject(mailerliteResponse)
+      }
+    }
+
+    return Promise.resolve(responseComment)
   }
 </script>
