@@ -11,7 +11,7 @@ const t = useTranslations(lang)
 
 {
   comments && (
-    <Fragment>
+    <div>
       <SectionTitle
         as="h3"
         title={`${comments.length} ${t('post.comments.title')}`}
@@ -28,6 +28,6 @@ const t = useTranslations(lang)
           </div>
         ))}
       </div>
-    </Fragment>
+    </div>
   )
 }
