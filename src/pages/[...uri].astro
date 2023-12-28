@@ -6,6 +6,7 @@ import Category from '../templates/Category.astro'
 import Tag from '../templates/Tag.astro'
 import Post from '../templates/Post.astro'
 import Page from '../templates/Page.astro'
+import PageLPCategory from '../templates/PageLPCategory.astro'
 import { getResourceByUri } from '../api/getByUrl'
 import { getAllUris } from '../api/getAllUrls'
 import { buildSeo } from '../utils/seo'
@@ -20,7 +21,9 @@ export async function getStaticPaths() {
 const uri: string = `/${Astro.params.uri}/`
 const data = await getResourceByUri(uri, 'fr')
 
-function resolveContentTemplate(type: string | null) {
+function resolveContentTemplate(data: any) {
+  const type = getTypeByData(data)
+
   if (!type) throw new Error(`No type found`)
 
   let template
@@ -29,6 +32,10 @@ function resolveContentTemplate(type: string | null) {
       template = Post
       break
     case 'page':
+      if (data.acf.template === 'category-landing-page') {
+        template = PageLPCategory
+        break
+      }
       template = Page
       break
     case 'category':
@@ -44,7 +51,7 @@ function resolveContentTemplate(type: string | null) {
   return template
 }
 
-const Template = resolveContentTemplate(getTypeByData(data))
+const Template = resolveContentTemplate(data)
 ---
 
 <Layout seo={buildSeo(data)}>

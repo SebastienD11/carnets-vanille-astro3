@@ -54,6 +54,9 @@ const { comment, className }: Props = Astro.props
 
       <FormattedDate date={comment.date} className="text-sm text-stone-500" />
     </div>
-    <div class="prose-global prose-p:!my-0" set:html={comment.content.rendered} />
+    <div
+      class="prose prose-stone dark:prose-invert prose-p:!my-0"
+      set:html={comment.content.rendered}
+    />
   </div>
 </div>
