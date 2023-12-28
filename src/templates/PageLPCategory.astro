@@ -56,7 +56,7 @@ const { node: page }: Props = Astro.props
             >
               {section.section_banner && (
                 <a
-                  href={section.section_banner_link.url}
+                  href={replaceLinks(section.section_banner_link.url)}
                   title={section.section_banner_link.title}
                   target={section.section_banner_link.target}
                   rel={section.section_banner_link.target === '_blank' ? 'noopener' : ''}
@@ -89,7 +89,7 @@ const { node: page }: Props = Astro.props
           {section.section_read_more_label && section.section_read_more_link && (
             <div class="flex justify-center">
               <a
-                href={section.section_read_more_link.url}
+                href={replaceLinks(section.section_read_more_link.url)}
                 title={section.section_read_more_link.title}
                 target={section.section_read_more_link.target}
                 rel={section.section_read_more_link.target === '_blank' ? 'noopener' : ''}
