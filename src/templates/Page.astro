@@ -15,4 +15,6 @@ const page: Page = Astro.props.node
   </h1>
 </div>
 
-<article class="prose prose-stone mx-auto" set:html={parseHtml(page.content.rendered)} />
+<article class="prose prose-stone mx-auto">
+  <div set:html={parseHtml(page.content.rendered)} />
+</article>
