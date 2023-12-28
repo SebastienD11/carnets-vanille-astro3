@@ -5,6 +5,7 @@ import '@wordpress/block-library/build-style/theme.css'
 import type { Page } from '../api/page'
 import RelatedPost from '../components/post/relatedPost.astro'
 import { replaceLinks } from '../utils/parser'
+import BannerEbookBuy from '../components/ebook/bannerEbookBuy.astro'
 
 type Props = {
   node: Page
@@ -31,7 +32,9 @@ const { node: page }: Props = Astro.props
   {
     page.acf.banner_ebook && (
       <>
-        <div class="w-full bg-beige lg:w-1/2">Banner Ebook</div>
+        <div class="w-full lg:w-1/2">
+          <BannerEbookBuy />
+        </div>
       </>
     )
   }

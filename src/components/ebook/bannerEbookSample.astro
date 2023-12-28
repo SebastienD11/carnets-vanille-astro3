@@ -14,9 +14,16 @@ const t = useTranslations(lang)
 const glaceOptions = await getThemeOptions(lang)
 ---
 
-<div astro-banner-ebook-sample class="not-prose relative w-full gap-4 rounded-lg border border-vanille bg-beige text-black md:flex md:items-stretch">
-  <div class="h-48 bg-cover bg-bottom bg-no-repeat md:h-auto md:w-1/3 md:bg-right" style={`background-image: url('${ebookImage.src}');`}></div>
-  <div class="space-y-4 p-4 text-center md:w-2/3 md:text-left">
+<div
+  astro-banner-ebook-sample
+  class="not-prose relative w-full gap-4 rounded-lg border border-vanille bg-beige text-black md:flex md:items-stretch"
+>
+  <div
+    class="h-48 bg-cover bg-bottom bg-no-repeat md:h-auto md:w-1/3 md:bg-right"
+    style={`background-image: url('${ebookImage.src}');`}
+  >
+  </div>
+  <div class="space-y-4 p-8 text-center md:w-2/3 md:text-left">
     <h3 class="text-xl font-extrabold leading-normal">
       {t('ebook.banner.sample.title')}
     </h3>
@@ -25,12 +32,19 @@ const glaceOptions = await getThemeOptions(lang)
     </p>
     <form onsubmit="formSubmit(event, postFreeEbook)" novalidate>
       <div class="grid gap-2">
-        <FormErrors requiredFieldsError={t('form.error.fields')} callbackError={t('form.error.generic') + ADMIN_EMAIL} />
+        <FormErrors
+          requiredFieldsError={t('form.error.fields')}
+          callbackError={t('form.error.generic') + ADMIN_EMAIL}
+        />
         <FormSuccess message={t('ebook.banner.sample.success')} />
         <InputText required id="firstName" name="firstName" label={t('form.input.firstName')} />
         <InputEmail required id="email" name="email" label={t('form.input.email')} />
         <InputSubmit label={t('ebook.banner.sample.submit')} />
-        <input type="hidden" name="mailerLiteGroupId" value={glaceOptions.mailerlite_group_id_for_ebook} />
+        <input
+          type="hidden"
+          name="mailerLiteGroupId"
+          value={glaceOptions.mailerlite_group_id_for_ebook}
+        />
       </div>
     </form>
   </div>

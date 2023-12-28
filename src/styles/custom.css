@@ -23,6 +23,17 @@
 }
 
 /**
+    * Mark
+*/
+
+*:not(.prose) .mark {
+  color: inherit !important;
+  background: var(--line-yellow) bottom left/100% 0.3em repeat-x;
+  text-decoration: none !important;
+  padding-bottom: 0.3em;
+}
+
+/**
     * Pre
 */
 
