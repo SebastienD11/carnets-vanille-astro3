@@ -1,0 +1,20 @@
+---
+export const prerender = true
+
+import Layout from '../layouts/Layout.astro'
+
+const seo = `
+    <title>Page non trouvée - Carnets Vanille</title>   
+	<!-- This site is optimized with the Yoast SEO plugin v21.7 - https://yoast.com/wordpress/plugins/seo/ -->
+	<meta property="og:locale" content="fr_FR" class="yoast-seo-meta-tag" />
+	<meta property="og:title" content="Page non trouvée - Carnets Vanille" class="yoast-seo-meta-tag" />
+	<meta property="og:site_name" content="Carnets Vanille" class="yoast-seo-meta-tag" />
+	<!-- / Yoast SEO plugin. -->
+`
+---
+
+<Layout seo={seo}>
+  <main class="flex items-center justify-center">
+    <span class="text-[100px] font-black text-vanille md:text-[160px] lg:text-[200px]">404</span>
+  </main>
+</Layout>
