@@ -7,6 +7,7 @@ import Tag from '../../templates/Tag.astro'
 import Post from '../../templates/Post.astro'
 import Page from '../../templates/Page.astro'
 import PageLPCategory from '../../templates/PageLPCategory.astro'
+import PageEbookLP from '../../templates/PageEbookLP.astro'
 import { getResourceByUri } from '../../api/getByUrl'
 import { getAllUris } from '../../api/getAllUrls'
 import { buildSeo } from '../../utils/seo'
@@ -34,6 +35,10 @@ function resolveContentTemplate(data: any) {
     case 'page':
       if (data.acf.template === 'category-landing-page') {
         template = PageLPCategory
+        break
+      }
+      if (data.acf.template === 'ebook-landing-page') {
+        template = PageEbookLP
         break
       }
       template = Page

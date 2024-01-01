@@ -1,0 +1,11 @@
+---
+import type { Page } from '../api/page'
+
+type Props = {
+  node: Page
+}
+
+const { node: page }: Props = Astro.props
+---
+
+{page.title.rendered}
