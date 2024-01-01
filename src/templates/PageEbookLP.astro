@@ -1,11 +1,219 @@
 ---
 import type { Page } from '../api/page'
+import { Image } from 'astro:assets'
+import ipadMockup from '../images/ipad-mockup.png'
 
 type Props = {
   node: Page
 }
 
 const { node: page }: Props = Astro.props
+
+console.log(page.acf)
+
+// Todo : Override Yoast SEO Schema ? The current one doesn't know the page is a product.
+// Todo : Override Layout. This Landing Page should not use the default layout.
+
+const title = page.acf.content_title
+const formats = page.acf.content_formats
+const version = page.acf.content_version
+
+const aggregateRating = 4.9 // Todo : Calculate aggreateRating and reviewsCount from Comment received.
+const reviewsCount = 16 // Initial value of 16, from Gumroad period.
+
+const intro = page.acf.content_intro
+const introBis = page.acf.content_intro_bis
+const content = page.acf.content_the_content
+
+const image = page.acf.content_image
+
+const author = page.acf.content_author
+
+const faq = page.acf.content_faq
 ---
 
-{page.title.rendered}
+<div
+  class="mx-auto flex flex-col justify-start space-y-8 px-6 lg:container md:px-8 lg:flex-row lg:space-x-12 xl:space-x-24 2xl:space-x-48"
+>
+  {/* Desktop Left column */}
+  <div
+    class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start space-y-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center lg:space-y-12 xl:max-w-[550px]"
+  >
+    <div class="space-y-4 xl:space-y-8">
+      {/* Title */}
+      {
+        title && (
+          <>
+            <h1 class="text-center text-2xl font-extrabold dark:text-vanille lg:text-left 2xl:text-4xl">
+              {title}
+            </h1>
+            <span class="block text-center">
+              Written by&nbsp;<span class="font-bold italic">Sarah Lagache</span>
+            </span>
+          </>
+        )
+      }
+      {/* Metas */}
+      {
+        (formats || version || aggregateRating) && (
+          <>
+            <div class="flex items-center justify-center gap-2">
+              {formats && (
+                <div class="mr-2 inline-block rounded-full bg-framboise px-4 py-1 text-center text-xs font-bold uppercase text-black">
+                  {formats}
+                </div>
+              )}
+
+              {aggregateRating && reviewsCount && (
+                <div class="mr-2 flex items-center justify-center gap-1 rounded-full bg-vanille px-4 py-1 text-center text-xs font-bold uppercase text-black ">
+                  <i class="icon-star text-md -mt-0.5" />
+                  <span>
+                    {aggregateRating} /5 ({reviewsCount} reviews)
+                  </span>
+                </div>
+              )}
+
+              {version && (
+                <div class="inline-block rounded-full bg-pistache px-4 py-1 text-center text-xs font-bold uppercase text-black">
+                  {version}
+                </div>
+              )}
+            </div>
+          </>
+        )
+      }
+    </div>
+    {/* Mobile Intro */}
+    {
+      intro && (
+        <div
+          class="prose prose-stone mx-auto text-center dark:prose-invert lg:hidden lg:text-left"
+          set:html={intro}
+        />
+      )
+    }
+    {/* Mobile Ipad */}
+    {
+      image && (
+        <div class="relative mx-auto max-w-[450px] lg:hidden">
+          <Image
+            src={image.url}
+            alt={image.alt || title}
+            width={image.width}
+            height={image.height}
+            densities={[1.5, 2]}
+            loading="lazy"
+            class="absolute z-10 h-auto w-full scale-[0.92] rounded-3xl"
+          />
+          <Image
+            src={ipadMockup}
+            alt="Ebook on Ipad"
+            width={ipadMockup.width}
+            densities={[1.5, 2]}
+            loading="lazy"
+            class="relative z-10 max-w-full"
+          />
+        </div>
+      )
+    }
+    {/* Desktop Intro */}
+    {
+      intro && (
+        <div
+          class="prose prose-stone mx-auto hidden dark:prose-invert lg:block lg:text-left"
+          set:html={intro}
+        />
+      )
+    }
+    {/* Intro Bis */}
+    {
+      introBis && (
+        <div
+          class="prose prose-stone mx-auto text-center dark:prose-invert lg:text-left "
+          set:html={introBis}
+        />
+      )
+    }
+  </div>
+  {/* End Desktop Left column */}
+  {/* Desktop Right column */}
+  <div class="mx-auto flex max-w-[450px] flex-col justify-start gap-8 lg:max-w-none lg:gap-12">
+    {/* Separator */}
+    <i class="icon-ermine mx-auto text-xl lg:hidden"> </i>
+
+    {/* Desktop Ipad */}
+    {
+      image && (
+        <div class="relative mx-auto hidden max-w-[450px] lg:block">
+          <Image
+            src={image.url}
+            alt={image.alt || title}
+            width={image.width}
+            height={image.height}
+            densities={[1.5, 2]}
+            loading="lazy"
+            class="absolute z-10 h-auto w-full scale-[0.92] rounded-3xl"
+          />
+          <Image
+            src={ipadMockup}
+            alt="Ebook on Ipad"
+            width={ipadMockup.width}
+            densities={[1.5, 2]}
+            loading="lazy"
+            class="relative z-10 max-w-full"
+          />
+        </div>
+      )
+    }
+
+    {/* The Content */}
+    {
+      content && (
+        <>
+          <h3 class="mark relative mx-auto inline-block overflow-hidden rounded-lg text-xl font-bold">
+            The Content
+          </h3>
+          <div class="prose prose-stone dark:prose-invert" set:html={content} />
+        </>
+      )
+    }
+
+    {/* Separator */}
+    <i class="icon-ermine mx-auto text-xl"> </i>
+
+    {/* Author */}
+    {
+      author.author_description && author.author_image && (
+        <div class="flex flex-col items-center justify-center">
+          <Image
+            src={author.author_image.url}
+            alt={author.author_image.alt || 'Sarah Lagache'}
+            width={author.author_image.width / 2}
+            height={author.author_image.height / 2}
+            densities={[1.5, 2]}
+            loading="lazy"
+          />
+          <div
+            class="prose prose-stone text-center dark:prose-invert"
+            set:html={author.author_description}
+          />
+        </div>
+      )
+    }
+
+    {/* Separator */}
+    <i class="icon-ermine mx-auto text-xl"> </i>
+
+    {/* The FAQ */}
+    {
+      faq && (
+        <>
+          <h3 class="mark relative mx-auto inline-block overflow-hidden rounded-lg text-xl font-bold">
+            FAQ
+          </h3>
+          <div class="prose prose-stone dark:prose-invert" set:html={faq} />
+        </>
+      )
+    }
+  </div>
+</div>
