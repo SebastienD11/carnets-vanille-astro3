@@ -3,16 +3,44 @@ import type { Page } from '../api/page'
 import { Image } from 'astro:assets'
 import ipadMockup from '../images/ipad-mockup.png'
 
+interface ACF extends Page {
+  acf: {
+    content_title: string
+    content_formats: string
+    content_version: string
+    content_intro: string
+    content_intro_bis: string
+    content_the_content: string
+    content_image: {
+      url: string
+      alt: string
+      width: number
+      height: number
+    }
+    content_author: {
+      author_description: string
+      author_image: {
+        url: string
+        alt: string
+        width: number
+        height: number
+      }
+    }
+    content_faq: string
+  }
+}
+
 type Props = {
-  node: Page
+  node: ACF
 }
 
 const { node: page }: Props = Astro.props
 
-console.log(page.acf)
-
 // Todo : Override Yoast SEO Schema ? The current one doesn't know the page is a product.
 // Todo : Override Layout. This Landing Page should not use the default layout.
+// Todo : Comment for testimonials.
+// Todo : CTA and Stripe Checkout.
+// Todo : Conversion Tracking
 
 const title = page.acf.content_title
 const formats = page.acf.content_formats

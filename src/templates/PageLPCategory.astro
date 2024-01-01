@@ -1,11 +1,20 @@
 ---
-import type { Page } from '../api/page'
+import type { Page, PageSection } from '../api/page'
 import RelatedPost from '../components/post/relatedPost.astro'
 import { replaceLinks } from '../utils/parser'
 import BannerEbookBuy from '../components/ebook/bannerEbookBuy.astro'
 
+interface ACF extends Page {
+  acf: {
+    introduction_title: string
+    introduction_intro: string
+    banner_ebook: boolean
+    sections: PageSection[]
+  }
+}
+
 type Props = {
-  node: Page
+  node: ACF
 }
 
 const { node: page }: Props = Astro.props

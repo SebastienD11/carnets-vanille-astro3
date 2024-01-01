@@ -7,7 +7,43 @@ export async function getPageBySlug(slug: string, lang: string): Promise<Page | 
   return page.length > 0 ? page[0] : null
 }
 
-type PageSection = {
+export type Page = {
+  id: number
+  date: string
+  date_gmt: string
+  modified: string
+  modified_gmt: string
+  slug: string
+  status: string
+  type: 'page'
+  link: string
+  title: {
+    rendered: string
+  }
+  content: {
+    rendered: string
+    protected: boolean
+  }
+  excerpt: {
+    rendered: string
+    protected: boolean
+  }
+  author: number
+  featured_media: number
+  comment_status: string
+  sticky: boolean
+  template: string
+  acf: any
+  yoast_head: string
+  wpml_current_locale: string
+  wpml_translations: {
+    locale: string
+    href: string
+  }[]
+}
+
+// Custom for this project
+export type PageSection = {
   section_title: string
   section_icon: string
   section_intro: string
@@ -53,45 +89,4 @@ type PageSection = {
     url: string
     target: string
   }
-}
-
-export type Page = {
-  id: number
-  date: string
-  date_gmt: string
-  modified: string
-  modified_gmt: string
-  slug: string
-  status: string
-  type: 'page'
-  link: string
-  title: {
-    rendered: string
-  }
-  content: {
-    rendered: string
-    protected: boolean
-  }
-  excerpt: {
-    rendered: string
-    protected: boolean
-  }
-  author: number
-  featured_media: number
-  comment_status: string
-  sticky: boolean
-  template: string
-  acf: {
-    introduction_title: string
-    introduction_intro: string
-    banner_ebook: boolean
-    sections: PageSection[]
-    template: string
-  }
-  yoast_head: string
-  wpml_current_locale: string
-  wpml_translations: {
-    locale: string
-    href: string
-  }[]
 }
