@@ -2,6 +2,10 @@
 import type { Page } from '../api/page'
 import { Image } from 'astro:assets'
 import ipadMockup from '../images/ipad-mockup.png'
+import { getCommentsForPost } from '../api/comment'
+import { decode } from 'html-entities'
+
+const lang = Astro.currentLocale as string
 
 interface ACF extends Page {
   acf: {
@@ -46,9 +50,6 @@ const title = page.acf.content_title
 const formats = page.acf.content_formats
 const version = page.acf.content_version
 
-const aggregateRating = 4.9 // Todo : Calculate aggreateRating and reviewsCount from Comment received.
-const reviewsCount = 16 // Initial value of 16, from Gumroad period.
-
 const intro = page.acf.content_intro
 const introBis = page.acf.content_intro_bis
 const content = page.acf.content_the_content
@@ -58,6 +59,19 @@ const image = page.acf.content_image
 const author = page.acf.content_author
 
 const faq = page.acf.content_faq
+
+const comments = await getCommentsForPost(page.id, lang)
+
+// Those note are proper to my use case. We account for previous reviews received on Gumroad before moving awayt from the plateform.
+let aggregateRating = 4.9
+let reviewsCount = 16
+
+comments?.map((comment) => {
+  aggregateRating = (aggregateRating + comment.meta.product_rating) / 2
+  reviewsCount += 1
+})
+
+aggregateRating = Math.round(aggregateRating)
 ---
 
 <div
@@ -202,6 +216,35 @@ const faq = page.acf.content_faq
             The Content
           </h3>
           <div class="prose prose-stone dark:prose-invert" set:html={content} />
+        </>
+      )
+    }
+
+    {/* Separator */}
+    <i class="icon-ermine mx-auto text-xl"> </i>
+
+    {/* Testimonials */}
+    {
+      comments.length > 0 && (
+        <>
+          <h3 class="mark relative mx-auto inline-block overflow-hidden rounded-lg text-xl font-bold">
+            Testimonials
+          </h3>
+          <div class="grid gap-8 xl:grid-cols-2">
+            {comments.map((comment) => (
+              <div class="flex items-center justify-center rounded-lg bg-stone-100 p-6 shadow dark:bg-stone-800">
+                <div>
+                  <blockquote
+                    class="text-center font-medium italic"
+                    set:html={comment.content.rendered}
+                  />
+                  <figcaption class="mt-2 text-center font-bold dark:text-vanille">
+                    {decode(comment.author_name)}
+                  </figcaption>
+                </div>
+              </div>
+            ))}
+          </div>
         </>
       )
     }
