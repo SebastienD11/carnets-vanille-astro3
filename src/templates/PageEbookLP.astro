@@ -71,7 +71,7 @@ comments?.map((comment) => {
   reviewsCount += 1
 })
 
-aggregateRating = Math.round(aggregateRating)
+aggregateRating = Math.round(aggregateRating * 100) / 100
 ---
 
 <div
@@ -108,10 +108,18 @@ aggregateRating = Math.round(aggregateRating)
 
               {aggregateRating && reviewsCount && (
                 <div class="mr-2 flex items-center justify-center gap-1 rounded-full bg-vanille px-4 py-1 text-center text-xs font-bold uppercase text-black ">
-                  <i class="icon-star text-md -mt-0.5" />
-                  <span>
-                    {aggregateRating} /5 ({reviewsCount} reviews)
-                  </span>
+                  <svg
+                    class="me-1 h-3 w-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 22 20"
+                  >
+                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                  </svg>
+                  <span>{aggregateRating}</span>
+                  <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-900" />
+                  <span>{reviewsCount} reviews</span>
                 </div>
               )}
 
@@ -212,9 +220,7 @@ aggregateRating = Math.round(aggregateRating)
     {
       content && (
         <>
-          <h3 class="mark relative mx-auto inline-block overflow-hidden rounded-lg text-xl font-bold">
-            The Content
-          </h3>
+          <h3 class="mark mx-auto inline-block text-xl font-bold">The Content</h3>
           <div class="prose prose-stone dark:prose-invert" set:html={content} />
         </>
       )
@@ -227,18 +233,50 @@ aggregateRating = Math.round(aggregateRating)
     {
       comments.length > 0 && (
         <>
-          <h3 class="mark relative mx-auto inline-block overflow-hidden rounded-lg text-xl font-bold">
-            Testimonials
-          </h3>
+          <div class="flex flex-col items-center gap-3">
+            <h3 class="mark mx-auto inline-block text-xl font-bold">Testimonials</h3>
+            <div class="flex flex-row items-center justify-center gap-1 font-bold">
+              <svg
+                class="me-1 h-4 w-4 text-vanille"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 22 20"
+              >
+                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+              </svg>
+              <span>{aggregateRating}</span>
+              <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
+              <span>{reviewsCount} reviews</span>
+            </div>
+          </div>
+
           <div class="grid gap-8 xl:grid-cols-2">
             {comments.map((comment) => (
               <div class="flex items-center justify-center rounded-lg bg-stone-100 p-6 shadow dark:bg-stone-800">
-                <div>
+                <div class="flex flex-col items-center gap-3">
+                  {comment.meta.product_rating && (
+                    <div class="flex flex-row items-center justify-center">
+                      {new Array(comment.meta.product_rating).fill(0).map(() => {
+                        return (
+                          <svg
+                            class="me-1 h-4 w-4 text-vanille"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 22 20"
+                          >
+                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                          </svg>
+                        )
+                      })}
+                    </div>
+                  )}
                   <blockquote
                     class="text-center font-medium italic"
                     set:html={comment.content.rendered}
                   />
-                  <figcaption class="mt-2 text-center font-bold dark:text-vanille">
+                  <figcaption class="text-center font-bold dark:text-vanille">
                     {decode(comment.author_name)}
                   </figcaption>
                 </div>
@@ -279,9 +317,7 @@ aggregateRating = Math.round(aggregateRating)
     {
       faq && (
         <>
-          <h3 class="mark relative mx-auto inline-block overflow-hidden rounded-lg text-xl font-bold">
-            FAQ
-          </h3>
+          <h3 class="mark mx-auto inline-block text-xl font-bold">FAQ</h3>
           <div class="prose prose-stone dark:prose-invert" set:html={faq} />
         </>
       )
