@@ -4,6 +4,7 @@ import { Image } from 'astro:assets'
 import ipadMockup from '../images/ipad-mockup.png'
 import { getCommentsForPost } from '../api/comment'
 import { decode } from 'html-entities'
+import Logo from '../components/header/Logo.astro'
 
 const lang = Astro.currentLocale as string
 
@@ -44,7 +45,6 @@ type Props = {
 
 const { node: page }: Props = Astro.props
 
-// Todo : Override Layout. This Landing Page should not use the default layout.
 // Todo : CTA and Stripe Checkout.
 // Todo : Conversion Tracking
 
@@ -111,31 +111,32 @@ const schema = {
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
 <div
-  class="mx-auto flex flex-col justify-start space-y-8 px-6 lg:container md:px-8 lg:flex-row lg:space-x-12 xl:space-x-24 2xl:space-x-48"
+  class="mx-auto flex flex-col justify-start gap-8 px-6 lg:container md:px-8 lg:flex-row lg:gap-12 xl:gap-24 2xl:gap-48"
 >
   {/* Desktop Left column */}
   <div
-    class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start space-y-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center lg:space-y-12 xl:max-w-[550px]"
+    class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start gap-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center lg:gap-12 xl:max-w-[550px]"
   >
-    <div class="space-y-4 xl:space-y-8">
+    <div class="flex flex-col items-center gap-8 lg:items-start xl:gap-8">
+      {/* Logo */}
+      <Logo />
+
       {/* Title */}
       {
         title && (
-          <>
-            <h1 class="text-center text-2xl font-extrabold dark:text-vanille lg:text-left 2xl:text-4xl">
-              {title}
-            </h1>
-            <span class="block text-center">
+          <div class="flex flex-col gap-2 text-center lg:text-left">
+            <h1 class="text-2xl font-extrabold dark:text-vanille 2xl:text-4xl">{title}</h1>
+            <span class="block text-sm">
               Written by&nbsp;<span class="font-bold italic">Sarah Lagache</span>
             </span>
-          </>
+          </div>
         )
       }
       {/* Metas */}
       {
         (formats || version || aggregateRating) && (
           <>
-            <div class="flex items-center justify-center gap-2">
+            <div class="flex flex-col items-center justify-center gap-2 md:flex-row">
               {formats && (
                 <div class="mr-2 inline-block rounded-full bg-framboise px-4 py-1 text-center text-xs font-bold uppercase text-black">
                   {formats}
@@ -172,16 +173,13 @@ const schema = {
     {/* Mobile Intro */}
     {
       intro && (
-        <div
-          class="prose prose-stone mx-auto text-center dark:prose-invert lg:hidden lg:text-left"
-          set:html={intro}
-        />
+        <div class="prose prose-stone mx-auto dark:prose-invert lg:hidden" set:html={intro} />
       )
     }
     {/* Mobile Ipad */}
     {
       image && (
-        <div class="relative mx-auto max-w-[450px] lg:hidden">
+        <div class="relative z-0 mx-auto max-w-full md:max-w-[450px] lg:hidden">
           <Image
             src={image.url}
             alt={image.alt || title}
@@ -205,21 +203,11 @@ const schema = {
     {/* Desktop Intro */}
     {
       intro && (
-        <div
-          class="prose prose-stone mx-auto hidden dark:prose-invert lg:block lg:text-left"
-          set:html={intro}
-        />
+        <div class="prose prose-stone mx-auto hidden dark:prose-invert lg:block" set:html={intro} />
       )
     }
     {/* Intro Bis */}
-    {
-      introBis && (
-        <div
-          class="prose prose-stone mx-auto text-center dark:prose-invert lg:text-left "
-          set:html={introBis}
-        />
-      )
-    }
+    {introBis && <div class="prose prose-stone mx-auto dark:prose-invert" set:html={introBis} />}
   </div>
   {/* End Desktop Left column */}
   {/* Desktop Right column */}
@@ -230,7 +218,7 @@ const schema = {
     {/* Desktop Ipad */}
     {
       image && (
-        <div class="relative mx-auto hidden max-w-[450px] lg:block">
+        <div class="relative mx-auto hidden max-w-[450px] lg:mt-12 lg:block">
           <Image
             src={image.url}
             alt={image.alt || title}
@@ -338,10 +326,7 @@ const schema = {
             densities={[1.5, 2]}
             loading="lazy"
           />
-          <div
-            class="prose prose-stone text-center dark:prose-invert"
-            set:html={author.author_description}
-          />
+          <div class="prose prose-stone dark:prose-invert" set:html={author.author_description} />
         </div>
       )
     }

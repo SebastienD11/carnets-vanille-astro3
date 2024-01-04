@@ -1,7 +1,8 @@
 ---
 export const prerender = true
 
-import Layout from '../../layouts/Layout.astro'
+import DefaultLayout from '../../layouts/Layout.astro'
+import LayoutLPEbook from '../../layouts/LayoutLPEbook.astro'
 import Category from '../../templates/Category.astro'
 import Tag from '../../templates/Tag.astro'
 import Post from '../../templates/Post.astro'
@@ -28,6 +29,7 @@ function resolveContentTemplate(data: any) {
   if (!type) throw new Error(`No type found`)
 
   let template
+  let layout = DefaultLayout
   switch (type) {
     case 'post':
       template = Post
@@ -39,6 +41,7 @@ function resolveContentTemplate(data: any) {
       }
       if (data.acf.template === 'ebook-landing-page') {
         template = PageEbookLP
+        layout = LayoutLPEbook
         break
       }
       template = Page
@@ -53,10 +56,10 @@ function resolveContentTemplate(data: any) {
       template = Post
   }
 
-  return template
+  return { template, layout }
 }
 
-const Template = resolveContentTemplate(data)
+const { template: Template, layout: Layout } = resolveContentTemplate(data)
 ---
 
 <Layout seo={buildSeo(data)}>
