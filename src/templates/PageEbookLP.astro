@@ -15,6 +15,7 @@ interface ACF extends Page {
     content_intro: string
     content_intro_bis: string
     content_the_content: string
+    content_product_price: string
     content_image: {
       url: string
       alt: string
@@ -31,6 +32,9 @@ interface ACF extends Page {
       }
     }
     content_faq: string
+    product_schema_name: string
+    product_schema_description: string
+    product_schema_sku: string
   }
 }
 
@@ -40,29 +44,26 @@ type Props = {
 
 const { node: page }: Props = Astro.props
 
-// Todo : Override Yoast SEO Schema ? The current one doesn't know the page is a product.
 // Todo : Override Layout. This Landing Page should not use the default layout.
-// Todo : Comment for testimonials.
 // Todo : CTA and Stripe Checkout.
 // Todo : Conversion Tracking
 
+// Content
 const title = page.acf.content_title
 const formats = page.acf.content_formats
 const version = page.acf.content_version
-
 const intro = page.acf.content_intro
 const introBis = page.acf.content_intro_bis
 const content = page.acf.content_the_content
-
 const image = page.acf.content_image
-
 const author = page.acf.content_author
-
 const faq = page.acf.content_faq
+
+// Ratings & Testimonials
 
 const comments = await getCommentsForPost(page.id, lang)
 
-// Those note are proper to my use case. We account for previous reviews received on Gumroad before moving awayt from the plateform.
+// Note: The value below are proper to my Carnets Vanille case. We account for previous reviews received on Gumroad before moving awayt from the plateform.
 let aggregateRating = 4.9
 let reviewsCount = 16
 
@@ -72,7 +73,42 @@ comments?.map((comment) => {
 })
 
 aggregateRating = Math.round(aggregateRating * 100) / 100
+
+// Pricing
+
+const productPriceSymbol = '€'
+const productPriceSymbolCode = 'EUR'
+const content_product_price = page.acf.content_product_price
+
+// This section is to overide the Google Markup coming from Yoast. As in Wordpress, this ebook is created as a page, Yoast schema markup doesn't know it's a product. By passing this object to <script type="application/ld+json" set:html={JSON.stringify(schema)} />  in our DOM, it will override the one coming from Yoast above in the DOM.
+
+const schema = {
+  '@context': 'https://schema.org/',
+  '@type': 'Product',
+  name: page.acf.product_schema_name,
+  image: image.url,
+  description: page.acf.product_schema_description,
+  sku: page.acf.product_schema_sku,
+  brand: {
+    '@type': 'Brand',
+    name: 'Carnets Vanille'
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: aggregateRating,
+    reviewCount: reviewsCount
+  },
+  offers: {
+    '@type': 'Offer',
+    url: page.link,
+    priceCurrency: productPriceSymbolCode,
+    price: content_product_price,
+    availability: 'https://schema.org/InStock'
+  }
+}
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
 <div
   class="mx-auto flex flex-col justify-start space-y-8 px-6 lg:container md:px-8 lg:flex-row lg:space-x-12 xl:space-x-24 2xl:space-x-48"
