@@ -5,6 +5,8 @@ import ipadMockup from '../images/ipad-mockup.png'
 import { getCommentsForPost } from '../api/comment'
 import { decode } from 'html-entities'
 import Logo from '../components/header/Logo.astro'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import Footer from '../components/Footer/Footer.astro'
 
 const lang = Astro.currentLocale as string
 
@@ -47,6 +49,7 @@ const { node: page }: Props = Astro.props
 
 // Todo : CTA and Stripe Checkout.
 // Todo : Conversion Tracking
+// Todo : Translations
 
 // Content
 const title = page.acf.content_title
@@ -110,238 +113,251 @@ const schema = {
 
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-<div
-  class="mx-auto flex flex-col justify-start gap-8 px-6 lg:container md:px-8 lg:flex-row lg:gap-12 xl:gap-24 2xl:gap-48"
->
-  {/* Desktop Left column */}
+<div class="flex flex-col border-b border-stone-200 lg:flex-row">
+  {/* Left column */}
   <div
-    class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start gap-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center lg:gap-12 xl:max-w-[550px]"
+    class="w-full px-4 pt-6 lg:w-1/2 lg:border-r lg:border-stone-200 lg:bg-gradient-to-l lg:from-stone-100 lg:to-stone-100/10 lg:pt-0"
   >
-    <div class="flex flex-col items-center gap-8 lg:items-start xl:gap-8">
-      {/* Logo */}
-      <Logo />
+    <div
+      class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start gap-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center xl:max-w-[550px]"
+    >
+      <div class="flex flex-col gap-48">
+        <div class="flex flex-col items-center gap-8 lg:items-start xl:gap-8">
+          {/* Logo */}
+          <div class="flex items-center justify-center lg:hidden">
+            <Logo />
+          </div>
+          <div
+            class="rounded-full border border-vanille bg-vanille/60 px-8 py-1 text-sm font-medium backdrop-blur-xl"
+          >
+            Digital Product
+          </div>
+          {/* Title */}
+          {
+            title && (
+              <div class="flex flex-col gap-2 text-center lg:text-left">
+                <h1 class="text-2xl font-extrabold dark:text-vanille 2xl:text-4xl">{title}</h1>
+                <span class="block text-sm">
+                  Written by&nbsp;<span class="font-bold italic">Sarah Lagache</span>
+                </span>
+              </div>
+            )
+          }
+          {/* Metas */}
+          {
+            (formats || version || aggregateRating) && (
+              <>
+                <div class="flex flex-col items-center justify-center gap-2 md:flex-row">
+                  {formats && (
+                    <div class="mr-2 inline-block rounded-full bg-framboise px-4 py-1 text-center text-xs font-bold uppercase text-black">
+                      {formats}
+                    </div>
+                  )}
 
-      {/* Title */}
+                  {aggregateRating && reviewsCount && (
+                    <div class="mr-2 flex items-center justify-center gap-1 rounded-full bg-vanille px-4 py-1 text-center text-xs font-bold uppercase text-black ">
+                      <svg
+                        class="me-1 h-3 w-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                      </svg>
+                      <span>{aggregateRating}</span>
+                      <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-900" />
+                      <span>{reviewsCount} reviews</span>
+                    </div>
+                  )}
+
+                  {version && (
+                    <div class="inline-block rounded-full bg-pistache px-4 py-1 text-center text-xs font-bold uppercase text-black">
+                      {version}
+                    </div>
+                  )}
+                </div>
+              </>
+            )
+          }
+          {/* Intro */}
+          {intro && <div class="prose prose-stone mx-auto dark:prose-invert" set:html={intro} />}
+          {/* Mobile Ipad */}
+          {
+            image && (
+              <div class="relative z-0 mx-auto max-w-full md:max-w-[450px] lg:hidden">
+                <Image
+                  src={image.url}
+                  alt={image.alt || title}
+                  width={image.width}
+                  height={image.height}
+                  densities={[1.5, 2]}
+                  loading="lazy"
+                  class="absolute z-10 h-auto w-full scale-[0.92] rounded-3xl"
+                />
+                <Image
+                  src={ipadMockup}
+                  alt="Ebook on Ipad"
+                  width={ipadMockup.width}
+                  densities={[1.5, 2]}
+                  loading="lazy"
+                  class="relative z-10 max-w-full"
+                />
+              </div>
+            )
+          }
+          {/* Intro Bis */}
+          {
+            introBis && (
+              <div class="prose prose-stone mx-auto dark:prose-invert" set:html={introBis} />
+            )
+          }
+        </div>
+        <a
+          href={getRelativeLocaleUrl(lang, '/')}
+          class="hidden text-sm text-stone-700 hover:underline lg:block"
+        >
+          &#8592; Back to the blog
+        </a>
+      </div>
+    </div>
+  </div>
+  {/* End Left column */}
+  {/* Right column */}
+  <div class="w-full px-4 pb-12 lg:mx-auto lg:w-1/2 lg:max-w-prose lg:pt-32">
+    <div class="mx-auto flex max-w-[450px] flex-col justify-start gap-8 lg:max-w-none lg:gap-12">
+      {/* Separator */}
+      <i class="icon-ermine mx-auto mt-8 text-xl lg:hidden"> </i>
+
+      {/* Desktop Ipad */}
       {
-        title && (
-          <div class="flex flex-col gap-2 text-center lg:text-left">
-            <h1 class="text-2xl font-extrabold dark:text-vanille 2xl:text-4xl">{title}</h1>
-            <span class="block text-sm">
-              Written by&nbsp;<span class="font-bold italic">Sarah Lagache</span>
-            </span>
+        image && (
+          <div class="relative mx-auto hidden max-w-[450px] lg:mt-12 lg:block">
+            <Image
+              src={image.url}
+              alt={image.alt || title}
+              width={image.width}
+              height={image.height}
+              densities={[1.5, 2]}
+              loading="lazy"
+              class="absolute z-10 h-auto w-full scale-[0.92] rounded-3xl"
+            />
+            <Image
+              src={ipadMockup}
+              alt="Ebook on Ipad"
+              width={ipadMockup.width}
+              densities={[1.5, 2]}
+              loading="lazy"
+              class="relative z-10 max-w-full"
+            />
           </div>
         )
       }
-      {/* Metas */}
+
+      {/* The Content */}
       {
-        (formats || version || aggregateRating) && (
+        content && (
           <>
-            <div class="flex flex-col items-center justify-center gap-2 md:flex-row">
-              {formats && (
-                <div class="mr-2 inline-block rounded-full bg-framboise px-4 py-1 text-center text-xs font-bold uppercase text-black">
-                  {formats}
-                </div>
-              )}
+            <h3 class="mark mx-auto inline-block text-xl font-bold">The Content</h3>
+            <div class="prose prose-stone dark:prose-invert" set:html={content} />
+          </>
+        )
+      }
 
-              {aggregateRating && reviewsCount && (
-                <div class="mr-2 flex items-center justify-center gap-1 rounded-full bg-vanille px-4 py-1 text-center text-xs font-bold uppercase text-black ">
-                  <svg
-                    class="me-1 h-3 w-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                  </svg>
-                  <span>{aggregateRating}</span>
-                  <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-900" />
-                  <span>{reviewsCount} reviews</span>
-                </div>
-              )}
+      {/* Separator */}
+      <i class="icon-ermine mx-auto text-xl"> </i>
 
-              {version && (
-                <div class="inline-block rounded-full bg-pistache px-4 py-1 text-center text-xs font-bold uppercase text-black">
-                  {version}
+      {/* Testimonials */}
+      {
+        comments.length > 0 && (
+          <>
+            <div class="flex flex-col items-center gap-3">
+              <h3 class="mark mx-auto inline-block text-xl font-bold">Testimonials</h3>
+              <div class="flex flex-row items-center justify-center gap-1 font-bold">
+                <svg
+                  class="me-1 h-4 w-4 text-vanille"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                </svg>
+                <span>{aggregateRating}</span>
+                <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
+                <span>{reviewsCount} reviews</span>
+              </div>
+            </div>
+
+            <div class="grid gap-8 xl:grid-cols-2">
+              {comments.map((comment) => (
+                <div class="flex items-center justify-center rounded-lg bg-stone-100 p-6 shadow dark:bg-stone-800">
+                  <div class="flex flex-col items-center gap-3">
+                    {comment.meta.product_rating && (
+                      <div class="flex flex-row items-center justify-center">
+                        {new Array(comment.meta.product_rating).fill(0).map(() => {
+                          return (
+                            <svg
+                              class="me-1 h-4 w-4 text-vanille"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                          )
+                        })}
+                      </div>
+                    )}
+                    <blockquote
+                      class="text-center font-medium italic"
+                      set:html={comment.content.rendered}
+                    />
+                    <figcaption class="text-center font-bold dark:text-vanille">
+                      {decode(comment.author_name)}
+                    </figcaption>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
           </>
         )
       }
+
+      {/* Separator */}
+      <i class="icon-ermine mx-auto text-xl"> </i>
+
+      {/* Author */}
+      {
+        author.author_description && author.author_image && (
+          <div class="flex flex-col items-center justify-center">
+            <Image
+              src={author.author_image.url}
+              alt={author.author_image.alt || 'Sarah Lagache'}
+              width={author.author_image.width / 2}
+              height={author.author_image.height / 2}
+              densities={[1.5, 2]}
+              loading="lazy"
+            />
+            <div class="prose prose-stone dark:prose-invert" set:html={author.author_description} />
+          </div>
+        )
+      }
+
+      {/* Separator */}
+      <i class="icon-ermine mx-auto text-xl"> </i>
+
+      {/* The FAQ */}
+      {
+        faq && (
+          <>
+            <h3 class="mark mx-auto inline-block text-xl font-bold">FAQ</h3>
+            <div class="prose prose-stone dark:prose-invert" set:html={faq} />
+          </>
+        )
+      }
     </div>
-    {/* Mobile Intro */}
-    {
-      intro && (
-        <div class="prose prose-stone mx-auto dark:prose-invert lg:hidden" set:html={intro} />
-      )
-    }
-    {/* Mobile Ipad */}
-    {
-      image && (
-        <div class="relative z-0 mx-auto max-w-full md:max-w-[450px] lg:hidden">
-          <Image
-            src={image.url}
-            alt={image.alt || title}
-            width={image.width}
-            height={image.height}
-            densities={[1.5, 2]}
-            loading="lazy"
-            class="absolute z-10 h-auto w-full scale-[0.92] rounded-3xl"
-          />
-          <Image
-            src={ipadMockup}
-            alt="Ebook on Ipad"
-            width={ipadMockup.width}
-            densities={[1.5, 2]}
-            loading="lazy"
-            class="relative z-10 max-w-full"
-          />
-        </div>
-      )
-    }
-    {/* Desktop Intro */}
-    {
-      intro && (
-        <div class="prose prose-stone mx-auto hidden dark:prose-invert lg:block" set:html={intro} />
-      )
-    }
-    {/* Intro Bis */}
-    {introBis && <div class="prose prose-stone mx-auto dark:prose-invert" set:html={introBis} />}
-  </div>
-  {/* End Desktop Left column */}
-  {/* Desktop Right column */}
-  <div class="mx-auto flex max-w-[450px] flex-col justify-start gap-8 lg:max-w-none lg:gap-12">
-    {/* Separator */}
-    <i class="icon-ermine mx-auto text-xl lg:hidden"> </i>
-
-    {/* Desktop Ipad */}
-    {
-      image && (
-        <div class="relative mx-auto hidden max-w-[450px] lg:mt-12 lg:block">
-          <Image
-            src={image.url}
-            alt={image.alt || title}
-            width={image.width}
-            height={image.height}
-            densities={[1.5, 2]}
-            loading="lazy"
-            class="absolute z-10 h-auto w-full scale-[0.92] rounded-3xl"
-          />
-          <Image
-            src={ipadMockup}
-            alt="Ebook on Ipad"
-            width={ipadMockup.width}
-            densities={[1.5, 2]}
-            loading="lazy"
-            class="relative z-10 max-w-full"
-          />
-        </div>
-      )
-    }
-
-    {/* The Content */}
-    {
-      content && (
-        <>
-          <h3 class="mark mx-auto inline-block text-xl font-bold">The Content</h3>
-          <div class="prose prose-stone dark:prose-invert" set:html={content} />
-        </>
-      )
-    }
-
-    {/* Separator */}
-    <i class="icon-ermine mx-auto text-xl"> </i>
-
-    {/* Testimonials */}
-    {
-      comments.length > 0 && (
-        <>
-          <div class="flex flex-col items-center gap-3">
-            <h3 class="mark mx-auto inline-block text-xl font-bold">Testimonials</h3>
-            <div class="flex flex-row items-center justify-center gap-1 font-bold">
-              <svg
-                class="me-1 h-4 w-4 text-vanille"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <span>{aggregateRating}</span>
-              <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
-              <span>{reviewsCount} reviews</span>
-            </div>
-          </div>
-
-          <div class="grid gap-8 xl:grid-cols-2">
-            {comments.map((comment) => (
-              <div class="flex items-center justify-center rounded-lg bg-stone-100 p-6 shadow dark:bg-stone-800">
-                <div class="flex flex-col items-center gap-3">
-                  {comment.meta.product_rating && (
-                    <div class="flex flex-row items-center justify-center">
-                      {new Array(comment.meta.product_rating).fill(0).map(() => {
-                        return (
-                          <svg
-                            class="me-1 h-4 w-4 text-vanille"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 22 20"
-                          >
-                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                          </svg>
-                        )
-                      })}
-                    </div>
-                  )}
-                  <blockquote
-                    class="text-center font-medium italic"
-                    set:html={comment.content.rendered}
-                  />
-                  <figcaption class="text-center font-bold dark:text-vanille">
-                    {decode(comment.author_name)}
-                  </figcaption>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )
-    }
-
-    {/* Separator */}
-    <i class="icon-ermine mx-auto text-xl"> </i>
-
-    {/* Author */}
-    {
-      author.author_description && author.author_image && (
-        <div class="flex flex-col items-center justify-center">
-          <Image
-            src={author.author_image.url}
-            alt={author.author_image.alt || 'Sarah Lagache'}
-            width={author.author_image.width / 2}
-            height={author.author_image.height / 2}
-            densities={[1.5, 2]}
-            loading="lazy"
-          />
-          <div class="prose prose-stone dark:prose-invert" set:html={author.author_description} />
-        </div>
-      )
-    }
-
-    {/* Separator */}
-    <i class="icon-ermine mx-auto text-xl"> </i>
-
-    {/* The FAQ */}
-    {
-      faq && (
-        <>
-          <h3 class="mark mx-auto inline-block text-xl font-bold">FAQ</h3>
-          <div class="prose prose-stone dark:prose-invert" set:html={faq} />
-        </>
-      )
-    }
+    <Footer />
   </div>
 </div>
