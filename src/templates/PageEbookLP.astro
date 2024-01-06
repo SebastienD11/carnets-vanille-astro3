@@ -53,8 +53,6 @@ const { node: page }: Props = Astro.props
 
 // Content
 const title = page.acf.content_title
-const formats = page.acf.content_formats
-const version = page.acf.content_version
 const intro = page.acf.content_intro
 const introBis = page.acf.content_intro_bis
 const content = page.acf.content_the_content
@@ -128,9 +126,17 @@ const schema = {
             <Logo />
           </div>
           <div
-            class="rounded-full border border-vanille bg-vanille/60 px-8 py-1 text-sm font-medium backdrop-blur-xl"
+            class="flex items-center justify-center gap-1 rounded-full border border-vanille bg-vanille/60 px-4 py-1 text-sm font-medium backdrop-blur-xl"
           >
-            Digital Product
+            <span class="mr-2">Digital Product</span>
+            <span
+              class="rounded bg-stone-600 px-1 py-[1px] text-xs font-bold uppercase text-vanille"
+              >PDF</span
+            >
+            <span
+              class="rounded bg-stone-600 px-1 py-[1px] text-xs font-bold uppercase text-vanille"
+              >Epub</span
+            >
           </div>
           {/* Title */}
           {
@@ -138,26 +144,22 @@ const schema = {
               <div class="flex flex-col gap-2 text-center lg:text-left">
                 <h1 class="text-2xl font-extrabold dark:text-vanille 2xl:text-4xl">{title}</h1>
                 <span class="block text-sm">
-                  Written by&nbsp;<span class="font-bold italic">Sarah Lagache</span>
+                  <em>
+                    Written by <strong>Sarah Lagache</strong>, updated in 2023
+                  </em>
                 </span>
               </div>
             )
           }
           {/* Metas */}
           {
-            (formats || version || aggregateRating) && (
+            aggregateRating && (
               <>
                 <div class="flex flex-col items-center justify-center gap-2 md:flex-row">
-                  {formats && (
-                    <div class="mr-2 inline-block rounded-full bg-framboise px-4 py-1 text-center text-xs font-bold uppercase text-black">
-                      {formats}
-                    </div>
-                  )}
-
                   {aggregateRating && reviewsCount && (
-                    <div class="mr-2 flex items-center justify-center gap-1 rounded-full bg-vanille px-4 py-1 text-center text-xs font-bold uppercase text-black ">
+                    <div class="flex flex-row items-center justify-center gap-1 font-bold">
                       <svg
-                        class="me-1 h-3 w-3"
+                        class="me-1 h-4 w-4 text-vanille"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -166,14 +168,8 @@ const schema = {
                         <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
                       </svg>
                       <span>{aggregateRating}</span>
-                      <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-900" />
+                      <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
                       <span>{reviewsCount} reviews</span>
-                    </div>
-                  )}
-
-                  {version && (
-                    <div class="inline-block rounded-full bg-pistache px-4 py-1 text-center text-xs font-bold uppercase text-black">
-                      {version}
                     </div>
                   )}
                 </div>
