@@ -42,13 +42,7 @@ const lang = Astro.currentLocale as string
   </head>
 
   <body class="bg-stone-50 font-mulish dark:bg-stone-900 dark:text-white">
-    <ResponsiveMenuToggle />
-    <ResponsiveMenuDrawer>
-      <ResponsiveMenuContent />
-    </ResponsiveMenuDrawer>
     <slot />
-    <FormScript />
     <ThemeColorScript />
-    <NewsletterModal />
   </body>
 </html>
