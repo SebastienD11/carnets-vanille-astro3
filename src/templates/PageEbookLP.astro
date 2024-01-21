@@ -47,7 +47,7 @@ type Props = {
 
 const { node: page }: Props = Astro.props
 
-// Todo : CTA and Stripe Checkout.
+// Todo : CTA and Payment link (DEV & PROD are simply different link). With would still need the webhook on success to subscribe the user to the newsletter and send the ebook.
 // Todo : Conversion Tracking
 // Todo : Translations
 
@@ -203,23 +203,21 @@ const schema = {
             )
           }
           {/* Checkout CTA */}
-          <button
-            type="button"
-            class="flex
-            w-full cursor-pointer select-none
-            items-center justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80
-            bg-vanille py-4
-            text-lg
-            font-extrabold
-            uppercase text-stone-900 transition-all
-            duration-150 [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841] hover:bg-vanille/80 active:translate-y-2 active:border-b-[0px] active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]"
+          <a
+            href="https://buy.stripe.com/test_9AQeXKbjsaulgPS9AA"
+            class="flex w-full cursor-pointer select-none items-center justify-center
+            gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4 text-lg font-extrabold
+            uppercase text-stone-900 transition-all duration-150
+            [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841] hover:bg-vanille/80
+            active:translate-y-2 active:border-b-[0px]
+            active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]"
           >
             <i class="icon-icon-add-to-card"></i>
             <span>
               Buy for {productPrice}
               {productPriceSymbol}
             </span>
-          </button>
+          </a>
 
           {/* Intro Bis */}
           {
