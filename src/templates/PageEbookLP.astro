@@ -38,6 +38,8 @@ interface ACF extends Page {
     product_schema_name: string
     product_schema_description: string
     product_schema_sku: string
+    stripe_product_price_id: string
+    stripe_product_price_id_test: string
   }
 }
 
@@ -80,6 +82,12 @@ aggregateRating = Math.round(aggregateRating * 100) / 100
 const productPrice = page.acf.content_product_price
 const productPriceSymbol = '€'
 const productPriceSymbolCode = 'EUR'
+
+// Stripe
+const testMode = true // Todo : Fetch from option
+const stripePriceId = testMode
+  ? page.acf.stripe_product_price_id_test
+  : page.acf.stripe_product_price_id
 
 // This section is to overide the Google Markup coming from Yoast. As in Wordpress, this ebook is created as a page, Yoast schema markup doesn't know it's a product. By passing this object to <script type="application/ld+json" set:html={JSON.stringify(schema)} />  in our DOM, it will override the one coming from Yoast above in the DOM.
 
@@ -205,12 +213,13 @@ const schema = {
           {/* Checkout CTA */}
           <button
             type="button"
-            onclick="createCheckout()"
-            class="flex w-full cursor-pointer select-none items-center justify-center
-            gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4 text-lg font-extrabold
-            uppercase text-stone-900 transition-all duration-150
+            create-checkout
+            class="ac bodytive:border-b-[0px] flex w-full cursor-pointer select-none
+            items-center justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4
+            text-lg font-extrabold uppercase text-stone-900
+            transition-all duration-150
             [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841] hover:bg-vanille/80
-            active:translate-y-2 active:border-b-[0px]
+            active:translate-y-2
             active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]"
           >
             <i class="icon-icon-add-to-card"></i>
@@ -376,13 +385,23 @@ const schema = {
   </div>
 </div>
 
-<script is:inline>
+<script define:vars={{ stripePriceId }}>
+  document.querySelectorAll('[create-checkout]').forEach((el) => {
+    el.addEventListener('click', () => {
+      createCheckout()
+    })
+  })
+
   async function createCheckout() {
     const response = await fetch('/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({
+        stripePriceId,
+        page: window.location
+      })
     })
 
     const { url } = await response.json()
