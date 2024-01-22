@@ -203,8 +203,9 @@ const schema = {
             )
           }
           {/* Checkout CTA */}
-          <a
-            href="https://buy.stripe.com/test_9AQeXKbjsaulgPS9AA"
+          <button
+            type="button"
+            onclick="createCheckout()"
             class="flex w-full cursor-pointer select-none items-center justify-center
             gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4 text-lg font-extrabold
             uppercase text-stone-900 transition-all duration-150
@@ -217,7 +218,7 @@ const schema = {
               Buy for {productPrice}
               {productPriceSymbol}
             </span>
-          </a>
+          </button>
 
           {/* Intro Bis */}
           {
@@ -374,3 +375,18 @@ const schema = {
     <Footer />
   </div>
 </div>
+
+<script is:inline>
+  async function createCheckout() {
+    const response = await fetch('/api/stripe/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    const { url } = await response.json()
+
+    window.location.href = url
+  }
+</script>
