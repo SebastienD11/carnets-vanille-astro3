@@ -7,6 +7,7 @@ import { decode } from 'html-entities'
 import Logo from '../components/header/Logo.astro'
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import Footer from '../components/Footer/Footer.astro'
+import { getThemeOptions } from '../api/options'
 
 const lang = Astro.currentLocale as string
 
@@ -49,6 +50,8 @@ type Props = {
 
 const { node: page }: Props = Astro.props
 
+const glaceOptions = await getThemeOptions(lang)
+
 // Todo : CTA and Payment link (DEV & PROD are simply different link). With would still need the webhook on success to subscribe the user to the newsletter and send the ebook.
 // Todo : Conversion Tracking
 // Todo : Translations
@@ -84,7 +87,8 @@ const productPriceSymbol = '€'
 const productPriceSymbolCode = 'EUR'
 
 // Stripe
-const testMode = true // Todo : Fetch from option
+const testMode = import.meta.env.MODE === 'development' ? true : glaceOptions.stripe_test_mode
+
 const stripePriceId = testMode
   ? page.acf.stripe_product_price_id_test
   : page.acf.stripe_product_price_id
