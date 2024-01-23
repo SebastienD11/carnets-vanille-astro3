@@ -84,7 +84,7 @@ const productPriceSymbol = '€'
 const productPriceSymbolCode = 'EUR'
 
 // Stripe
-const testMode = import.meta.env.MODE === 'development' ? true : glaceOptions.stripe_test_mode
+const testMode = import.meta.env.DEV ? true : glaceOptions.stripe_test_mode
 const stripePriceId = testMode
   ? page.acf.stripe_product_price_id_test
   : page.acf.stripe_product_price_id
