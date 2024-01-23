@@ -52,7 +52,7 @@ const { node: page }: Props = Astro.props
 
 const glaceOptions = await getThemeOptions(lang)
 
-// Todo : CTA and Payment link (DEV & PROD are simply different link). With would still need the webhook on success to subscribe the user to the newsletter and send the ebook.
+// Todo : Webhook for Payment processing
 // Todo : Conversion Tracking
 // Todo : Translations
 
@@ -66,9 +66,7 @@ const author = page.acf.content_author
 const faq = page.acf.content_faq
 
 // Ratings & Testimonials
-
 const comments = await getCommentsForPost(page.id, lang)
-
 // Note: The value below are proper to my Carnets Vanille case. We account for previous reviews received on Gumroad before moving awayt from the plateform.
 let aggregateRating = 4.9
 let reviewsCount = 16
@@ -81,20 +79,17 @@ comments?.map((comment) => {
 aggregateRating = Math.round(aggregateRating * 100) / 100
 
 // Pricing
-
 const productPrice = page.acf.content_product_price
 const productPriceSymbol = '€'
 const productPriceSymbolCode = 'EUR'
 
 // Stripe
 const testMode = import.meta.env.MODE === 'development' ? true : glaceOptions.stripe_test_mode
-
 const stripePriceId = testMode
   ? page.acf.stripe_product_price_id_test
   : page.acf.stripe_product_price_id
 
 // This section is to overide the Google Markup coming from Yoast. As in Wordpress, this ebook is created as a page, Yoast schema markup doesn't know it's a product. By passing this object to <script type="application/ld+json" set:html={JSON.stringify(schema)} />  in our DOM, it will override the one coming from Yoast above in the DOM.
-
 const schema = {
   '@context': 'https://schema.org/',
   '@type': 'Product',
