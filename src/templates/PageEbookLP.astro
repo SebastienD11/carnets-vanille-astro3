@@ -121,7 +121,7 @@ const schema = {
 <div class="flex flex-col border-b border-stone-200 lg:flex-row">
   {/* Left column */}
   <div
-    class="w-full px-4 pt-6 lg:w-1/2 lg:border-r lg:border-stone-200 lg:bg-gradient-to-l lg:from-stone-100 lg:to-stone-100/10 lg:pt-0"
+    class="w-full px-4 pt-6 lg:w-1/2 lg:border-r lg:border-stone-200 lg:bg-gradient-to-l lg:from-stone-100 lg:to-stone-100/10 lg:pt-0 dark:lg:border-stone-600 dark:lg:from-stone-800 dark:lg:to-stone-900"
   >
     <div
       class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start gap-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center xl:max-w-[550px]"
@@ -133,9 +133,9 @@ const schema = {
             <Logo />
           </div>
           <div
-            class="flex items-center justify-center gap-1 rounded-full border border-vanille bg-vanille/60 px-4 py-1 text-sm font-medium backdrop-blur-xl"
+            class="flex items-center justify-center gap-1 rounded-full border border-vanille bg-vanille/60 px-4 py-1 text-sm font-medium backdrop-blur-xl dark:bg-vanille"
           >
-            <span class="mr-2">Digital Product</span>
+            <span class="mr-2 dark:text-stone-900">Digital Product</span>
             <span
               class="rounded bg-stone-600 px-1 py-[1px] text-xs font-bold uppercase text-vanille"
               >PDF</span
@@ -237,7 +237,7 @@ const schema = {
         </div>
         <a
           href={getRelativeLocaleUrl(lang, '/')}
-          class="hidden text-sm text-stone-700 hover:underline lg:block"
+          class="hidden text-sm text-stone-700 hover:underline dark:text-stone-400 lg:block"
         >
           &#8592; Back to the blog
         </a>
