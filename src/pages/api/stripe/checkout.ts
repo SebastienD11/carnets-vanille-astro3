@@ -17,7 +17,11 @@ export const POST: APIRoute = async ({ request }) => {
       allow_promotion_codes: true,
       mode: 'payment',
       success_url: `${body.page.origin + body.page.pathname}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: body.page.origin + body.page.pathname
+      cancel_url: body.page.origin + body.page.pathname,
+      metadata: {
+        ml_source: body.page.origin + body.page.pathname,
+        ml_group: body.mlGroup
+      }
     })
 
     return new Response(JSON.stringify({ url: session.url }), {

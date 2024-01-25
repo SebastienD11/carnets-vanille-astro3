@@ -1,16 +1,10 @@
+import MailerLite from '@mailerlite/mailerlite-nodejs'
 import type { APIRoute } from 'astro'
 import Stripe from 'stripe'
 
-const fulfillOrder = (lineItems) => {
-  // TODO: fill me in
-  console.log('Fulfilling order', lineItems)
-}
-
 export const POST: APIRoute = async ({ params, request }) => {
   const stripe = new Stripe(import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY)
-  // Find your endpoint's secret in your Dashboard's webhook settings
-  const endpointSecret = 'whsec_ae1decd8a8b6345611d293577ae87f9e2b2c4e0f3ae475c0e9f0c7706c71536a'
-
+  const endpointSecret = import.meta.env.ASTRO_APP_STRIPE_WEBHOOK
   const sig = request.headers.get('stripe-signature')
   const payload = await request.text()
   const buffer = Buffer.from(payload)
@@ -19,24 +13,58 @@ export const POST: APIRoute = async ({ params, request }) => {
   try {
     event = stripe.webhooks.constructEvent(buffer, sig, endpointSecret)
   } catch (err) {
-    console.log(`Webhook Error: ${err.message}`)
     return new Response(JSON.stringify(`Webhook Error: ${err.message}`), { status: 400 })
   }
-  // Handle the checkout.session.completed event
+
   if (event.type === 'checkout.session.completed') {
-    // Retrieve the session. If you require line items in the response, you may include them by expanding line_items.
-    const sessionWithLineItems = await stripe.checkout.sessions.retrieve(event.data.object.id, {
+    const session = await stripe.checkout.sessions.retrieve(event.data.object.id, {
       expand: ['line_items']
     })
-    const lineItems = sessionWithLineItems.line_items
-    // Fulfill the purchase...
-    fulfillOrder(lineItems)
+
+    if (
+      session.customer_details?.email &&
+      session.status === 'complete' &&
+      session.payment_status === 'paid' &&
+      session.metadata?.ml_group
+    ) {
+      const params = {
+        email: session.customer_details.email,
+        fields: {
+          cv_source: session.metadata?.ml_source,
+          name: session.customer_details?.name,
+          stripe_session_id: session.id
+        },
+        groups: [session.metadata.ml_group]
+      }
+
+      const mailerlite = new MailerLite({
+        api_key: import.meta.env.MAILERLITE_KEY
+      })
+
+      return await mailerlite.subscribers
+        .createOrUpdate(params)
+        .then(() => {
+          return new Response(null, {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+        })
+        .catch((error) => {
+          return new Response(JSON.stringify({ error, session }), {
+            status: 400
+          })
+        })
+    } else {
+      return new Response(
+        JSON.stringify({ error: `Customer Upsert Error, Lack of customer infos`, session }),
+        {
+          status: 400
+        }
+      )
+    }
   }
 
-  return new Response(null, {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+  return new Response(JSON.stringify(`Other Event: ${event.type}`), { status: 400 })
 }
