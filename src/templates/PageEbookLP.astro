@@ -4,12 +4,13 @@ import { Image } from 'astro:assets'
 import ipadMockup from '../images/ipad-mockup.png'
 import { getCommentsForPost } from '../api/comment'
 import { decode } from 'html-entities'
-import Logo from '../components/header/Logo.astro'
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import Footer from '../components/Footer/Footer.astro'
 import { getThemeOptions } from '../api/options'
+import { useTranslations } from '../i18n/ui'
 
 const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
 
 interface ACF extends Page {
   acf: {
@@ -135,7 +136,7 @@ const schema = {
           <div
             class="flex items-center justify-center gap-1 rounded-full border border-vanille bg-vanille/60 px-4 py-1 text-sm font-medium backdrop-blur-xl dark:bg-vanille"
           >
-            <span class="mr-2 dark:text-stone-900">Digital Product</span>
+            <span class="mr-2 dark:text-stone-900">{t('ebook.lp.digitalProduct')}</span>
             <span
               class="rounded bg-stone-600 px-1 py-[1px] text-xs font-bold uppercase text-vanille"
               >PDF</span
@@ -152,7 +153,8 @@ const schema = {
                 <h1 class="text-2xl font-extrabold dark:text-vanille 2xl:text-4xl">{title}</h1>
                 <span class="block text-sm">
                   <em>
-                    Written by <strong>Sarah Lagache</strong>, updated in 2023
+                    {t('ebook.lp.writtenBy')}&nbsp;<strong>Sarah Lagache</strong>,
+                    {t('ebook.lp.updatedIn')} 2023
                   </em>
                 </span>
               </div>
@@ -176,7 +178,9 @@ const schema = {
                       </svg>
                       <span>{aggregateRating}</span>
                       <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
-                      <span>{reviewsCount} reviews</span>
+                      <span>
+                        {reviewsCount} {t('ebook.lp.reviews')}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -223,7 +227,8 @@ const schema = {
           >
             <i class="icon-icon-add-to-card"></i>
             <span>
-              Buy for {productPrice}
+              {t('ebook.lp.buy')}
+              {productPrice}
               {productPriceSymbol}
             </span>
           </button>
@@ -242,7 +247,8 @@ const schema = {
           >
             <i class="icon-icon-add-to-card"></i>
             <span>
-              Buy for {productPrice}
+              {t('ebook.lp.buy')}
+              {productPrice}
               {productPriceSymbol}
             </span>
           </button>
@@ -258,7 +264,7 @@ const schema = {
           href={getRelativeLocaleUrl(lang, '/')}
           class="hidden text-sm text-stone-700 hover:underline dark:text-stone-400 lg:block"
         >
-          &#8592; Back to the blog
+          &#8592; {t('ebook.lp.back')}
         </a>
       </div>
     </div>
@@ -299,7 +305,9 @@ const schema = {
       {
         content && (
           <>
-            <h3 class="mark mx-auto inline-block text-xl font-bold">The Content</h3>
+            <h3 class="mark mx-auto inline-block text-xl font-bold">
+              {t('ebook.lp.section.title.content')}
+            </h3>
             <div class="prose prose-stone dark:prose-invert" set:html={content} />
           </>
         )
@@ -313,7 +321,9 @@ const schema = {
         comments.length > 0 && (
           <>
             <div class="flex flex-col items-center gap-3">
-              <h3 class="mark mx-auto inline-block text-xl font-bold">Testimonials</h3>
+              <h3 class="mark mx-auto inline-block text-xl font-bold">
+                {t('ebook.lp.section.title.testimonials')}
+              </h3>
               <div class="flex flex-row items-center justify-center gap-1 font-bold">
                 <svg
                   class="me-1 h-4 w-4 text-vanille"
@@ -326,7 +336,9 @@ const schema = {
                 </svg>
                 <span>{aggregateRating}</span>
                 <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
-                <span>{reviewsCount} reviews</span>
+                <span>
+                  {reviewsCount} {t('ebook.lp.reviews')}
+                </span>
               </div>
             </div>
 
@@ -393,7 +405,9 @@ const schema = {
       {
         faq && (
           <>
-            <h3 class="mark mx-auto inline-block text-xl font-bold">FAQ</h3>
+            <h3 class="mark mx-auto inline-block text-xl font-bold">
+              {t('ebook.lp.section.title.faq')}
+            </h3>
             <div class="prose prose-stone dark:prose-invert" set:html={faq} />
           </>
         )

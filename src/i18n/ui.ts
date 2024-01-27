@@ -73,7 +73,16 @@ export const ui = {
     'socialLinks.pinterest.alt': 'Follow me on Pinterest',
     'socialLinks.twitter.alt': 'Follow me on Twitter',
     'socialLinks.twitter.share': 'Share',
-    'tag.grid.title': 'Tag: '
+    'tag.grid.title': 'Tag: ',
+    'ebook.lp.digitalProduct': 'Digital Product',
+    'ebook.lp.writtenBy': 'Written by',
+    'ebook.lp.updatedIn': 'updated in',
+    'ebook.lp.reviews': 'reviews',
+    'ebook.lp.buy': 'Buy for',
+    'ebook.lp.back': 'Back to the blog',
+    'ebook.lp.section.title.content': 'The Content',
+    'ebook.lp.section.title.testimonials': 'Testimonials',
+    'ebook.lp.section.title.faq': 'FAQ'
   },
   fr: {
     'card.date.modified': 'Mise à jour le ',
@@ -141,6 +150,15 @@ export const ui = {
     'socialLinks.pinterest.alt': 'Suivez-moi sur Pinterest',
     'socialLinks.twitter.alt': 'Suivez-moi sur Twitter',
     'socialLinks.twitter.share': 'Partager',
-    'tag.grid.title': 'Tag : '
+    'tag.grid.title': 'Tag : ',
+    'ebook.lp.digitalProduct': 'Livre numérique',
+    'ebook.lp.writtenBy': 'Écrit par',
+    'ebook.lp.updatedIn': 'mis à jour en',
+    'ebook.lp.reviews': 'notes',
+    'ebook.lp.buy': 'Acheter pour',
+    'ebook.lp.back': 'Retour au blog',
+    'ebook.lp.section.title.content': 'Le Contenu',
+    'ebook.lp.section.title.testimonials': 'Témoignages',
+    'ebook.lp.section.title.faq': 'FAQ'
   }
 } as const
