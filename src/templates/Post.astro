@@ -26,7 +26,9 @@ const comments = await getCommentsForPost(post.id, lang)
 ---
 
 <div class="flex flex-col gap-12">
-  <div class="relative mx-auto w-full max-w-screen-md">
+  <div
+    class="relative mx-auto w-full max-w-screen-md after:absolute after:inset-0 after:block after:h-full after:bg-stone-900/50"
+  >
     {
       post.featured_media_data[0] && (
         <Image
@@ -46,10 +48,10 @@ const comments = await getCommentsForPost(post.id, lang)
       )
     }
     <div
-      class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4"
+      class="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4"
     >
       <h1
-        class="inline-block text-center text-xl font-extrabold leading-tight text-white drop-shadow-lg md:text-2xl lg:text-3xl xl:text-4xl"
+        class="text-balance inline-block text-center text-xl font-extrabold leading-tight text-white drop-shadow-lg md:text-2xl lg:text-3xl xl:text-4xl"
       >
         {decode(post.title.rendered)}
       </h1>
