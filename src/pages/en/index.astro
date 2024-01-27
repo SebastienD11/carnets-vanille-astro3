@@ -9,6 +9,7 @@ import { getThemeOptions } from '../../api/options'
 import { useTranslations } from '../../i18n/ui'
 import LinkCard, { type Card } from '../../components/linkCard.astro'
 import Grid from '../../components/post/grid.astro'
+import { replaceEnvUrls } from '../../utils/parser'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -39,7 +40,7 @@ const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
       glaceOptions.home_hero_p && (
         <div
           class="prose prose-stone mx-auto !max-w-4xl text-center dark:prose-invert"
-          set:html={glaceOptions.home_hero_p}
+          set:html={replaceEnvUrls(glaceOptions.home_hero_p)}
         />
       )
     }
