@@ -54,9 +54,7 @@ const { node: page }: Props = Astro.props
 
 const glaceOptions = await getThemeOptions(lang)
 
-// Todo : Webhook for Payment processing
 // Todo : Conversion Tracking
-// Todo : Translations
 
 // Content
 const title = page.acf.content_title
@@ -131,7 +129,7 @@ const schema = {
     <div
       class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start gap-8 py-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center xl:max-w-[550px]"
     >
-      <div class="flex flex-col gap-48">
+      <div class="flex flex-col">
         <div class="flex flex-col items-center gap-8 lg:items-start xl:gap-8">
           <div
             class="flex items-center justify-center gap-1 rounded-full border border-vanille bg-vanille/60 px-4 py-1 text-sm font-medium backdrop-blur-xl dark:bg-vanille"
@@ -188,7 +186,14 @@ const schema = {
             )
           }
           {/* Intro */}
-          {intro && <div class="prose prose-stone mx-auto dark:prose-invert" set:html={intro} />}
+          {
+            intro && (
+              <div
+                class="prose prose-stone mx-auto text-center dark:prose-invert lg:text-left"
+                set:html={intro}
+              />
+            )
+          }
           {/* Mobile Ipad */}
           {
             image && (
@@ -241,7 +246,7 @@ const schema = {
             justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4 text-lg
             font-extrabold uppercase text-stone-900 transition-all
             duration-150 [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841]
-            hover:bg-vanille/80 active:translate-y-2
+            hover:bg-vanille active:translate-y-2
             active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]
             lg:hidden"
           >
@@ -260,18 +265,18 @@ const schema = {
             )
           }
         </div>
-        <a
-          href={getRelativeLocaleUrl(lang, '/')}
-          class="hidden text-sm text-stone-700 hover:underline dark:text-stone-400 lg:block"
-        >
-          &#8592; {t('ebook.lp.back')}
-        </a>
       </div>
+      <a
+        href={getRelativeLocaleUrl(lang, '/')}
+        class="hidden text-sm text-stone-600 hover:underline dark:text-stone-400 lg:block"
+      >
+        &#8592; {t('ebook.lp.back')}
+      </a>
     </div>
   </div>
   {/* End Left column */}
   {/* Right column */}
-  <div class="w-full px-4 pb-12 lg:mx-auto lg:w-1/2 lg:max-w-prose lg:pt-32">
+  <div class="w-full px-4 pb-12 lg:mx-auto lg:w-1/2 lg:max-w-prose lg:pt-24">
     <div class="mx-auto flex max-w-[450px] flex-col justify-start gap-8 lg:max-w-none lg:gap-12">
       {/* Separator */}
       <i class="icon-ermine mx-auto mt-8 text-xl lg:hidden"> </i>
@@ -279,7 +284,7 @@ const schema = {
       {/* Desktop Ipad */}
       {
         image && (
-          <div class="relative mx-auto hidden max-w-[450px] lg:mt-12 lg:block">
+          <div class="relative mx-auto hidden max-w-[450px] lg:block">
             <Image
               src={image.url}
               alt={image.alt || title}
