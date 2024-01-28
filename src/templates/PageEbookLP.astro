@@ -8,6 +8,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n'
 import Footer from '../components/Footer/Footer.astro'
 import { getThemeOptions } from '../api/options'
 import { useTranslations } from '../i18n/ui'
+import Spinner from '../components/ui/spinner.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -231,6 +232,7 @@ const schema = {
             lg:flex"
           >
             <i class="icon-icon-add-to-card"></i>
+            <Spinner className="hidden animate-spin" />
             <span>
               {t('ebook.lp.buy')}
               {productPrice}
@@ -251,6 +253,7 @@ const schema = {
             lg:hidden"
           >
             <i class="icon-icon-add-to-card"></i>
+            <Spinner className="hidden animate-spin" />
             <span>
               {t('ebook.lp.buy')}
               {productPrice}
@@ -430,6 +433,13 @@ const schema = {
   })
 
   async function createCheckout() {
+    document.querySelectorAll('[create-checkout] > svg').forEach((el) => {
+      el.classList.toggle('hidden')
+    })
+    document.querySelectorAll('[create-checkout] > i').forEach((el) => {
+      el.classList.toggle('hidden')
+    })
+
     const response = await fetch('/api/stripe/checkout', {
       method: 'POST',
       headers: {
