@@ -1,0 +1,98 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { useTranslations } from '../../i18n/ui'
+import image from '../../images/small-ebook-ipad.svg'
+import { Image } from 'astro:assets'
+import Sarah from '../sarah.astro'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+---
+
+<div
+  id="thank-you-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-full max-h-full w-full !items-end overflow-y-auto overflow-x-hidden data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn md:inset-0 md:!items-center md:!justify-center"
+>
+  <div
+    class="relative max-h-full w-full max-w-full overflow-auto rounded-none bg-stone-50 p-12 text-stone-900 shadow-lg dark:bg-stone-900 dark:text-stone-50 md:h-auto md:max-w-2xl md:rounded"
+  >
+    <header class="p-6">
+      <div class="flex flex-col items-center gap-4">
+        <Image src={image} alt="Saint-Malo Ebook" width={150} densities={[1.5, 2]} loading="lazy" />
+        <h2 class="flex flex-col items-center justify-center gap-4 text-center text-3xl font-bold">
+          {t('ebook.thankyou.title')}
+        </h2>
+      </div>
+      <button
+        aria-label="Close modal"
+        thank-you-modal
+        class="absolute right-2 top-2 rounded-sm p-1"
+      >
+        <i class="icon-close text-sm"></i>
+      </button>
+    </header>
+    <div class="flex flex-col items-center justify-center gap-8">
+      <div class="flex flex-col items-center justify-center gap-4">
+        <p
+          class="prose prose-stone text-balance text-center dark:prose-invert prose-a:underline"
+          set:html={t('ebook.thankyou.text')}
+        />
+        <Sarah />
+      </div>
+      <a
+        href={getRelativeLocaleUrl(lang, '/')}
+        class="text-sm text-stone-600 hover:underline dark:text-stone-400"
+      >
+        &#8592; {t('ebook.lp.back')}
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { Modal } from 'flowbite'
+  import type { ModalOptions, ModalInterface } from 'flowbite'
+  import type { InstanceOptions } from 'flowbite'
+
+  const $targetEl: HTMLElement = document.querySelector('#thank-you-modal')
+
+  const modalOptions: ModalOptions = {
+    placement: undefined,
+    backdrop: 'dynamic',
+    backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
+    closable: true,
+    onHide: () => {
+      $targetEl.setAttribute('data-state', 'closed')
+    },
+    onShow: () => {
+      $targetEl.setAttribute('data-state', 'open')
+    },
+    onToggle: () => {}
+  }
+
+  const instanceOptions: InstanceOptions = {
+    id: 'thank-you-modal',
+    override: true
+  }
+
+  const modal: ModalInterface = new Modal($targetEl, modalOptions, instanceOptions)
+
+  // Event listener to toggle the drawer
+  document.querySelectorAll('[thank-you-modal]').forEach((el) => {
+    el.addEventListener('click', () => {
+      modal.toggle()
+    })
+  })
+
+  // Listen to Page Query Params to open the modal if we have a stripe session ID.
+  const urlParams = new URLSearchParams(window.location.search)
+  const isSessionPresent = !!urlParams.get('session_id')
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (isSessionPresent) {
+      modal.show()
+    }
+  })
+</script>

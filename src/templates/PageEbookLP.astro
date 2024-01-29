@@ -9,6 +9,7 @@ import Footer from '../components/Footer/Footer.astro'
 import { getThemeOptions } from '../api/options'
 import { useTranslations } from '../i18n/ui'
 import Spinner from '../components/ui/spinner.astro'
+import ThankYouModal from '../components/ebook/thankYouModal.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -424,6 +425,8 @@ const schema = {
     <Footer />
   </div>
 </div>
+
+<ThankYouModal />
 
 <script define:vars={{ stripePriceId, mailerlite_group }}>
   document.querySelectorAll('[create-checkout]').forEach((el) => {
