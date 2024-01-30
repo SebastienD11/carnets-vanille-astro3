@@ -26,11 +26,40 @@
     * Mark
 */
 
-*:not(.prose) .mark {
+/* *:not(.prose) .mark {
   color: inherit !important;
   background: var(--line-yellow) bottom left/100% 0.3em repeat-x;
   text-decoration: none !important;
   padding-bottom: 0.3em;
+} */
+
+.mark,
+mark {
+  margin: 0 -0.4em;
+  padding: 0em 1rem;
+  border-radius: 0.8em 0.3em;
+  background: transparent;
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 225, 76, 0.1),
+    rgba(255, 225, 76, 0.8) 4%,
+    rgba(255, 225, 76, 0.3)
+  );
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  a {
+    padding-bottom: 0.5em;
+  }
+}
+
+.dark .mark,
+.dark mark {
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 225, 76, 0.6),
+    rgba(255, 225, 76, 1) 4%,
+    rgba(255, 225, 76, 0.7)
+  );
 }
 
 /**
