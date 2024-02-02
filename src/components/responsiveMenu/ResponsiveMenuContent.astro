@@ -3,6 +3,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n'
 import { getThemeOptions } from '../../api/options'
 import { primaryMenu } from '../../constant'
 import { useTranslations } from '../../i18n/ui'
+import BannerEbookBuy from '../ebook/bannerEbookBuy.astro'
 
 const lang = Astro.currentLocale as string
 const glaceOptions = await getThemeOptions(lang)
@@ -54,6 +55,9 @@ const t = useTranslations(lang)
           )
         })
       }
+    </div>
+    <div class="mt-8">
+      <BannerEbookBuy />
     </div>
   </div>
 </div>

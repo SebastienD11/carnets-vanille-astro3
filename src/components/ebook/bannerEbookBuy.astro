@@ -1,11 +1,9 @@
 ---
 import ebookImage from '../../images/bg-buy-ebook-image.webp'
-import { useTranslations } from '../../i18n/ui'
 import { getThemeOptions } from '../../api/options'
 import { replaceLinks } from '../../utils/parser'
 
 const lang = Astro.currentLocale as string
-const t = useTranslations(lang)
 const glaceOptions = await getThemeOptions(lang)
 ---
 
