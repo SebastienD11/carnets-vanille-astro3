@@ -47,9 +47,11 @@ mark {
   );
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
-  a {
-    padding-bottom: 0.5em;
-  }
+}
+
+.mark a,
+mark a {
+  padding-bottom: 0.5em;
 }
 
 .dark .mark,
@@ -70,17 +72,18 @@ mark {
   position: relative;
   overflow: visible !important;
   font-family: inherit;
-  &:after {
-    content: '';
-    display: block;
-    position: absolute;
-    bottom: -12px;
-    right: 0;
-    background: url(/phare.svg) bottom center no-repeat;
-    background-size: contain;
-    width: 78px;
-    height: 115%;
-  }
+}
+
+.prose :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) :after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: -12px;
+  right: 0;
+  background: url(/phare.svg) bottom center no-repeat;
+  background-size: contain;
+  width: 78px;
+  height: 115%;
 }
 
 .dark .prose :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
