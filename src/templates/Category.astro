@@ -31,7 +31,7 @@ await Promise.all(
     <PageTitle className="mb-2">{category.name}</PageTitle>
     {
       category.description && (
-        <div class="prose prose-slate dark:prose-invert">
+        <div class="prose prose-zinc dark:prose-invert">
           <div set:html={category.description} />
         </div>
       )

@@ -42,7 +42,7 @@ const { comment, className }: Props = Astro.props
           <a
             href={comment.author_url}
             target="_blank"
-            class="relative grow-0 font-bold after:absolute after:-bottom-px after:left-0 after:block after:w-full after:border after:border-dashed after:border-slate-200"
+            class="relative grow-0 font-bold after:absolute after:-bottom-px after:left-0 after:block after:w-full after:border after:border-dashed after:border-zinc-200"
             rel="external nofollow ugc"
           >
             {decode(comment.author_name)}
@@ -52,10 +52,10 @@ const { comment, className }: Props = Astro.props
         )
       }
 
-      <FormattedDate date={comment.date} className="text-sm text-slate-500" />
+      <FormattedDate date={comment.date} className="text-sm text-zinc-500" />
     </div>
     <div
-      class="prose prose-slate dark:prose-invert prose-p:!my-0"
+      class="prose prose-zinc dark:prose-invert prose-p:!my-0"
       set:html={comment.content.rendered}
     />
   </div>
