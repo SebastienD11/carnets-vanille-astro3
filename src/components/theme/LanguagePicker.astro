@@ -9,13 +9,13 @@ const currentLang = Astro.currentLocale as string
     locales.map((lang) => (
       <li>
         {lang === currentLang ? (
-          <strong class="text-sm font-bold uppercase text-stone-600 dark:text-stone-300">
+          <strong class="text-sm font-bold uppercase text-slate-600 dark:text-slate-300">
             {lang}
           </strong>
         ) : (
           <a
             href={getRelativeLocaleUrl(lang as string, '/')}
-            class="text-sm uppercase text-stone-600 hover:underline dark:text-stone-300"
+            class="text-sm uppercase text-slate-600 hover:underline dark:text-slate-300"
           >
             {lang}
           </a>
