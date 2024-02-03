@@ -87,5 +87,5 @@ mark a {
 }
 
 .dark .prose :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply bg-slate-700;
+  @apply bg-zink-700;
 }

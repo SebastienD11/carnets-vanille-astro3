@@ -16,7 +16,7 @@ const t = useTranslations(lang)
   class="fixed left-0 right-0 top-0 z-50 hidden h-full max-h-full w-full !items-end overflow-y-auto overflow-x-hidden data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn md:inset-0 md:!items-center md:!justify-center"
 >
   <div
-    class="relative max-h-full w-full max-w-full overflow-auto rounded-none bg-slate-50 p-12 text-slate-900 shadow-lg dark:bg-slate-700 dark:text-slate-50 md:h-auto md:max-w-2xl md:rounded"
+    class="bg-zink-50 text-zink-900 dark:bg-zink-700 dark:text-zink-50 relative max-h-full w-full max-w-full overflow-auto rounded-none p-12 shadow-lg md:h-auto md:max-w-2xl md:rounded"
   >
     <header class="p-6">
       <div class="flex flex-col items-center gap-4">
@@ -36,14 +36,14 @@ const t = useTranslations(lang)
     <div class="flex flex-col items-center justify-center gap-8">
       <div class="flex flex-col items-center justify-center gap-4">
         <p
-          class="prose prose-slate text-balance text-center dark:prose-invert prose-a:underline"
+          class="prose-zink prose text-balance text-center dark:prose-invert prose-a:underline"
           set:html={t('ebook.thankyou.text')}
         />
         <Sarah />
       </div>
       <a
         href={getRelativeLocaleUrl(lang, '/')}
-        class="text-sm text-slate-600 hover:underline dark:text-slate-400"
+        class="text-zink-600 dark:text-zink-400 text-sm hover:underline"
       >
         &#8592; {t('ebook.lp.back')}
       </a>
@@ -61,7 +61,7 @@ const t = useTranslations(lang)
   const modalOptions: ModalOptions = {
     placement: undefined,
     backdrop: 'dynamic',
-    backdropClasses: 'bg-slate-900/50 dark:bg-slate-900/80 fixed inset-0 z-30',
+    backdropClasses: 'bg-zink-900/50 dark:bg-zink-900/80 fixed inset-0 z-30',
     closable: true,
     onHide: () => {
       $targetEl.setAttribute('data-state', 'closed')

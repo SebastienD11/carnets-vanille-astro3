@@ -8,7 +8,7 @@ const glaceOptions = await getThemeOptions(lang)
 ---
 
 <div
-  class="not-prose relative w-full gap-2 rounded-lg border border-vanille bg-beige text-black dark:border-vanille/50 dark:bg-slate-800 dark:text-slate-50 md:flex md:items-stretch md:gap-4"
+  class="not-prose dark:bg-zink-800 dark:text-zink-50 relative w-full gap-2 rounded-lg border border-vanille bg-beige text-black dark:border-vanille/50 md:flex md:items-stretch md:gap-4"
 >
   <div
     class="h-48 bg-cover bg-bottom bg-no-repeat md:h-auto md:w-1/3 md:bg-right"
@@ -23,7 +23,7 @@ const glaceOptions = await getThemeOptions(lang)
       href={replaceLinks(glaceOptions.banner_ebook_button_link.url)}
       title={glaceOptions.banner_ebook_button_link.title}
       target={glaceOptions.banner_ebook_button_link.target}
-      class="flex w-full items-center justify-center rounded bg-vanille px-4 py-4 text-center !font-bold text-slate-900 transition hover:-translate-y-1 hover:shadow-lg disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none md:px-16"
+      class="text-zink-900 flex w-full items-center justify-center rounded bg-vanille px-4 py-4 text-center !font-bold transition hover:-translate-y-1 hover:shadow-lg disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none md:px-16"
     >
       <span>{glaceOptions.banner_ebook_button_label}</span>
     </a>

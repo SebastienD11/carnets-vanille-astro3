@@ -27,7 +27,7 @@ const comments = await getCommentsForPost(post.id, lang)
 
 <div class="flex flex-col gap-12">
   <div
-    class="relative mx-auto w-full max-w-screen-md after:absolute after:inset-0 after:block after:h-full after:rounded-lg after:bg-slate-900/50"
+    class="after:bg-zink-900/50 relative mx-auto w-full max-w-screen-md after:absolute after:inset-0 after:block after:h-full after:rounded-lg"
   >
     {
       post.featured_media_data[0] && (
@@ -65,7 +65,7 @@ const comments = await getCommentsForPost(post.id, lang)
   <TagList post={post} />
 
   <article
-    class="prose prose-slate mx-auto dark:prose-invert"
+    class="prose-zink prose mx-auto dark:prose-invert"
     set:html={parseHtml(post.content.rendered)}
   />
 
@@ -74,7 +74,7 @@ const comments = await getCommentsForPost(post.id, lang)
       <SectionTitle as="h3" title={t('post.footer.title')} subtitle={t('post.footer.subtitle')} />
       <div class="flex flex-col gap-4">
         <ShareButtons post={post} />
-        <p class="text-center text-slate-500 dark:text-slate-300">
+        <p class="text-zink-500 dark:text-zink-300 text-center">
           {
             post.modified !== post.date && (
               <>
