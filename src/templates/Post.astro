@@ -108,7 +108,6 @@ const comments = await getCommentsForPost(post.id, lang)
     {
       post.comment_status === 'open' && (
         <div id="comments" class="flex flex-col gap-24">
-          <CommentList comments={comments} />
           <div>
             <SectionTitle
               as="h3"
@@ -117,6 +116,7 @@ const comments = await getCommentsForPost(post.id, lang)
             />
             <CommentForm postId={post.id} newsletterGroupId={post.acf.mailerlite} />
           </div>
+          <CommentList comments={comments} />
         </div>
       )
     }

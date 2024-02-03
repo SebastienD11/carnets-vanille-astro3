@@ -150,7 +150,7 @@ export const ui = {
     'post.comments.form.subtitle': 'J’y répondrai au plus vite !',
     'post.comments.form.success':
       'Merci ! Votre commentaire a bien été envoyé et sera affiché après validation.',
-    'post.comments.form.title': 'Ajoutez le vôtre :)',
+    'post.comments.form.title': 'Laissez un commentaire :)',
     'post.comments.form.website': 'Site internet',
     'post.comments.subtitle': 'N’hésitez pas à me laisser un commentaire !',
     'post.comments.title': 'Commentaires',
