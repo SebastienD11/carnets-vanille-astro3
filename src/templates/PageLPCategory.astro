@@ -29,7 +29,7 @@ const { node: page }: Props = Astro.props
         >
           {page.acf.introduction_title}
         </h1>
-        <div class="prose prose-stone dark:prose-invert prose-p:mt-0">
+        <div class="prose prose-zinc dark:prose-invert prose-p:mt-0">
           <div set:html={replaceLinks(page.acf.introduction_intro)} />
         </div>
       </div>
@@ -82,7 +82,7 @@ const { node: page }: Props = Astro.props
                 </a>
               )}
               {section.section_intro && (
-                <div class="prose prose-stone w-full !max-w-none dark:prose-invert prose-p:mt-0 md:w-1/2">
+                <div class="prose prose-zinc w-full !max-w-none dark:prose-invert prose-p:mt-0 md:w-1/2">
                   <div set:html={replaceLinks(section.section_intro)} />
                 </div>
               )}

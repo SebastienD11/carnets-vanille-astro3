@@ -13,7 +13,7 @@ const t = useTranslations(lang)
   class="fixed left-0 right-0 top-0 z-50 hidden h-full max-h-full w-full !items-end overflow-y-auto overflow-x-hidden data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn md:inset-0 md:!items-center md:!justify-center"
 >
   <div
-    class="relative h-full max-h-full w-full max-w-full overflow-auto rounded-none bg-stone-50 p-6 text-stone-900 shadow-lg dark:bg-stone-700 dark:text-stone-50 md:h-auto md:max-w-2xl md:rounded"
+    class="relative h-full max-h-full w-full max-w-full overflow-auto rounded-none bg-zinc-50 p-6 text-zinc-900 shadow-lg dark:bg-zinc-700 dark:text-zinc-50 md:h-auto md:max-w-2xl md:rounded"
   >
     <header class="p-6 pb-8 lg:p-12 lg:pb-8">
       <div class="flex flex-col items-center gap-4">
@@ -53,7 +53,7 @@ const t = useTranslations(lang)
   const modalOptions: ModalOptions = {
     placement: undefined,
     backdrop: 'dynamic',
-    backdropClasses: 'bg-stone-900/50 dark:bg-stone-900/80 fixed inset-0 z-30',
+    backdropClasses: 'bg-zinc-900/50 dark:bg-zinc-900/80 fixed inset-0 z-30',
     closable: true,
     onHide: () => {
       $targetEl.setAttribute('data-state', 'closed')

@@ -13,33 +13,33 @@ const t = useTranslations(lang)
 
 <div class="flex flex-wrap items-center justify-center gap-4">
   <a
-    class="flex items-center rounded-lg border border-stone-900 bg-stone-900 px-8 py-2 text-stone-50 transition hover:-translate-y-1 hover:no-underline hover:shadow-lg dark:border-stone-50"
+    class="flex items-center rounded-lg border border-zinc-900 bg-zinc-900 px-8 py-2 text-zinc-50 transition hover:-translate-y-1 hover:no-underline hover:shadow-lg dark:border-zinc-50"
     href={`https://twitter.com/intent/tweet?text=${post.title.rendered}, ${post.link}&via=carnetsvanille`}
     target="_blank"
     rel="noopener"
     data-network="Twitter"
   >
     <span class="mr-2">{t('socialLinks.twitter.share')}</span>
-    <i class="icon-twitter text-md text-stone-50"></i>
+    <i class="icon-twitter text-md text-zinc-50"></i>
   </a>
   <a
-    class="flex items-center rounded-lg border border-stone-900 bg-stone-900 px-8 py-2 text-stone-50 transition hover:-translate-y-1 hover:no-underline hover:shadow-lg dark:border-stone-50"
+    class="flex items-center rounded-lg border border-zinc-900 bg-zinc-900 px-8 py-2 text-zinc-50 transition hover:-translate-y-1 hover:no-underline hover:shadow-lg dark:border-zinc-50"
     href={`https://www.facebook.com/sharer/sharer.php?u=${post.link}`}
     target="_blank"
     rel="noopener"
     data-network="Facebook"
   >
     <span class="mr-2">{t('socialLinks.facebook.share')}</span>
-    <i class="icon-facebook text-md text-stone-50"></i>
+    <i class="icon-facebook text-md text-zinc-50"></i>
   </a>
   {
     post.comment_status === 'open' && (
       <a
-        class="flex items-center rounded-lg border border-stone-900 bg-stone-900 px-8 py-2 text-stone-50 transition hover:-translate-y-1 hover:no-underline hover:shadow-lg dark:border-stone-50"
+        class="flex items-center rounded-lg border border-zinc-900 bg-zinc-900 px-8 py-2 text-zinc-50 transition hover:-translate-y-1 hover:no-underline hover:shadow-lg dark:border-zinc-50"
         href="#comments"
       >
         <span class="mr-2">{t('post.footer.comment')}</span>
-        <i class="icon-pen text-md text-stone-50" />
+        <i class="icon-pen text-md text-zinc-50" />
       </a>
     )
   }
