@@ -1,0 +1,65 @@
+---
+import type { Page } from '../api/page'
+import BannerEbookBuy from '../components/ebook/bannerEbookBuy.astro'
+
+type Link = {
+  link_label: string
+  link_icon: string
+  link_url: {
+    url: string
+    title: string
+    target: string
+  }
+}
+
+interface ACF extends Page {
+  acf: {
+    sections: {
+      type: 'links' | 'ebook'
+      titre: string
+      links: boolean | Link[]
+    }[]
+  }
+}
+
+type Props = {
+  node: ACF
+}
+
+const { node: page }: Props = Astro.props
+---
+
+<div class="mx-auto px-4 pb-8 md:container md:mt-0 md:px-8">
+  <div class="flex flex-col items-center gap-12">
+    {
+      page.acf.sections.map((section) => {
+        if (section.type === 'ebook') {
+          return <BannerEbookBuy />
+        }
+        if (section.type === 'links') {
+          return (
+            <section class="flex w-full flex-col items-center justify-center">
+              <h2 class="mb-4 text-center text-2xl font-bold leading-tight md:mb-4 lg:text-3xl xl:text-4xl">
+                {section.titre}
+              </h2>
+              {section.links.map((link) => {
+                return (
+                  <a
+                    href={link.link_url.url}
+                    class="mb-4 flex w-full flex-row items-center rounded-lg border border-[#AE9206] bg-vanille p-4 text-stone-900 last:mb-0 md:flex-row"
+                    target={link.link_url.target}
+                  >
+                    <i class={`icon-${link.link_icon} mr-2`} />
+                    <h2 class="text-base-md font-base inline leading-tight lg:text-lg xl:text-xl">
+                      {link.link_label}
+                    </h2>
+                  </a>
+                )
+              })}
+            </section>
+          )
+        }
+      })
+    }
+  </div>
+</div>

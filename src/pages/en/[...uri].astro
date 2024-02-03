@@ -13,6 +13,7 @@ import { getResourceByUri } from '../../api/getByUrl'
 import { getAllUris } from '../../api/getAllUrls'
 import { buildSeo } from '../../utils/seo'
 import { getTypeByData } from '../../utils/type'
+import Linktree from '../../templates/Linktree.astro'
 
 // Return a list of all resources (pages, posts, tags, categories, etc), existing in the CMS in the current locale.
 export async function getStaticPaths() {
@@ -42,6 +43,10 @@ function resolveContentTemplate(data: any) {
       if (data.acf.template === 'ebook-landing-page') {
         template = PageEbookLP
         layout = LayoutLPEbook
+        break
+      }
+      if (data.acf.template === 'linktree') {
+        template = Linktree
         break
       }
       template = Page
