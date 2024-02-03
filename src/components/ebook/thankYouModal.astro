@@ -61,7 +61,7 @@ const t = useTranslations(lang)
   const modalOptions: ModalOptions = {
     placement: undefined,
     backdrop: 'dynamic',
-    backdropClasses: 'bg-gray-900/50 dark:bg-stone-900/80 fixed inset-0 z-30',
+    backdropClasses: 'bg-stone-900/50 dark:bg-stone-900/80 fixed inset-0 z-30',
     closable: true,
     onHide: () => {
       $targetEl.setAttribute('data-state', 'closed')
