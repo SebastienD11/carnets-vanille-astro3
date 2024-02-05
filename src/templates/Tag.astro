@@ -15,15 +15,8 @@ const tag: Tag = Astro.props.node
 const page = getPageNumberInUrl(Astro.url)
 const filters = `&tags=${tag?.id}&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=${page}`
 const postsBySlug = await getPosts(lang, filters)
-let posts: Post[] = []
-await Promise.all(
-  postsBySlug.map(
-    async (post) =>
-      await getPostBySlug(post.slug, lang).then((post: Post | null) => {
-        if (post) posts.push(post)
-      })
-  )
-)
+const promises = postsBySlug.map(async (post) => await getPostBySlug(post.slug, lang))
+const posts = await Promise.all(promises)
 ---
 
 <div class="flex flex-col gap-8">

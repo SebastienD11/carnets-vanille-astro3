@@ -16,15 +16,8 @@ const t = useTranslations(lang)
 const glaceOptions = await getThemeOptions(lang)
 const filters = `&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=1`
 const postsBySlug = await getPosts(lang, filters)
-let posts: Post[] = []
-await Promise.all(
-  postsBySlug.map(
-    async (post) =>
-      await getPostBySlug(post.slug, lang).then((post: Post | null) => {
-        if (post) posts.push(post)
-      })
-  )
-)
+const promises = postsBySlug.map(async (post) => await getPostBySlug(post.slug, lang))
+const posts = await Promise.all(promises)
 
 const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
 ---
