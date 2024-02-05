@@ -14,7 +14,13 @@ const newsleterCardPosition = Math.round(Math.random() * posts.length) || 1
 <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
   {
     posts.map((post: Post, index: number) => {
-      if (index === newsleterCardPosition) return <NewsletterCard />
+      if (index === newsleterCardPosition)
+        return (
+          <>
+            <NewsletterCard />
+            <Card post={post} />
+          </>
+        )
       return <Card post={post} />
     })
   }
