@@ -10,8 +10,7 @@ import Pagination from '../../../components/pagination.astro'
 
 // Return a list of all resources (pages, posts, tags, categories, etc), existing in the CMS in the current locale.
 export async function getStaticPaths() {
-    const lang = Astro.currentLocale as string
-    const totalPosts = await getPostsCount(lang)
+    const totalPosts = await getPostsCount('en')
     const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
     const paths = []
     let i = 2
