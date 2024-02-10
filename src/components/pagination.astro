@@ -12,7 +12,7 @@ const totalPages = Math.ceil(total / perPage)
       const pageNumber = page + 1
       return (
         <li>
-          {pageNumber === currentPage ? (
+          {pageNumber === parseInt(currentPage) ? (
             <span class="bold flex h-8 w-8 items-center justify-center rounded-sm border border-black bg-black p-2 text-white dark:border-white dark:bg-white dark:text-black">
               {pageNumber}
             </span>

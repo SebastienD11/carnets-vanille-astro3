@@ -1,0 +1,51 @@
+---
+export const prerender = true
+
+import Layout from '../../layouts/Layout.astro'
+import { getPostBySlug, getPosts, getPostsCount } from '../../api/post'
+import { getSEObyUrl } from '../../api/yoast'
+import { POSTS_PER_PAGE } from '../../constant'
+import Grid from '../../components/post/grid.astro'
+import Pagination from '../../components/pagination.astro'
+
+// Return a list of all resources (pages, posts, tags, categories, etc), existing in the CMS in the current locale.
+export async function getStaticPaths() {
+    const lang = Astro.currentLocale as string
+    const totalPosts = await getPostsCount(lang)
+    const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
+    const paths = Array.from({ length: totalPages }, (_, i) => ({
+        params: { page: i },
+    }))
+    
+    return paths
+}
+
+const lang = Astro.currentLocale as string
+const { page } = Astro.params;
+const filters = `&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=${page}`
+const totalPosts = await getPostsCount(lang)
+const postsBySlug = await getPosts(lang, filters)
+const promises = postsBySlug.map(async (post) => await getPostBySlug(post.slug, lang))
+const posts = await Promise.all(promises)
+
+// Todo improve SEO
+const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
+---
+
+<Layout seo={seo}>
+  <main class="flex flex-col gap-6 lg:gap-12">
+    {
+      posts.length > 0 && (
+        <>
+          <Grid posts={posts} />
+        </>
+      )
+    }
+    <Pagination
+      total={totalPosts}
+      perPage={POSTS_PER_PAGE}
+      currentPage={page}
+      baseUrl={``}
+    />
+  </main>
+</Layout>

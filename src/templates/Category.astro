@@ -1,7 +1,6 @@
 ---
 import Grid from '../components/post/grid.astro'
-import { getPostBySlug, getPosts, type Post } from '../api/post'
-import { useTranslations } from '../i18n/ui'
+import { getPostBySlug, getPosts } from '../api/post'
 import type { Category } from '../api/category'
 import { getPageNumberInUrl } from '../utils/pagination'
 import { POSTS_PER_PAGE } from '../constant'

@@ -2,7 +2,7 @@
 export const prerender = true
 
 import Layout from '../layouts/Layout.astro'
-import { getPostBySlug, getPosts, type Post } from '../api/post'
+import { getPostBySlug, getPosts, getPostsCount } from '../api/post'
 import { getSEObyUrl } from '../api/yoast'
 import { POSTS_PER_PAGE } from '../constant'
 import { getThemeOptions } from '../api/options'
@@ -10,11 +10,13 @@ import { useTranslations } from '../i18n/ui'
 import LinkCard, { type Card } from '../components/linkCard.astro'
 import Grid from '../components/post/grid.astro'
 import { replaceEnvUrls } from '../utils/parser'
+import Pagination from '../components/pagination.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
 const glaceOptions = await getThemeOptions(lang)
 const filters = `&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=1`
+const totalPosts = await getPostsCount(lang)
 const postsBySlug = await getPosts(lang, filters)
 const promises = postsBySlug.map(async (post) => await getPostBySlug(post.slug, lang))
 const posts = await Promise.all(promises)
@@ -61,5 +63,11 @@ const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
         </>
       )
     }
+    <Pagination
+      total={totalPosts}
+      perPage={POSTS_PER_PAGE}
+      currentPage={1}
+      baseUrl={``}
+    />
   </main>
 </Layout>

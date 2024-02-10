@@ -38,6 +38,14 @@ export async function getPosts(lang: string, filter?: string): Promise<Post[]> {
   return posts
 }
 
+export async function getPostsCount(lang: string): Promise<number> {
+  const res = await fetch(
+    import.meta.env.WORDPRESS_REST_API_URL + `/posts/?_fields=id&per_page=1&lang=${lang}`
+  )
+
+  return res.headers.get('X-WP-Total') ? parseInt(res.headers.get('X-WP-Total')!) : 0
+}
+
 export type Post = {
   id: number
   date: string
