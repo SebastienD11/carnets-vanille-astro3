@@ -13,10 +13,12 @@ export async function getStaticPaths() {
     const lang = Astro.currentLocale as string
     const totalPosts = await getPostsCount(lang)
     const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
-    const paths = Array.from({ length: totalPages }, (_, i) => ({
-        params: { page: i },
-    }))
-    
+    const paths = []
+    let i = 2
+    while(i <= totalPages) {
+      paths.push({ params: { page: i }})
+      i += 1
+    }
     return paths
 }
 
