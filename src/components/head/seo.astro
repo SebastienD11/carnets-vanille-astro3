@@ -60,10 +60,10 @@ if(page > 1) {
 {seo.yoast.article_publisher && (<meta property="article:publisher" content={seo.yoast.article_publisher}/>)}
 {seo.yoast.article_published_time && (<meta property="article:published_time" content={seo.yoast.article_published_time}/>)}
 {seo.yoast.article_modified_time && (<meta property="article:modified_time" content={seo.yoast.article_modified_time}/>)}
-{seo.yoast.og_image[0] && (<meta property="og:image" content={seo.yoast.og_image[0].url} />)}
-{seo.yoast.og_image[0] && (<meta property="og:image:width" content={seo.yoast.og_image[0].width} />)}
-{seo.yoast.og_image[0] && (<meta property="og:image:height" content={seo.yoast.og_image[0].height} />)}
-{seo.yoast.og_image[0] && (<meta property="og:image:type" content={seo.yoast.og_image[0].type} />)}
+{seo.yoast.og_image && (<meta property="og:image" content={seo.yoast.og_image[0].url} />)}
+{seo.yoast.og_image && (<meta property="og:image:width" content={seo.yoast.og_image[0].width} />)}
+{seo.yoast.og_image && (<meta property="og:image:height" content={seo.yoast.og_image[0].height} />)}
+{seo.yoast.og_image && (<meta property="og:image:type" content={seo.yoast.og_image[0].type} />)}
 
 <!-- Author -->
 {seo.yoast.author && (<meta name="author" content={seo.yoast.author} />)}
