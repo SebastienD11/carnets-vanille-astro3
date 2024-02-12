@@ -18,17 +18,25 @@ const buildAlternates = (node: Node) => {
   return alternates
 }
 
+// Todo : Do better than this
+export const buildIndexAlternates = () => {
+  return [
+    {
+      href: 'https://carnetsvanille.com/en/',
+      hrefLang: 'en'
+    },
+    {
+      href: 'https://carnetsvanille.com/',
+      hrefLang: 'fr'
+    }
+  ]
+}
+
 export const buildSeo = (node: Node) => {
-  // Todo: Build alternates
-  const alternates = buildAlternates(node)
+  const seo = {
+    yoast: node.yoast_head_json,
+    alternates: buildAlternates(node)
+  }
 
-  let ret = ''
-  alternates?.map(
-    (alternate) =>
-      (ret += `<link rel="alternate" hreflang="${alternate.hrefLang}" href="${alternate.href}" />`)
-  )
-
-  ret += node.yoast_head
-
-  return ret
+  return seo
 }

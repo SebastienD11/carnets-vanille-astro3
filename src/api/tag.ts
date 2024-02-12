@@ -27,7 +27,7 @@ export type Tag = {
   name: string
   slug: string
   taxonomy: 'post_tag'
-  yoast_head: string
+  yoast_head_json: any
   wpml_current_locale: string
   wpml_translations: {
     locale: string

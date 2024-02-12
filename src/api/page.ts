@@ -34,7 +34,7 @@ export type Page = {
   sticky: boolean
   template: string
   acf: any
-  yoast_head: string
+  yoast_head_json: any
   wpml_current_locale: string
   wpml_translations: {
     locale: string

@@ -27,7 +27,7 @@ export type Category = {
   name: string
   slug: string
   taxonomy: 'category'
-  yoast_head: string
+  yoast_head_json: any
   wpml_current_locale: string
   wpml_translations: {
     locale: string

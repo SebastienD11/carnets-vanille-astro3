@@ -11,9 +11,16 @@ import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDra
 import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
 import ThemeColorScript from '../components/scripts/themeColor.astro'
 import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
+import type { Yoast } from '../api/yoast'
 
 interface Props {
-  seo: string
+  seo: {
+    yoast: Yoast,
+    alternates: {
+      hrefLang: string
+      href: string
+    }[]
+  }
 }
 
 const { seo } = Astro.props

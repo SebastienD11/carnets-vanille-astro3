@@ -76,7 +76,7 @@ export type Post = {
   format: string
   categories: number[]
   tags: number[]
-  yoast_head: string
+  yoast_head_json: any
   _embedded: {
     'wp:term': any // Todo, type this
   }
