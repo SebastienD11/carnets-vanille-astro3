@@ -1,5 +1,6 @@
 ---
 import type { Yoast } from '../../api/yoast'
+import { getPageNumberInUrl } from '../../utils/pagination'
 
 interface Props {
   seo: {
@@ -24,6 +25,13 @@ if(seo.yoast.twitter_misc === undefined) {
 const twitterData = Object.entries(seo.yoast.twitter_misc).map(([key, value]) => {
   return { key, value }
 })
+
+// We need to handle different canonical per paginated pages.
+const page = getPageNumberInUrl(Astro.url);
+if(page > 1) {
+  seo.yoast.canonical = `${seo.yoast.canonical}page/${page}`
+}
+
 ---
 
 <title>{seo.yoast.title}</title>

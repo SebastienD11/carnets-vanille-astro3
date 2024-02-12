@@ -29,8 +29,11 @@ const postsBySlug = await getPosts(lang, filters)
 const promises = postsBySlug.map(async (post) => await getPostBySlug(post.slug, lang))
 const posts = await Promise.all(promises)
 
-// Todo improve SEO
-const seo = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
+let yoast = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
+const seo = {
+  yoast,
+  alternates: []
+}
 ---
 
 <Layout seo={seo}>
