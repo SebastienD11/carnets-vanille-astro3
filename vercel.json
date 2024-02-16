@@ -6,7 +6,18 @@
         {
           "type": "host",
           "value": "carnets-vanille-astro3.vercel.app"
-        },
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/",
+      "has": [
         {
           "type": "host",
           "value": "stg.carnetsvanille.com"
