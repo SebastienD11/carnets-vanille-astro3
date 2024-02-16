@@ -6,6 +6,10 @@
         {
           "type": "host",
           "value": "carnets-vanille-astro3.vercel.app"
+        },
+        {
+          "type": "host",
+          "value": "stg.carnetsvanille.com"
         }
       ],
       "headers": [
