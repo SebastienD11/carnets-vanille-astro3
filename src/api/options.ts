@@ -7,7 +7,7 @@ export async function getThemeOptions(lang: string): Promise<any> {
     return options
   } else {
     const res = await fetch(
-      import.meta.env.WORDPRESS_INDEX_URL + `/wp-json/astroglace/options/?lang=${lang}`
+      import.meta.env.WORDPRESS_REST_API_URL_SHORT + `/astroglace/options/?lang=${lang}`
     )
     const options = await res.json()
 

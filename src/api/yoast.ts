@@ -34,7 +34,7 @@ export type Yoast = {
 
 export async function getSEObyUrl(url: string, lang: string): Promise<Yoast> {
   const res = await fetch(
-    import.meta.env.WORDPRESS_INDEX_URL + `/wp-json/yoast/v1/get_head?url=${url}&lang=${lang}`
+    import.meta.env.WORDPRESS_REST_API_URL_SHORT + `/yoast/v1/get_head?url=${url}&lang=${lang}`
   )
   const seo = await res.json()
   return seo.json
