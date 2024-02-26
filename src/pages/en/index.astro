@@ -9,7 +9,7 @@ import { getThemeOptions } from '../../api/options'
 import { useTranslations } from '../../i18n/ui'
 import LinkCard, { type Card } from '../../components/linkCard.astro'
 import Grid from '../../components/post/grid.astro'
-import { replaceEnvUrls } from '../../utils/parser'
+import { replaceUrls } from '../../utils/parser'
 import Pagination from '../../components/pagination.astro'
 import { buildIndexAlternates } from '../../utils/seo'
 
@@ -22,7 +22,7 @@ const postsBySlug = await getPosts(lang, filters)
 const promises = postsBySlug.map(async (post) => await getPostBySlug(post.slug, lang))
 const posts = await Promise.all(promises)
 
-let yoast = await getSEObyUrl(import.meta.env.WORDPRESS_INDEX_URL + '/', lang)
+let yoast = await getSEObyUrl(import.meta.env.BLOG_URL + '/', lang)
 const seo = {
   yoast,
   alternates: buildIndexAlternates()
@@ -40,7 +40,7 @@ const seo = {
       glaceOptions.home_hero_p && (
         <div
           class="prose prose-stone mx-auto !max-w-4xl text-center dark:prose-invert"
-          set:html={replaceEnvUrls(glaceOptions.home_hero_p)}
+          set:html={replaceUrls(glaceOptions.home_hero_p)}
         />
       )
     }

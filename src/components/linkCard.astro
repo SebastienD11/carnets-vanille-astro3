@@ -1,5 +1,5 @@
 ---
-import { replaceEnvUrls } from '../utils/parser'
+import { replaceUrls } from '../utils/parser'
 
 type Props = {
   card: Card
@@ -22,7 +22,7 @@ const { card }: Props = Astro.props
 ---
 
 <a
-  href={replaceEnvUrls(card.bloc_link.url)}
+  href={replaceUrls(card.bloc_link.url)}
   title={card.bloc_link.title}
   target={card.bloc_link.target}
   class="relative flex h-48 w-full items-end rounded-lg bg-cover bg-center bg-no-repeat p-4 transition before:absolute before:bottom-0 before:left-0 before:block before:h-1/3 before:w-full before:rounded-b-lg before:bg-gradient-to-t before:from-black before:to-transparent hover:-translate-y-1 hover:shadow-lg md:mb-0 md:h-auto lg:h-64"

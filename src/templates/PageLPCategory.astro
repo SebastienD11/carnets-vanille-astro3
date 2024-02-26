@@ -1,7 +1,7 @@
 ---
 import type { Page, PageSection } from '../api/page'
 import RelatedPost from '../components/post/relatedPost.astro'
-import { replaceLinks } from '../utils/parser'
+import { replaceUrls } from '../utils/parser'
 import BannerEbookBuy from '../components/ebook/bannerEbookBuy.astro'
 
 interface ACF extends Page {
@@ -30,7 +30,7 @@ const { node: page }: Props = Astro.props
           {page.acf.introduction_title}
         </h1>
         <div class="prose prose-stone dark:prose-invert prose-p:mt-0">
-          <div set:html={replaceLinks(page.acf.introduction_intro)} />
+          <div set:html={replaceUrls(page.acf.introduction_intro)} />
         </div>
       </div>
     </div>
@@ -65,7 +65,7 @@ const { node: page }: Props = Astro.props
             >
               {section.section_banner && (
                 <a
-                  href={replaceLinks(section.section_banner_link.url)}
+                  href={replaceUrls(section.section_banner_link.url)}
                   title={section.section_banner_link.title}
                   target={section.section_banner_link.target}
                   rel={section.section_banner_link.target === '_blank' ? 'noopener' : ''}
@@ -83,7 +83,7 @@ const { node: page }: Props = Astro.props
               )}
               {section.section_intro && (
                 <div class="prose prose-stone w-full !max-w-none dark:prose-invert prose-p:mt-0 md:w-1/2">
-                  <div set:html={replaceLinks(section.section_intro)} />
+                  <div set:html={replaceUrls(section.section_intro)} />
                 </div>
               )}
             </div>
@@ -98,7 +98,7 @@ const { node: page }: Props = Astro.props
           {section.section_read_more_label && section.section_read_more_link && (
             <div class="flex justify-center">
               <a
-                href={replaceLinks(section.section_read_more_link.url)}
+                href={replaceUrls(section.section_read_more_link.url)}
                 title={section.section_read_more_link.title}
                 target={section.section_read_more_link.target}
                 rel={section.section_read_more_link.target === '_blank' ? 'noopener' : ''}

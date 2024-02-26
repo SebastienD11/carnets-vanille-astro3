@@ -1,7 +1,7 @@
 ---
 import ebookImage from '../../images/bg-buy-ebook-image.webp'
 import { getThemeOptions } from '../../api/options'
-import { replaceLinks } from '../../utils/parser'
+import { replaceUrls } from '../../utils/parser'
 
 const lang = Astro.currentLocale as string
 const glaceOptions = await getThemeOptions(lang)
@@ -20,7 +20,7 @@ const glaceOptions = await getThemeOptions(lang)
 
     <div set:html={glaceOptions.banner_ebook_content} />
     <a
-      href={replaceLinks(glaceOptions.banner_ebook_button_link.url)}
+      href={replaceUrls(glaceOptions.banner_ebook_button_link.url)}
       title={glaceOptions.banner_ebook_button_link.title}
       target={glaceOptions.banner_ebook_button_link.target}
       class="flex w-full items-center justify-center rounded bg-vanille px-4 py-4 text-center !font-bold text-stone-900 transition hover:-translate-y-1 hover:shadow-lg disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none md:px-16"
