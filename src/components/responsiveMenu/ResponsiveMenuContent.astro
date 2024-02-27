@@ -4,6 +4,7 @@ import { getThemeOptions } from '../../api/options'
 import { primaryMenu } from '../../constant'
 import { useTranslations } from '../../i18n/ui'
 import BannerEbookBuy from '../ebook/bannerEbookBuy.astro'
+import { replaceUrls } from '../../utils/parser'
 
 const lang = Astro.currentLocale as string
 const glaceOptions = await getThemeOptions(lang)
@@ -21,7 +22,7 @@ const t = useTranslations(lang)
       id="off-canvas-additionals-info"
       class="transition-max-h max-h-96 duration-300 ease-in-out"
     >
-      <div set:html={glaceOptions.introduction} />
+      <div set:html={replaceUrls(glaceOptions.introduction)} />
       <div class="flex items-center gap-2">
         <span>{t('offCanvas.socialLinks.title')}</span>
         <a href={glaceOptions.facebook} title={t('socialLinks.facebook.alt')}
