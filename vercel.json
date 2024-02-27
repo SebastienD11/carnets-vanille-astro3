@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
@@ -16,7 +16,7 @@
       ]
     },
     {
-      "source": "*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
