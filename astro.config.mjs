@@ -17,7 +17,7 @@ export default defineConfig({
     }
   },
   image: {
-    domains: ['carnetsvanille.com']
+    domains: ['content.carnetsvanille.com']
   },
   vite: {
     plugins: [basicSsl()]
