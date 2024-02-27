@@ -2,6 +2,7 @@
 import { getThemeOptions } from '../../api/options'
 import { Image } from 'astro:assets'
 import authorImage from '../../images/sarah-carnets-vanille.png'
+import { replaceUrls } from '../../utils/parser'
 
 const lang = Astro.currentLocale as string
 const glaceOptions = await getThemeOptions(lang)
@@ -17,7 +18,7 @@ const glaceOptions = await getThemeOptions(lang)
         densities={[1.5, 2]}
         loading="lazy"
       />
-      <div class="prose prose-stone mx-auto p-6" set:html={glaceOptions.author_description} />
+      <div class="prose prose-stone mx-auto p-6" set:html={replaceUrls(glaceOptions.author_description)} />
     </div>
   )
 }
