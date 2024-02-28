@@ -4,11 +4,26 @@ import lifecycleLogs from './src/integrations/lifecycle-logs'
 import tailwind from '@astrojs/tailwind'
 import vercel from '@astrojs/vercel/serverless'
 
+import sitemap from '@astrojs/sitemap'
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
+  site: 'https://carnetsvanille.com', // required for sitemap build
   adapter: vercel(),
-  integrations: [tailwind(), lifecycleLogs()],
+  integrations: [
+    tailwind(),
+    lifecycleLogs(),
+    sitemap({
+      i18n: {
+        defaultLocale: 'fr',
+        locales: {
+          fr: 'fr',
+          en: 'en'
+        }
+      }
+    })
+  ],
   i18n: {
     defaultLocale: 'fr',
     locales: ['en', 'fr'],
