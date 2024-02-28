@@ -10,6 +10,7 @@ import NewsletterModal from '../components/newsletter/newsletterModal.astro'
 import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDrawer.astro'
 import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
 import ThemeColorScript from '../components/scripts/themeColor.astro'
+import Stay22 from '../components/thirdPartyScripts/Stay22.astro'
 import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
 import type { Yoast } from '../api/yoast'
 
@@ -63,5 +64,6 @@ const lang = Astro.currentLocale as string
     <FormScript />
     <ThemeColorScript />
     <NewsletterModal />
+    <Stay22 />
   </body>
 </html>

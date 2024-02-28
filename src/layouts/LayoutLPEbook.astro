@@ -4,6 +4,7 @@ import Seo from '../components/head/seo.astro'
 
 import '../styles/custom.css'
 import ThemeColorScript from '../components/scripts/themeColor.astro'
+import Stay22 from '../components/thirdPartyScripts/Stay22.astro'
 import type { Yoast } from '../api/yoast'
 
 interface Props {
@@ -46,5 +47,6 @@ const lang = Astro.currentLocale as string
   <body class="bg-stone-50 font-mulish dark:bg-stone-900 dark:text-white">
     <slot />
     <ThemeColorScript />
+    <Stay22 />
   </body>
 </html>
