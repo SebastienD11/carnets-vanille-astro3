@@ -1,0 +1,102 @@
+{
+  "/category/etats-unis": {
+    "status": 301,
+    "destination": "/tag/etats-unis"
+  },
+  "/blog": {
+    "status": 301,
+    "destination": "/"
+  },
+  "/blog/page/2": {
+    "status": 301,
+    "destination": "/page/2"
+  },
+  "/blog/page/3": {
+    "status": 301,
+    "destination": "/page/3"
+  },
+  "/blog/page/4": {
+    "status": 301,
+    "destination": "/page/4"
+  },
+  "/blog/page/5": {
+    "status": 301,
+    "destination": "/page/5"
+  },
+  "/blog/page/6": {
+    "status": 301,
+    "destination": "/page/6"
+  },
+  "/blog/page/7": {
+    "status": 301,
+    "destination": "/page/7"
+  },
+  "/category/canada": {
+    "status": 301,
+    "destination": "/tag/canada"
+  },
+  "/category/canada/page/2": {
+    "status": 301,
+    "destination": "/tag/canada/page/2"
+  },
+  "/category/canada/page/3": {
+    "status": 301,
+    "destination": "/tag/canada/page/3"
+  },
+  "/category/france": {
+    "status": 301,
+    "destination": "/tag/france"
+  },
+  "/category/france/page/2": {
+    "status": 301,
+    "destination": "/tag/france/page/2"
+  },
+  "/tag/la-reunion": {
+    "status": 301,
+    "destination": "/tag/ile-de-la-reunion"
+  },
+  "/category/les-iles": {
+    "status": 301,
+    "destination": "/tag/les-iles"
+  },
+  "/category/les-iles/page/2": {
+    "status": 301,
+    "destination": "/tag/les-iles/page/2"
+  },
+  "/route-du-rhum-2018-evenement-saint-malo": {
+    "status": 301,
+    "destination": "/route-du-rhum-saint-malo"
+  },
+  "/contact": {
+    "status": 301,
+    "destination": "/"
+  },
+  "/2020/07/02/grand-be-saint-malo": {
+    "status": 301,
+    "destination": "/grand-be-saint-malo"
+  },
+  "/2020/07/05/restaurants-saint-malo": {
+    "status": 301,
+    "destination": "/restaurants-saint-malo"
+  },
+  "/mes-carnets-nouvelle-rubrique": {
+    "status": 301,
+    "destination": "/carnet-1-nouvelle-rubrique"
+  },
+  "/7-incontournables-pour-visiter-cancale": {
+    "status": 301,
+    "destination": "/visiter-cancale"
+  },
+  "/excursion-blackemroad-cancale-saint-malo": {
+    "status": 301,
+    "destination": "/excursion-blackemroad"
+  },
+  "/conge-maternite-qubec": {
+    "status": 301,
+    "destination": "/conge-maternite-quebec"
+  },
+  "/en/in-quebec": {
+    "status": 301,
+    "destination": "/en/quebec"
+  }
+}
