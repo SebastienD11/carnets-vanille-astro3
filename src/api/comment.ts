@@ -43,7 +43,7 @@ export type Comment = {
   date_gmt: string
   children?: Comment[]
   content: {
-    rendered: { __html: string | TrustedHTML }
+    rendered: string
   }
   status: string
   modified: string
