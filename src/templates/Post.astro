@@ -124,4 +124,29 @@ const comments = await getCommentsForPost(post.id, lang)
 </div>
 
 {/* Shortcode Original Components */}
-<BannerEbookSample />
+<div astro-shortcode>
+  <BannerEbookSample />
+  <BannerEbookBuy />
+</div>
+
+
+
+<script is:inline>
+  // Banner Sample Ebook
+  const bannerEbookSample = document.querySelector('[astro-shortcode] > [astro-banner-ebook-sample]')
+  const clone = bannerEbookSample.cloneNode(true)
+  bannerEbookSample.remove()
+  document.querySelectorAll('[shortcode_free_ebook_banner]').forEach((el) => {
+    el.after(clone)
+    el.remove()
+  })
+
+  // Banner Buy Ebook
+  const bannerEbookBuyElt = document.querySelector('[astro-shortcode] > [astro-banner-ebook]')
+  const cloneBannerEbookBuyElt = bannerEbookBuyElt.cloneNode(true)
+  bannerEbookBuyElt.remove()
+  document.querySelectorAll('[shortcode_ebook_banner]').forEach((el) => {
+    el.after(cloneBannerEbookBuyElt)
+    el.remove()
+  })
+</script>
