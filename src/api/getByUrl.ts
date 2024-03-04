@@ -1,6 +1,6 @@
 import { getCategoryBySlug, type Category } from './category'
 import { getPageBySlug } from './page'
-import { getPostBySlug, type Post } from './post'
+import { getPostBySlug, getPostPreviewById, type Post } from './post'
 import { getTagBySlug, type Tag } from './tag'
 
 export async function getResourceByUri(uri: string, lang: string): Promise<any> {
@@ -44,4 +44,8 @@ export async function getResourceByUri(uri: string, lang: string): Promise<any> 
   }
 
   return null
+}
+
+export async function getPreviewResource(id: number, type: string) {
+  if (type === 'post') return getPostPreviewById(id)
 }

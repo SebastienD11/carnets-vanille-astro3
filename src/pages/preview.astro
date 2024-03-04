@@ -1,0 +1,65 @@
+---
+import DefaultLayout from '../layouts/Layout.astro'
+import LayoutLPEbook from '../layouts/LayoutLPEbook.astro'
+import Category from '../templates/Category.astro'
+import Tag from '../templates/Tag.astro'
+import Post from '../templates/Post.astro'
+import Page from '../templates/Page.astro'
+import PageLPCategory from '../templates/PageLPCategory.astro'
+import PageEbookLP from '../templates/PageEbookLP.astro'
+import { buildSeo } from '../utils/seo'
+import { getTypeByData } from '../utils/type'
+import Linktree from '../templates/Linktree.astro'
+import { getPreviewResource } from '../api/getByUrl'
+
+
+const data = await getPreviewResource(parseInt(Astro.url.searchParams.get('id') as string, 10), Astro.url.searchParams.get('type') as string)
+
+console.log(data)
+
+function resolveContentTemplate(data: any) {
+  const type = getTypeByData(data)
+
+  if (!type) throw new Error(`No type found`)
+
+  let template
+  let layout = DefaultLayout
+  switch (type) {
+    case 'post':
+      template = Post
+      break
+    case 'page':
+      if (data.acf.template === 'category-landing-page') {
+        template = PageLPCategory
+        break
+      }
+      if (data.acf.template === 'ebook-landing-page') {
+        template = PageEbookLP
+        layout = LayoutLPEbook
+        break
+      }
+      if (data.acf.template === 'linktree') {
+        template = Linktree
+        break
+      }
+      template = Page
+      break
+    case 'category':
+      template = Category
+      break
+    case 'post_tag':
+      template = Tag
+      break
+    default:
+      template = Post
+  }
+
+  return { template, layout }
+}
+
+const { template: Template, layout: Layout } = resolveContentTemplate(data)
+---
+
+<Layout seo={buildSeo(data)}>
+  <Template node={data} />
+</Layout>

@@ -46,6 +46,26 @@ export async function getPostsCount(lang: string): Promise<number> {
   return res.headers.get('X-WP-Total') ? parseInt(res.headers.get('X-WP-Total')!) : 0
 }
 
+export async function getPostPreviewById(id: number): Promise<Post | null> {
+  const headerAuth = `Basic ${btoa(
+    import.meta.env.WORDPRESS_APP_USERNAME + ':' + import.meta.env.WORDPRESS_APP_PASSWORD
+  )}`
+
+  const res = await fetch(import.meta.env.WORDPRESS_REST_API_URL + `/posts/${id}/autosaves`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: headerAuth
+    }
+  })
+
+  const post: Post[] = await res.json()
+  if (post.length > 0) {
+    return post[0]
+  }
+
+  return null
+}
+
 export type Post = {
   id: number
   date: string
