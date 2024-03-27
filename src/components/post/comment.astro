@@ -6,6 +6,7 @@ import { type Comment } from '../../api/comment'
 import FormattedDate from '../formatedDate.astro'
 import authorImage from '../../images/sarah-96x96.png'
 import userImage from '../../images/avatar-96x96.png'
+import { replaceUrls } from '../../utils/parser'
 
 type Props = {
   comment: Comment
@@ -56,7 +57,7 @@ const { comment, className }: Props = Astro.props
     </div>
     <div
       class="prose prose-stone dark:prose-invert prose-p:!my-0"
-      set:html={comment.content.rendered}
+      set:html={replaceUrls(comment.content.rendered)}
     />
   </div>
 </div>
