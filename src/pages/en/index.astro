@@ -16,7 +16,7 @@ import { buildIndexAlternates } from '../../utils/seo'
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
 const glaceOptions = await getThemeOptions(lang)
-const filters = `&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=1`
+const filters = `&orderby=modified&order=desc&per_page=${POSTS_PER_PAGE}&page=1`
 const totalPosts = await getPostsCount(lang)
 const postsBySlug = await getPosts(lang, filters)
 const promises = postsBySlug.map(async (post) => await getPostBySlug(post.slug, lang))
@@ -68,11 +68,6 @@ const seo = {
         </>
       )
     }
-    <Pagination
-      total={totalPosts}
-      perPage={POSTS_PER_PAGE}
-      currentPage={1}
-      baseUrl={``}
-    />
+    <Pagination total={totalPosts} perPage={POSTS_PER_PAGE} currentPage={1} baseUrl={``} />
   </main>
 </Layout>

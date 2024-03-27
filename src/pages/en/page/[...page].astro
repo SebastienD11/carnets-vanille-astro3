@@ -10,20 +10,20 @@ import Pagination from '../../../components/pagination.astro'
 
 // Return a list of all resources (pages, posts, tags, categories, etc), existing in the CMS in the current locale.
 export async function getStaticPaths() {
-    const totalPosts = await getPostsCount('en')
-    const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
-    const paths = []
-    let i = 2
-    while(i <= totalPages) {
-      paths.push({ params: { page: i }})
-      i += 1
-    }
-    return paths
+  const totalPosts = await getPostsCount('en')
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
+  const paths = []
+  let i = 2
+  while (i <= totalPages) {
+    paths.push({ params: { page: i } })
+    i += 1
+  }
+  return paths
 }
 
 const lang = Astro.currentLocale as string
-const { page } = Astro.params;
-const filters = `&orderby=date&order=desc&per_page=${POSTS_PER_PAGE}&page=${page}`
+const { page } = Astro.params
+const filters = `&orderby=modified&order=desc&per_page=${POSTS_PER_PAGE}&page=${page}`
 const totalPosts = await getPostsCount(lang)
 const postsBySlug = await getPosts(lang, filters)
 const promises = postsBySlug.map(async (post) => await getPostBySlug(post.slug, lang))
@@ -45,11 +45,6 @@ const seo = {
         </>
       )
     }
-    <Pagination
-      total={totalPosts}
-      perPage={POSTS_PER_PAGE}
-      currentPage={page}
-      baseUrl={``}
-    />
+    <Pagination total={totalPosts} perPage={POSTS_PER_PAGE} currentPage={page} baseUrl={``} />
   </main>
 </Layout>
