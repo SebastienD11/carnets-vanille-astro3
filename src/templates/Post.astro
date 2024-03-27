@@ -57,7 +57,7 @@ const comments = await getCommentsForPost(post.id, lang)
       </h1>
 
       <p class="text-center text-sm italic text-white">
-        <FormattedDate date={post.date} />
+        <FormattedDate date={post.modified} />
       </p>
     </div>
   </div>
@@ -131,7 +131,9 @@ const comments = await getCommentsForPost(post.id, lang)
 
 <script is:inline>
   // Banner Sample Ebook
-  const bannerEbookSample = document.querySelector('[astro-shortcode] > [astro-banner-ebook-sample]')
+  const bannerEbookSample = document.querySelector(
+    '[astro-shortcode] > [astro-banner-ebook-sample]'
+  )
   const clone = bannerEbookSample.cloneNode(true)
   bannerEbookSample.remove()
   document.querySelectorAll('[shortcode_free_ebook_banner]').forEach((el) => {
