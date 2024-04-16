@@ -1,0 +1,74 @@
+{
+  "author_description": "<p>Hello! I&#8217;m Sarah, a Malouin at heart, living in Montreal for a few years. <a href=\"https://carnetsvanille.com/\">Carnets Vanille</a> is an opportunity for me to combine my two passions, writing and travel, by sharing with you about the two corners of the world that excite me, Quebec and Brittany. I share my discoveries, provide tips to help you plan your visits, and also offer recommendations on the best restaurants and accommodations.</p>\n",
+  "author_picture": "https://content.carnetsvanille.com/wp-content/uploads/2021/06/sarah-carnets-vanille.png",
+  "available_groups_for_newsletter": [
+    { "value": "88968404275299938", "label": "Saint-Malo et la Bretagne" },
+    { "value": "88968404285785703", "label": "Le Québec et la vie d'expat' à Montréal" }
+  ],
+  "banner_ebook_button_label": "Buy for 9,90€",
+  "banner_ebook_button_link": { "title": "", "url": "#", "target": "" },
+  "banner_ebook_content": "<strong>180+ pages</strong> in PDF or EPUB about Saint-Malo and the Emerald Coast. Works on your tablet as well! ",
+  "banner_ebook_title": "Plan your trip with my <span class=\"mark\">ebook</span> “Discover Saint-Malo” !",
+  "banner_free_ebook_button_label": "Get the ebook",
+  "banner_free_ebook_content": "You may also receive my newsletter on Saint-Malo and Brittany.",
+  "banner_free_ebook_title": "Download <span class=\"mark\">for free</span>an extract from my ebook on Saint-Malo and the surrounding area",
+  "cookie_banner": "<p><strong>Privacy Policy</strong>: By browsing my blog, you accept the use of cookies for the purposes described in the legal notices.</p>\n",
+  "facebook": "https://www.facebook.com/carnetsvanille",
+  "free_ebook_comments_mailerlite_group": "88968404275299938",
+  "home_hero_blocs": false,
+  "home_hero_p": "<p>My name is Sarah, a Breton at heart who has recently settled in Quebec. I write about these two regions that are close to my heart: travel itineraries, ebooks, tips, and more! Whether you&#8217;re here for <strong>tips on visiting Saint-Malo or the Emerald Coast</strong>, planning your <strong>trip to Quebec</strong>, or even <strong>discovering expat life in Montreal</strong>, I&#8217;ve got what you need!</p>\n",
+  "home_hero_title": "Welcome",
+  "instagram": "https://www.instagram.com/carnetsvanille/",
+  "introduction": "<p>Welcome to <strong>Carnets Vanille</strong>! I&#8217;m Sarah, a lover of Saint-Malo who ended up in Montreal. I write about these two regions that are close to my heart: travel itineraries, ebooks, tips, and more!</p>\n",
+  "mailerlite_api_key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiZmE5MzcwZGFhMmZmNWI0MGIwOTE2MmE4Y2JjOWM3NmUxOWVjNjMyMzVlYjUwYTU2ODNkOGMyMjM1NzhlZTJlMDc1MDM0NzJmMmRjMTBlOTUiLCJpYXQiOjE2ODQ5NDMxNjQuMzYzMzY3LCJuYmYiOjE2ODQ5NDMxNjQuMzYzMzcxLCJleHAiOjQ4NDA2MTY3NjQuMzU1NDcyLCJzdWIiOiI3Mzg1MCIsInNjb3BlcyI6W119.tuUTVwcR9OpETo6qPQXEX8nbJPW1b11Re3hB96KNTP6popZR1ncLYMY2wKEvP7FEs9VNzyPozFDKyplU_fkkA5dDbUd6bqPnEkKJaUbwgvWTyk8yImDYsS3nPVuQFEZUz1abFCL74xBvq4d7cZLY5nEg1kcblvnZMFGuJgsFhgmfAY5aFfKvL-CM54LgP3Iqp_pKeq5QPMPgCwK6Eo9r0oQDarCOhwdh1BLQLXnOWh3eIGWnIjD4hz1_R9MPBc5XQfK0-nBD_x9I92XVWz8XknQ0eevPwlyaVflScHtbY8vmSHDoJTo1yoSJYIag9HhvDjzkVrCIgGF7Gs-Srj8d0C3WD6BwhVOkbn7zhqAK7jh3wiQ35H5FcpXw2og8nl9m8xAvo_ZpddRMd9Tz0rjkUeAanKfkUHOTDtEq2u0DeLanBTbsswEO8XJwaXs7dvJwWS4mxz2dHTG5dS7yjT4j52UGlfh2yxqpZoeNA03VS7usJijKXXrZjBvuESFNSsplXdpV6zyQj52itnfbx04xkcRjaoJ9GQ9ZTow67nHXG18B3CF2o2f4OAUIgT5JMsZgdfMzW9Rj83X9Rgr1xjcCpOgkIdUoLvdfdHt2hzsI5SKOxtQ6yqnK6V3bgOpK9txhfYgSSY7EzrDjhpZmAIlY5D9lVseFXUf1NdYqKhQCABU",
+  "mailerlite_group_id_for_ebook": "88968404289980009",
+  "off_canvas_menu": [
+    {
+      "off_canvas_menu_label": "From Brittany",
+      "off_canvas_menu_tag": {
+        "term_id": 86,
+        "name": "Brittany",
+        "slug": "brittany",
+        "term_group": 0,
+        "term_taxonomy_id": 86,
+        "taxonomy": "post_tag",
+        "description": "Brittany is a region full of surprises and mysteries. Despite its beauty, I have to admit that I prefer the Emerald Coast, which stretches from Cancale to Cap Fréhel.\n\nThe green hues of the sea charm me every time, and I'm pretty sure they'll charm you too!\n\nCheck out all my articles on Saint-Malo and the Emerald Coast: things to do, restaurants to try and must-sees.",
+        "parent": 0,
+        "count": 9,
+        "filter": "raw"
+      },
+      "off_canvas_menu_link": {
+        "title": "",
+        "url": "https://content.carnetsvanille.com/en/tag/brittany/",
+        "target": ""
+      }
+    },
+    {
+      "off_canvas_menu_label": "To Quebec",
+      "off_canvas_menu_tag": {
+        "term_id": 109,
+        "name": "Québec",
+        "slug": "quebec",
+        "term_group": 0,
+        "term_taxonomy_id": 109,
+        "taxonomy": "post_tag",
+        "description": "Having lived in Quebec for several years, I've had the opportunity to visit the region extensively. Whether you want to come to Quebec in winter or summer, I've got just what you need!\n\nMaybe you're planning a trip to Quebec on your next holiday, or maybe you've just moved to the region. Either way, check out my tips on what to do and see when you're in Quebec.",
+        "parent": 0,
+        "count": 7,
+        "filter": "raw"
+      },
+      "off_canvas_menu_link": {
+        "title": "",
+        "url": "https://content.carnetsvanille.com/en/tag/quebec/",
+        "target": ""
+      }
+    }
+  ],
+  "pinterest": "https://www.pinterest.ca/carnetsvanille/",
+  "stripe_api_key": "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",
+  "stripe_api_key_test": "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",
+  "stripe_test_mode": false,
+  "stripe_webhook_key": "whsec_c77OdI2v7gr96AEerIKqbaGz7wovyJsM",
+  "stripe_webhook_key_test": "whsec_gfV72iFjL87pwqnLovPitIVzh8LXcplj",
+  "twitter": "https://twitter.com/carnetsvanille"
+}
