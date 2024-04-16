@@ -1,0 +1,51 @@
+---
+import Header from '../components/header/Header.astro'
+import '@fontsource-variable/mulish'
+import '../styles/custom.css'
+import Footer from '../components/Footer/Footer.astro'
+import FormScript from '../components/scripts/formScript.astro'
+import NewsletterModal from '../components/newsletter/newsletterModal.astro'
+import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDrawer.astro'
+import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
+import ThemeColorScript from '../components/scripts/themeColor.astro'
+import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
+const lang = Astro.currentLocale as string
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="generator" content={Astro.generator} />
+    <!-- No SEO in Preview - Yoast data are not surfaced in the revision endpoint -->
+    <meta name="robots" content="noindex" />
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="/icons/glace-icons.css" />
+    <script defer data-domain="carnetsvanille.com" src="https://plausible.io/js/script.js"></script>
+  </head>
+
+  <body
+    class="mx-auto bg-stone-50 px-4 py-6 font-mulish md:container dark:bg-stone-900 dark:text-white"
+  >
+    <Header />
+    <ResponsiveMenuToggle />
+    <ResponsiveMenuDrawer>
+      <ResponsiveMenuContent />
+    </ResponsiveMenuDrawer>
+    <slot />
+    <Footer />
+    <FormScript />
+    <ThemeColorScript />
+    <NewsletterModal />
+  </body>
+</html>

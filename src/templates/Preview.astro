@@ -1,0 +1,117 @@
+---
+import '@wordpress/block-library/build-style/common.css'
+import '@wordpress/block-library/build-style/style.css'
+import '@wordpress/block-library/build-style/theme.css'
+import { Image } from 'astro:assets'
+import { decode } from 'html-entities'
+import { parseHtml } from '../utils/parser'
+import { useTranslations } from '../i18n/ui'
+import AuthorCard from '../components/post/authorCard.astro'
+import BannerEbookSample from '../components/ebook/bannerEbookSample.astro'
+import FormattedDate from '../components/formatedDate.astro'
+import RelatedPost from '../components/post/relatedPost.astro'
+import SectionTitle from '../components/ui/sectionTitle.astro'
+import ShareButtons from '../components/post/shareButtons.astro'
+import type { Post } from '../api/post'
+import BannerEbookBuy from '../components/ebook/bannerEbookBuy.astro'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+const post: Post = Astro.props.node
+---
+
+<div class="flex flex-col gap-12">
+  <div
+    class="relative mx-auto w-full max-w-screen-md after:absolute after:inset-0 after:block after:h-full after:rounded-lg after:bg-stone-900/50"
+  >
+    <!-- No featured media in preview -->
+    <div class="h-96 bg-vanille"></div>
+    <div
+      class="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4"
+    >
+      <h1
+        class="inline-block text-balance text-center text-xl font-extrabold leading-tight text-white drop-shadow-lg md:text-2xl lg:text-3xl xl:text-4xl"
+      >
+        [Preview]<br />{decode(post.title.rendered)}
+      </h1>
+
+      <p class="text-center text-sm italic text-white">
+        <FormattedDate date={post.modified} />
+      </p>
+    </div>
+  </div>
+
+  <!-- No tag list in preview -->
+  <!-- <TagList post={post} /> -->
+
+  <article
+    class="prose prose-stone mx-auto dark:prose-invert"
+    set:html={parseHtml(post.content.rendered)}
+  />
+
+  <div class="mx-auto flex w-full max-w-screen-md flex-col gap-24">
+    <div>
+      <SectionTitle as="h3" title={t('post.footer.title')} subtitle={t('post.footer.subtitle')} />
+      <div class="flex flex-col gap-4">
+        <ShareButtons post={post} />
+        <p class="text-center text-stone-500 dark:text-stone-300">
+          {
+            post.modified !== post.date && (
+              <>
+                {t('post.footer.date_modified')}
+                <FormattedDate date={post.modified} />
+              </>
+            )
+          }
+        </p>
+        <!-- No tag list in preview -->
+        <!-- <TagList post={post} /> -->
+      </div>
+    </div>
+
+    <AuthorCard />
+
+    {
+      post.acf.related_posts?.length > 0 && (
+        <div>
+          <SectionTitle as="h3" title={t('post.relatedPost.title')} />
+          <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            {post.acf.related_posts.map((postId) => (
+              <RelatedPost postId={postId} />
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {post.acf.display_banner && <BannerEbookBuy />}
+  </div>
+</div>
+
+{/* Shortcode Original Components */}
+<div astro-shortcode>
+  <BannerEbookSample />
+  <BannerEbookBuy />
+</div>
+
+<script is:inline>
+  // Banner Sample Ebook
+  const bannerEbookSample = document.querySelector(
+    '[astro-shortcode] > [astro-banner-ebook-sample]'
+  )
+  const clone = bannerEbookSample.cloneNode(true)
+  bannerEbookSample.remove()
+  document.querySelectorAll('[shortcode_free_ebook_banner]').forEach((el) => {
+    el.after(clone)
+    el.remove()
+  })
+
+  // Banner Buy Ebook
+  const bannerEbookBuyElt = document.querySelector('[astro-shortcode] > [astro-banner-ebook]')
+  const cloneBannerEbookBuyElt = bannerEbookBuyElt.cloneNode(true)
+  bannerEbookBuyElt.remove()
+  document.querySelectorAll('[shortcode_ebook_banner]').forEach((el) => {
+    el.after(cloneBannerEbookBuyElt)
+    el.remove()
+  })
+</script>
