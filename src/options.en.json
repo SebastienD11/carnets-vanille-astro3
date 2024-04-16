@@ -65,10 +65,6 @@
     }
   ],
   "pinterest": "https://www.pinterest.ca/carnetsvanille/",
-  "stripe_api_key": "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",
-  "stripe_api_key_test": "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",
   "stripe_test_mode": false,
-  "stripe_webhook_key": "whsec_c77OdI2v7gr96AEerIKqbaGz7wovyJsM",
-  "stripe_webhook_key_test": "whsec_gfV72iFjL87pwqnLovPitIVzh8LXcplj",
   "twitter": "https://twitter.com/carnetsvanille"
 }
