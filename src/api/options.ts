@@ -1,17 +1,7 @@
-import { CACHE_FOLDER } from '../constant'
-import { cacheExist, getCache, writeCache } from '../utils/cache'
+import optionsFr from '../options.fr.json'
+import optionsEn from '../options.en.json'
 
 export async function getThemeOptions(lang: string): Promise<any> {
-  if (cacheExist(`${CACHE_FOLDER}/${lang}/options.json`)) {
-    const options = getCache(`${CACHE_FOLDER}/${lang}/options.json`)
-    return options
-  } else {
-    const res = await fetch(
-      import.meta.env.WORDPRESS_REST_API_URL_SHORT + `/astroglace/options/?lang=${lang}`
-    )
-    const options = await res.json()
-
-    writeCache(`${CACHE_FOLDER}/${lang}/`, 'options', options)
-    return options
-  }
+  if (lang === 'fr') return optionsFr
+  if (lang === 'en') return optionsEn
 }
