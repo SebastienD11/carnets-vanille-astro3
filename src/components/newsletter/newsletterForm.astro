@@ -15,7 +15,7 @@ type mlGroup = {
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
-const glaceOptions = await getThemeOptions(lang)
+const glaceOptions = getThemeOptions(lang)
 ---
 
 <form onsubmit="formSubmit(event, postMailerlite)" class="flex flex-col gap-8" novalidate>
@@ -29,9 +29,9 @@ const glaceOptions = await getThemeOptions(lang)
     <InputEmail required id="email" name="email" label={t('newsletter.form.email')} />
 
     {
-      glaceOptions.available_groups_for_newsletter.length > 0 && (
+      glaceOptions.mailerlite.groups.length > 0 && (
         <div class="flex flex-col gap-4">
-          {glaceOptions.available_groups_for_newsletter.map((group: mlGroup) => (
+          {glaceOptions.mailerlite.groups.map((group: mlGroup) => (
             <>
               <div class="flex cursor-pointer items-center gap-1">
                 <input

@@ -6,7 +6,6 @@ import { getCommentsForPost } from '../api/comment'
 import { decode } from 'html-entities'
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import Footer from '../components/Footer/Footer.astro'
-import { getThemeOptions } from '../api/options'
 import { useTranslations } from '../i18n/ui'
 import Spinner from '../components/ui/spinner.astro'
 import ThankYouModal from '../components/ebook/thankYouModal.astro'
@@ -54,8 +53,6 @@ type Props = {
 
 const { node: page }: Props = Astro.props
 
-const glaceOptions = await getThemeOptions(lang)
-
 // Todo : Conversion Tracking
 
 // Content
@@ -86,7 +83,7 @@ const productPriceSymbol = '€'
 const productPriceSymbolCode = 'EUR'
 
 // Stripe
-const testMode = import.meta.env.VERCEL_ENV === 'production' ? glaceOptions.stripe_test_mode : true
+const testMode = import.meta.env.VERCEL_ENV === 'production' ? false : true
 const stripePriceId = testMode
   ? page.acf.stripe_product_price_id_test
   : page.acf.stripe_product_price_id
