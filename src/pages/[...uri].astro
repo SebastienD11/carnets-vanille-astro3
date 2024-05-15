@@ -2,7 +2,7 @@
 export const prerender = true
 
 import DefaultLayout from '../layouts/Layout.astro'
-import LayoutLPEbook from '../layouts/LayoutLPEbook.astro'
+import LayoutLPEProduct from '../layouts/LayoutLPProduct.astro'
 import Category from '../templates/Category.astro'
 import Tag from '../templates/Tag.astro'
 import Post from '../templates/Post.astro'
@@ -42,7 +42,7 @@ function resolveContentTemplate(data: any) {
       }
       if (data.acf.template === 'ebook-landing-page') {
         template = PageEbookLP
-        layout = LayoutLPEbook
+        layout = LayoutLPEProduct
         break
       }
       if (data.acf.template === 'linktree') {
