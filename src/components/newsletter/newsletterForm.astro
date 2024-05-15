@@ -9,7 +9,7 @@ import FormSuccess from '../ui/form/success.astro'
 import InputSubmit from '../ui/form/submit.astro'
 
 type mlGroup = {
-  value: string
+  id: string
   label: string
 }
 
@@ -22,7 +22,7 @@ const glaceOptions = getThemeOptions(lang)
   <FormSuccess message={t('newsletter.form.success')} />
   <FormErrors
     requiredFieldsError={t('newsletter.form.error.fields')}
-    callbackError={'callback error' + ADMIN_EMAIL}
+    callbackError={'Something went wrong, please contact : ' + ADMIN_EMAIL}
   />
   <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
     <InputText required id="firstName" name="firstName" label={t('newsletter.form.firstName')} />
@@ -35,13 +35,13 @@ const glaceOptions = getThemeOptions(lang)
             <>
               <div class="flex cursor-pointer items-center gap-1">
                 <input
-                  id={group.value}
+                  id={group.id}
                   name="groups"
                   type="checkbox"
-                  value={group.value}
+                  value={group.id}
                   class="h-4 w-4 cursor-pointer rounded border-stone-500 bg-stone-900 text-stone-50 focus:ring-2"
                 />
-                <label for={group.value} class="ms-2 cursor-pointer text-sm font-medium ">
+                <label for={group.id} class="ms-2 cursor-pointer text-sm font-medium ">
                   {group.label}
                 </label>
               </div>
