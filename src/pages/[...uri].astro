@@ -2,13 +2,14 @@
 export const prerender = true
 
 import DefaultLayout from '../layouts/Layout.astro'
-import LayoutLPEProduct from '../layouts/LayoutLPProduct.astro'
+import LayoutLPProduct from '../layouts/LayoutLPProduct.astro'
 import Category from '../templates/Category.astro'
 import Tag from '../templates/Tag.astro'
 import Post from '../templates/Post.astro'
 import Page from '../templates/Page.astro'
 import PageLPCategory from '../templates/PageLPCategory.astro'
 import PageEbookLP from '../templates/PageEbookLP.astro'
+import ProductCarnetEnfants from '../templates/products/CarnetEnfants.astro'
 import { getResourceByUri } from '../api/getByUrl'
 import { getAllUris } from '../api/getAllUrls'
 import { buildSeo } from '../utils/seo'
@@ -42,7 +43,12 @@ function resolveContentTemplate(data: any) {
       }
       if (data.acf.template === 'ebook-landing-page') {
         template = PageEbookLP
-        layout = LayoutLPEProduct
+        layout = LayoutLPProduct
+        break
+      }
+      if (data.acf.template === 'carnet-enfants-landing-page') {
+        layout = LayoutLPProduct
+        template = ProductCarnetEnfants
         break
       }
       if (data.acf.template === 'linktree') {

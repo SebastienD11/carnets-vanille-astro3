@@ -1,0 +1,360 @@
+---
+import { Image } from 'astro:assets'
+import authorImage from '../../images/sarah-carnets-vanille.png'
+import { getRelativeLocaleUrl } from 'astro/virtual-modules/i18n.js'
+import Spinner from '../../components/ui/spinner.astro'
+import { useTranslations } from '../../i18n/ui'
+import { decode } from 'html-entities'
+import Footer from '../../components/Footer/Footer.astro'
+import type { Page } from '../../api/page'
+import { getCommentsForPage } from '../../api/comment'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+const page: Page = Astro.props.node
+
+const comments = await getCommentsForPage(page.id, lang)
+let aggregateRating = 0
+let reviewsCount = 0
+comments?.map((comment) => {
+  aggregateRating = (aggregateRating + comment.meta.product_rating) / 2
+  reviewsCount += 1
+})
+
+aggregateRating = Math.round(aggregateRating * 100) / 100
+---
+
+<div class="flex flex-col border-b border-stone-200 lg:flex-row">
+  {/* Left column */}
+  <div
+    class="w-full px-4 pt-12 md:pt-6 lg:w-1/2 lg:border-r lg:border-stone-200 lg:bg-gradient-to-l lg:from-stone-100 lg:to-stone-100/10 lg:pt-0 dark:lg:border-stone-600 dark:lg:from-stone-800 dark:lg:to-stone-900"
+  >
+    <div
+      class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start gap-8 py-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center xl:max-w-[550px]"
+    >
+      <div class="flex flex-col">
+        <div class="flex flex-col items-center gap-8 lg:items-start xl:gap-8">
+          <div
+            class="flex items-center justify-center gap-1 rounded-full border border-vanille bg-vanille/60 px-4 py-1 text-sm font-medium backdrop-blur-xl dark:bg-vanille"
+          >
+            <span class="mr-2 dark:text-stone-900">Carnet de jeu numérique</span>
+            <span
+              class="rounded bg-stone-600 px-1 py-[1px] text-xs font-bold uppercase text-vanille"
+              >PDF</span
+            >
+          </div>
+
+          <div class="flex flex-col gap-2 text-center lg:text-left">
+            <h1 class="text-2xl font-extrabold dark:text-vanille 2xl:text-4xl">
+              Découvrir Saint-Malo en s’amusant !
+            </h1>
+            <span class="block text-sm">
+              <em>
+                {t('ebook.lp.writtenBy')}&nbsp;<strong>Sarah Lagache</strong>,
+                {t('ebook.lp.updatedIn')} Avril 2024
+              </em>
+            </span>
+          </div>
+          {/* Metas */}
+          {
+            aggregateRating > 0 && (
+              <>
+                <div class="flex flex-col items-center justify-center gap-2 md:flex-row">
+                  {aggregateRating && reviewsCount && (
+                    <div class="flex flex-row items-center justify-center gap-1 font-bold">
+                      <svg
+                        class="me-1 h-4 w-4 text-vanille"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                      </svg>
+                      <span>{aggregateRating}</span>
+                      <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
+                      <span>
+                        {reviewsCount} {t('ebook.lp.reviews')}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </>
+            )
+          }
+          {/* Intro */}
+
+          <div class="prose prose-stone mx-auto text-center dark:prose-invert lg:text-left">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat non libero ut
+            porta. Maecenas vestibulum, augue sit amet fermentum faucibus, ligula lectus tincidunt
+            est, at posuere nisi justo sed sem.
+          </div>
+          {/* Mobile Ipad */}
+          <div class="relative z-0 mx-auto max-w-full md:max-w-[450px] lg:hidden">IMAGE MOBILE</div>
+          {/* Checkout CTA */}
+          <button
+            type="button"
+            create-checkout
+            class="hidden w-full cursor-pointer select-none items-center
+                  justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4 text-lg
+                  font-extrabold uppercase text-stone-900 transition-all
+                  duration-150 [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841]
+                  hover:bg-vanille/80 active:translate-y-2
+                  active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]
+                  lg:flex"
+          >
+            <i class="icon-icon-add-to-card"></i>
+            <Spinner className="hidden animate-spin" />
+            <span> Acheter pour 14.90 € </span>
+          </button>
+
+          {/* Mobile Checkout CTA */}
+          <button
+            type="button"
+            create-checkout
+            class="fixed bottom-4 z-10 mx-auto flex w-full max-w-[94%] cursor-pointer select-none items-center
+                  justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4 text-lg
+                  font-extrabold uppercase text-stone-900 transition-all
+                  duration-150 [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841]
+                  hover:bg-vanille active:translate-y-2
+                  active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]
+                  lg:hidden"
+          >
+            <i class="icon-icon-add-to-card"></i>
+            <Spinner className="hidden animate-spin" />
+            <span>Acheter pour 14.90 €</span>
+          </button>
+
+          {/* Intro Bis */}
+          <div class="prose prose-stone mx-auto dark:prose-invert">
+            Integer ut sem auctor, rhoncus dui at, fermentum diam. In in lacus posuere, elementum
+            ipsum a, dictum orci. Vestibulum finibus arcu id orci dignissim ullamcorper. Vestibulum
+            ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Cras a
+            fringilla nunc. Vivamus tristique iaculis mattis. Integer efficitur justo odio, sit amet
+            congue nisl tincidunt sit amet. Proin lectus eros, sollicitudin sit amet risus vitae,
+            gravida posuere lorem. Vestibulum nec ipsum at lacus sollicitudin gravida ut ac metus.
+            Maecenas sit amet quam ac erat pharetra lacinia. Sed pulvinar varius leo et vulputate.
+            Maecenas lacinia mollis nisl, a porttitor dui lobortis at. Orci varius natoque penatibus
+            et magnis dis parturient montes, nascetur ridiculus mus. Vivamus non erat et erat
+            consectetur semper.
+          </div>
+        </div>
+      </div>
+      <a
+        href={getRelativeLocaleUrl(lang, '/')}
+        class="hidden text-sm text-stone-600 hover:underline dark:text-stone-400 lg:block"
+      >
+        &#8592; {t('ebook.lp.back')}
+      </a>
+    </div>
+  </div>
+  {/* End Left column */}
+  {/* Right column */}
+  <div class="w-full px-4 pb-12 lg:mx-auto lg:w-1/2 lg:max-w-prose lg:pt-24">
+    <div class="mx-auto flex max-w-[450px] flex-col justify-start gap-8 lg:max-w-none lg:gap-12">
+      {/* Separator */}
+      <i class="icon-ermine mx-auto mt-8 text-xl lg:hidden"> </i>
+
+      {/* Desktop Ipad */}
+      {(<div class="relative mx-auto hidden max-w-[450px] lg:block">DESKOPT IMAGE</div>)}
+
+      {/* The Content */}
+
+      <>
+        <h3 class="mark mx-auto inline-block text-xl font-bold">
+          {t('ebook.lp.section.title.content')}
+        </h3>
+        <div class="prose prose-stone dark:prose-invert">
+          <p>
+            Dans cet ebook sur Saint-Malo et ses 210 pages de contenu, au format PDF, vous trouverez
+            toutes les informations requises pour préparer votre séjour dans la <strong
+              >Cité Corsaire</strong
+            >.
+          </p>
+          <p>
+            <em
+              ><strong>Nouveauté 2024</strong> : un test du voyageur pour vous permettre de déterminer
+              votre profil et ainsi identifier plus facilement les activités, restaurants ou hébergements
+              qui vous correspondent parfaitement !</em
+            >
+          </p>
+          <p>Le ebook comprend :</p>
+          <ul>
+            <li>
+              <strong>Les incontournables</strong> : toutes les activités à faire et les choses à voir
+              pour découvrir Saint-Malo comme un local.
+            </li>
+            <li>
+              <strong>Les plages</strong> : un focus sur toutes les plages de la Cité Corsaire et leurs
+              caractéristiques (jeux, toilettes, buvette…) pour vous aider à choisir celle qui vous correspond
+              le plus.
+            </li>
+            <li>
+              <strong>Les événements</strong> : un point sur tous les événements qui animent la ville
+              tout au long de l’année et le calendrier annuel pour ne rien manquer.
+            </li>
+            <li>
+              <strong>Les restaurants</strong> : une sélection des 45 meilleures adresses, pour une pause
+              rapide ou un repas plus long, pour tous les budgets.
+            </li>
+            <li>
+              <strong>Les hébergements</strong> : les plus beaux établissements où séjourner, du camping
+              aux 5 étoiles. Il se peut même que vous trouviez un code promo pour l’un des hôtels 😉
+            </li>
+            <li>
+              <strong>Itinéraires de visite</strong> : des propositions de circuits à suivre selon votre
+              profil, des programmes de visite sur un week-end et des balades à faire sur la côte.
+            </li>
+            <li>
+              <strong>Autour de Saint-Malo</strong> : des conseils de visites et de villes à découvrir
+              autour de Saint-Malo, sur la Côte d’Émeraude.
+            </li>
+          </ul>
+          <p>
+            <strong>Mais aussi</strong> : plus de 375 photos de la Cité Corsaire et de la région, les
+            différents quartiers de Saint-Malo à découvrir, les spécialités bretonnes à tester absolument,
+            une sélection des meilleures boutiques pour acheter local, un dico franco-breton pour saluer
+            comme un vrai breton, des détails sur la vie à Saint-Malo ou encore des conseils &amp; anecdotes
+            pour en apprendre plus sur Saint-Malo.
+          </p>
+          <h3>5 raisons d’acheter mon ebook pour visiter Saint-Malo</h3>
+          <ul>
+            <li>
+              <strong>200 pages de contenu</strong> pour un tout petit prix, le tout rédigé par une vraie
+              malouine !
+            </li>
+            <li>
+              Tous les conseils pour préparer un voyage à Saint-Malo <strong
+                >regroupé au même endroit.</strong
+              >
+            </li>
+            <li>
+              Un <strong>format digital accessible</strong> sur votre tablette ou votre smartphone en
+              1 clic !
+            </li>
+            <li>
+              Des <strong>mises à jour régulières</strong> comprises dans le prix : vous achetez le ebook
+              une fois et vous recevez chaque année la nouvelle version gratuitement.
+            </li>
+            <li>C’est la meilleure manière de <strong>soutenir le blog</strong> !</li>
+          </ul>
+        </div>
+      </>
+
+      {/* Testimonials */}
+      {
+        comments.length > 0 && (
+          <>
+            {/* Separator */}
+            <i class="icon-ermine mx-auto text-xl"> </i>
+            <div class="flex flex-col items-center gap-3">
+              <h3 class="mark mx-auto inline-block text-xl font-bold">
+                {t('ebook.lp.section.title.testimonials')}
+              </h3>
+              <div class="flex flex-row items-center justify-center gap-1 font-bold">
+                <svg
+                  class="me-1 h-4 w-4 text-vanille"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                </svg>
+                <span>{aggregateRating}</span>
+                <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
+                <span>
+                  {reviewsCount} {t('ebook.lp.reviews')}
+                </span>
+              </div>
+            </div>
+
+            <div class="grid gap-8 xl:grid-cols-2">
+              {comments.map((comment) => (
+                <div class="flex items-center justify-center rounded-lg bg-stone-100 p-6 shadow dark:bg-stone-800">
+                  <div class="flex flex-col items-center gap-3">
+                    {comment.meta.product_rating && (
+                      <div class="flex flex-row items-center justify-center">
+                        {new Array(comment.meta.product_rating).fill(0).map(() => {
+                          return (
+                            <svg
+                              class="me-1 h-4 w-4 text-vanille"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                          )
+                        })}
+                      </div>
+                    )}
+                    <blockquote
+                      class="text-center font-medium italic"
+                      set:html={comment.content.rendered}
+                    />
+                    <figcaption class="text-center font-bold dark:text-vanille">
+                      {decode(comment.author_name)}
+                    </figcaption>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )
+      }
+
+      {/* Separator */}
+      <i class="icon-ermine mx-auto text-xl"> </i>
+
+      {/* Author */}
+
+      <div class="flex flex-col items-center justify-center">
+        <Image
+          src={authorImage}
+          alt="Sarah - Carnets Vanille"
+          width={authorImage.width}
+          densities={[1.5, 2]}
+          loading="lazy"
+        />
+        <div class="prose prose-stone dark:prose-invert">
+          Bonjour ! Moi c’est Sarah, malouine de coeur expatriée à Montréal pour quelques années.
+          Carnets Vanille, c’est l’occasion pour moi d’associer mes 2 passions, l’écriture et le
+          voyage, en vous parlant des 2 coins du monde qui me font vibrer, le Québec et la Bretagne.
+          J’y raconte mes découvertes, donne des conseils pour vous aider à planifier vos visites,
+          mais aussi des recommandations sur les meilleurs restos & hébergements.
+        </div>
+      </div>
+
+      {/* Separator */}
+      <i class="icon-ermine mx-auto text-xl"> </i>
+
+      {/* The FAQ */}
+      <h3 class="mark mx-auto inline-block text-xl font-bold">
+        {t('ebook.lp.section.title.faq')}
+      </h3>
+      <div class="prose prose-stone dark:prose-invert">
+        <h4>Est-ce que le paiement est sécurisé ?</h4>
+        <p>
+          Bien sûr ! Le paiement se fait à travers la plateforme Stripe. Stripe a été audité par un
+          évaluateur de sécurité qualifié PCI indépendant et est certifié en tant que prestataire de
+          services PCI de niveau 1. Il s’agit du niveau de certification le plus élevé du secteur
+          des paiements.
+        </p>
+        <h4>Puis-je lire le ebook sur ma tablette ?</h4>
+        <p>
+          Oui ! Une fois que vous avez téléchargé le ebook, vous pouvez l’ouvrir avec votre
+          tablette. Sur iPad, par exemple, il va s’ajouter automatiquement à votre bibliothèque dans
+          l’application Livres.
+        </p>
+        <h4>Comment te contacter si j’ai une question ?</h4>
+        <p>
+          Si vous avez une demande particulière, vous pouvez me contacter par email à l’adresse
+          suivante : sarah@carnetsvanille.com
+        </p>
+      </div>
+    </div>
+    <Footer />
+  </div>
+</div>
