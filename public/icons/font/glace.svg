@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg">
-<metadata>Copyright (C) 2023 by original authors @ fontello.com</metadata>
+<metadata>Copyright (C) 2024 by original authors @ fontello.com</metadata>
 <defs>
 <font id="glace" horiz-adv-x="1000" >
 <font-face font-family="glace" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
@@ -49,6 +49,8 @@
 <glyph glyph-name="ermine" unicode="&#xe814;" d="M490 592l-64 97 64 161 65-161-65-97z m0 0l291-710-226 97-65-129-64 129-226-97 290 710z" horiz-adv-x="950" />
 
 <glyph glyph-name="twitter" unicode="&#xe815;" d="M931 648c-36-16-74-26-114-31 41 24 72 63 87 109-38-23-80-39-125-48-36 38-87 62-144 62-109 0-197-88-197-197 0-15 2-30 5-45-164 9-309 87-407 206-17-29-26-63-26-99 0-68 35-129 87-164-32 1-62 10-89 25v-3c0-95 68-175 158-193-16-4-34-7-52-7-12 0-24 1-37 4 25-79 98-135 184-137-67-53-152-84-245-84-15 0-31 1-47 2 88-56 191-88 303-88 362 0 561 300 561 560l-1 26c39 28 72 62 99 102z" horiz-adv-x="1000" />
+
+<glyph glyph-name="comment" unicode="&#xe816;" d="M0 413q0 156 147 265t353 109 354-109 146-265-146-266-354-109q-47 0-96 7-29-35-89-78t-122-55l-9 0q-12 0-20 8t-8 20q0 6 2 12 0 1 13 21t18 29 13 30 13 36 4 32l0 2q-102 53-160 134t-59 177z m63 0q0-75 48-143t137-111q33-18 33-57l0-6q0-41-21-92 60 37 95 80 18 24 49 24 4 0 8-2 45-6 88-6 182 0 310 92t127 221-127 220-310 92-310-92-127-220z m93 0q0 89 102 154t242 64q16 0 16-15t-16-16q-125 0-219-57t-93-130q0-16-16-16t-16 16z" horiz-adv-x="1000" />
 </font>
 </defs>
 </svg>
