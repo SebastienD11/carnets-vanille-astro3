@@ -6,7 +6,7 @@ import InputSubmit from '../ui/form/submit.astro'
 import FormErrors from '../ui/form/error.astro'
 import FormSuccess from '../ui/form/success.astro'
 import Textarea from '../ui/form/textarea.astro'
-import { ADMIN_EMAIL, MAILERLITE_GROUPS } from '../../constant'
+import { ADMIN_EMAIL } from '../../constant'
 import { getThemeOptions } from '../../api/options'
 
 type Props = {
@@ -17,8 +17,10 @@ type Props = {
 const lang = Astro.currentLocale as string
 const { postId, newsletterGroupId }: Props = Astro.props
 const t = useTranslations(lang)
-const mailerliteGroup = MAILERLITE_GROUPS.find((group) => group.id === newsletterGroupId)
-const glaceOptions = await getThemeOptions(lang)
+const glaceOptions = getThemeOptions(lang)
+const mailerliteGroup = glaceOptions.mailerlite.groups.find(
+  (group) => group.id === newsletterGroupId
+)
 ---
 
 <form class="flex flex-col gap-8" onsubmit="formSubmit(event, postComment)" novalidate>
@@ -54,8 +56,8 @@ const glaceOptions = await getThemeOptions(lang)
         />
         <label for="mailerlite_group_id">
           {t('post.comments.form.newsletter')}
-          <strong>{mailerliteGroup.name}</strong>
-          {glaceOptions.free_ebook_comments_mailerlite_group === mailerliteGroup.id && (
+          <strong>{mailerliteGroup.label}</strong>
+          {glaceOptions.mailerlite.group_comment_ebook === mailerliteGroup.id && (
             <span set:html={t('post.comments.form.newsletter.ebook')} />
           )}
         </label>

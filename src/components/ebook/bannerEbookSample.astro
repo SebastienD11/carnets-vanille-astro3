@@ -11,7 +11,7 @@ import { ADMIN_EMAIL } from '../../constant'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
-const glaceOptions = await getThemeOptions(lang)
+const glaceOptions = getThemeOptions(lang)
 ---
 
 <div
@@ -43,7 +43,7 @@ const glaceOptions = await getThemeOptions(lang)
         <input
           type="hidden"
           name="mailerLiteGroupId"
-          value={glaceOptions.mailerlite_group_id_for_ebook}
+          value={glaceOptions.mailerlite.group_sample_ebook}
         />
       </div>
     </form>

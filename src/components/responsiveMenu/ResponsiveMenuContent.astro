@@ -7,7 +7,7 @@ import BannerEbookBuy from '../ebook/bannerEbookBuy.astro'
 import { replaceUrls } from '../../utils/parser'
 
 const lang = Astro.currentLocale as string
-const glaceOptions = await getThemeOptions(lang)
+const glaceOptions = getThemeOptions(lang)
 const primaryMenuForLang = primaryMenu.find((item) => item.lang === lang)?.items
 const t = useTranslations(lang)
 ---
@@ -22,19 +22,19 @@ const t = useTranslations(lang)
       id="off-canvas-additionals-info"
       class="transition-max-h max-h-96 duration-300 ease-in-out"
     >
-      <div set:html={replaceUrls(glaceOptions.introduction)} />
+      <div set:html={replaceUrls(glaceOptions.index.offcanvas_introduction)} />
       <div class="flex items-center gap-2">
         <span>{t('offCanvas.socialLinks.title')}</span>
-        <a href={glaceOptions.facebook} title={t('socialLinks.facebook.alt')}
+        <a href={glaceOptions.socials.facebook} title={t('socialLinks.facebook.alt')}
           ><i class="icon-facebook h-4 w-4"></i></a
         >
-        <a href={glaceOptions.instagram} title={t('socialLinks.instagram.alt')}
+        <a href={glaceOptions.socials.instagram} title={t('socialLinks.instagram.alt')}
           ><i class="icon-instagram h-4 w-4"></i></a
         >
-        <a href={glaceOptions.pinterest} title={t('socialLinks.pinterest.alt')}
+        <a href={glaceOptions.socials.pinterest} title={t('socialLinks.pinterest.alt')}
           ><i class="icon-pinterest h-4 w-4"></i></a
         >
-        <a href={glaceOptions.twitter} title={t('socialLinks.twitter.alt')}
+        <a href={glaceOptions.socials.twitter} title={t('socialLinks.twitter.alt')}
           ><i class="icon-twitter h-4 w-4"></i></a
         >
       </div>

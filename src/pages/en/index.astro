@@ -15,7 +15,7 @@ import { buildIndexAlternates } from '../../utils/seo'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
-const glaceOptions = await getThemeOptions(lang)
+const glaceOptions = getThemeOptions(lang)
 const filters = `&orderby=modified&order=desc&per_page=${POSTS_PER_PAGE}&page=1`
 const totalPosts = await getPostsCount(lang)
 const postsBySlug = await getPosts(lang, filters)
@@ -37,18 +37,18 @@ const seo = {
       {t('index.title')}
     </span>
     {
-      glaceOptions.home_hero_p && (
+      glaceOptions.index.introduction && (
         <div
           class="prose prose-stone mx-auto !max-w-4xl text-center dark:prose-invert"
-          set:html={replaceUrls(glaceOptions.home_hero_p)}
+          set:html={replaceUrls(glaceOptions.index.introduction)}
         />
       )
     }
     {
-      glaceOptions.home_hero_blocs && (
+      glaceOptions.index.blocks.length > 0 && (
         <>
           <div class="mb-12 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8 lg:gap-16 xl:gap-20">
-            {glaceOptions.home_hero_blocs.map((bloc: Card) => {
+            {glaceOptions.index.blocks.map((bloc: Card) => {
               return <LinkCard card={bloc} />
             })}
           </div>
