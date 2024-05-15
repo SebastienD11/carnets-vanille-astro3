@@ -7,7 +7,7 @@ import ThemeColorScript from '../components/scripts/themeColor.astro'
 import type { Yoast } from '../api/yoast'
 
 interface Props {
-  seo: {
+  seo?: {
     yoast: Yoast
     alternates: {
       hrefLang: string
@@ -32,7 +32,7 @@ const lang = Astro.currentLocale as string
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="generator" content={Astro.generator} />
     <!-- SEO -->
-    <Seo seo={seo} />
+    {seo && <Seo seo={seo} />}
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
