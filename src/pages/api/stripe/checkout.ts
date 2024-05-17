@@ -18,7 +18,7 @@ export const POST: APIRoute = async ({ request }) => {
           quantity: 1
         }
       ],
-      allow_promotion_codes: true,
+      allow_promotion_codes: body.allowPromotionCode,
       mode: 'payment',
       success_url: `${body.page.origin + body.page.pathname}?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: body.page.origin + body.page.pathname,
