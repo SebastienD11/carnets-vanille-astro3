@@ -7,6 +7,10 @@ export const POST: APIRoute = async ({ request }) => {
   if (request.headers.get('Content-Type') === 'application/json') {
     const stripe = new Stripe(import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY)
     const body = await request.json()
+
+    if (!body.stripePriceId) return new Response(null, { status: 400 })
+    if (!body.mlGroup) return new Response(null, { status: 400 })
+
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
