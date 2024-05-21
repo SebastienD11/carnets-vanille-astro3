@@ -21,7 +21,6 @@ interface ACF extends Page {
     content_intro: string
     content_intro_bis: string
     content_the_content: string
-    content_product_price: string
     content_image: {
       url: string
       alt: string
@@ -42,8 +41,20 @@ interface ACF extends Page {
     product_schema_name: string
     product_schema_description: string
     product_schema_sku: string
-    stripe_product_price_id: string
-    stripe_product_price_id_test: string
+    stripe_product_can_be_free: boolean
+    stripe_product_info: {
+      stripe_product_id: string
+      stripe_product_id_test: string
+    }
+    stripe_product_price_info: {
+      stripe_product_price_id: string
+      stripe_product_price_id_test: string
+    }
+    product_display_informations: {
+      content_product_price: string
+      product_link_pdf: string
+      product_link_epub: string
+    }
   }
 }
 
@@ -78,15 +89,15 @@ comments?.map((comment) => {
 aggregateRating = Math.round(aggregateRating * 100) / 100
 
 // Pricing
-const productPrice = page.acf.content_product_price
+const productPrice = page.acf.product_display_informations.content_product_price
 const productPriceSymbol = '€'
 const productPriceSymbolCode = 'EUR'
 
 // Stripe
 const testMode = import.meta.env.VERCEL_ENV === 'production' ? false : true
 const stripePriceId = testMode
-  ? page.acf.stripe_product_price_id_test
-  : page.acf.stripe_product_price_id
+  ? page.acf.stripe_product_price_info.stripe_product_price_id_test
+  : page.acf.stripe_product_price_info.stripe_product_price_id
 
 // Mailerlite
 const mailerlite_group = page.acf.mailerlite_group
