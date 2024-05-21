@@ -9,6 +9,7 @@ import Footer from '../../components/Footer/Footer.astro'
 import { useTranslations } from '../../i18n/ui'
 import Spinner from '../../components/ui/spinner.astro'
 import ThankYouModal from '../../components/ebook/thankYouModal.astro'
+import CheckoutButton from '../../components/products/checkoutButton.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -225,46 +226,22 @@ const schema = {
             )
           }
           {/* Checkout CTA */}
-          <button
-            type="button"
-            create-checkout
-            class="hidden w-full cursor-pointer select-none items-center
-            justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4 text-lg
-            font-extrabold uppercase text-stone-900 transition-all
-            duration-150 [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841]
-            hover:bg-vanille/80 active:translate-y-2
-            active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]
-            lg:flex"
-          >
-            <i class="icon-icon-add-to-card"></i>
-            <Spinner className="hidden animate-spin" />
+          <CheckoutButton classNames="hidden lg:flex">
             <span>
               {t('product.common.buy')}
               {productPrice}
               {productPriceSymbol}
             </span>
-          </button>
+          </CheckoutButton>
 
           {/* Mobile Checkout CTA */}
-          <button
-            type="button"
-            create-checkout
-            class="fixed bottom-4 z-10 mx-auto flex w-full max-w-[94%] cursor-pointer select-none items-center
-            justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille py-4 text-lg
-            font-extrabold uppercase text-stone-900 transition-all
-            duration-150 [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841]
-            hover:bg-vanille active:translate-y-2
-            active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]
-            lg:hidden"
-          >
-            <i class="icon-icon-add-to-card"></i>
-            <Spinner className="hidden animate-spin" />
+          <CheckoutButton classNames="fixed bottom-4 z-10 mx-auto max-w-[94%]  flex lg:hidden">
             <span>
               {t('product.common.buy')}
               {productPrice}
               {productPriceSymbol}
             </span>
-          </button>
+          </CheckoutButton>
 
           {/* Intro Bis */}
           {
