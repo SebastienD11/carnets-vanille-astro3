@@ -305,13 +305,12 @@ const schema = {
         )
       }
 
-      {/* Separator */}
-      <i class="icon-ermine mx-auto text-xl"> </i>
-
       {/* Testimonials */}
       {
         comments.length > 0 && (
           <>
+            {/* Separator */}
+            <i class="icon-ermine mx-auto text-xl"> </i>
             <div class="flex flex-col items-center gap-3">
               <h3 class="mark mx-auto inline-block text-xl font-bold">
                 {t('product.common.section.title.testimonials')}
