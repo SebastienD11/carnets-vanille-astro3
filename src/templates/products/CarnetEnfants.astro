@@ -6,12 +6,11 @@ import { getRelativeLocaleUrl } from 'astro:i18n'
 import Footer from '../../components/Footer/Footer.astro'
 import { useTranslations } from '../../i18n/ui'
 import ThankYouModal from '../../components/ebook/thankYouModal.astro'
-import CheckoutButton from '../../components/products/checkoutButton.astro'
 import Testimonials from '../../components/products/testimonials.astro'
-import Star from '../../components/products/star.astro'
 import ProductNote from '../../components/products/productNote.astro'
 import SectionTitle from '../../components/products/sectionTitle.astro'
 import SectionAuthor from '../../components/products/sectionAuthor.astro'
+import CheckoutSection from '../../components/products/checkoutSection.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -103,6 +102,9 @@ const testMode = import.meta.env.VERCEL_ENV === 'production' ? false : true
 const stripePriceId = testMode
   ? page.acf.stripe_product_price_info.stripe_product_price_id_test
   : page.acf.stripe_product_price_info.stripe_product_price_id
+const stripeProductId = testMode
+  ? page.acf.stripe_product_info.stripe_product_id_test
+  : page.acf.stripe_product_info.stripe_product_id
 
 // Mailerlite
 const mailerlite_group = page.acf.mailerlite_group
@@ -199,31 +201,15 @@ const schema = {
             )
           }
 
-          {
-            page.acf.stripe_product_can_be_free === false ? (
-              <>
-                {/* Desktop Checkout CTA */}
-                <CheckoutButton classNames="hidden lg:flex">
-                  <span>
-                    {t('product.common.buy')}
-                    {productPrice}
-                    {productPriceSymbol}
-                  </span>
-                </CheckoutButton>
-
-                {/* Mobile Checkout CTA */}
-                <CheckoutButton classNames="fixed bottom-4 z-10 mx-auto max-w-[94%] flex lg:hidden">
-                  <span>
-                    {t('product.common.buy')}
-                    {productPrice}
-                    {productPriceSymbol}
-                  </span>
-                </CheckoutButton>
-              </>
-            ) : (
-              <span>telecharger gratuitement</span>
-            )
-          }
+          <CheckoutSection
+            priceSlider={page.acf.stripe_product_can_be_free}
+            productPrice={productPrice}
+            productPriceSymbol={productPriceSymbol}
+            stripePriceId={stripePriceId}
+            stripeProductId={stripeProductId}
+            mailerliteGroup={mailerlite_group}
+            productLink={page.acf.product_display_informations.product_link_pdf}
+          />
 
           {/* Intro Bis */}
           {
@@ -323,37 +309,3 @@ const schema = {
 </div>
 
 <ThankYouModal />
-
-<script define:vars={{ stripePriceId, mailerlite_group }}>
-  document.querySelectorAll('[create-checkout]').forEach((el) => {
-    el.addEventListener('click', () => {
-      createCheckout()
-    })
-  })
-
-  async function createCheckout() {
-    document.querySelectorAll('[create-checkout] > svg').forEach((el) => {
-      el.classList.toggle('hidden')
-    })
-    document.querySelectorAll('[create-checkout] > i').forEach((el) => {
-      el.classList.toggle('hidden')
-    })
-
-    const response = await fetch('/api/stripe/checkout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        stripePriceId,
-        page: window.location,
-        allowPromotionCode: false,
-        mlGroup: mailerlite_group
-      })
-    })
-
-    const { url } = await response.json()
-
-    window.location.href = url
-  }
-</script>

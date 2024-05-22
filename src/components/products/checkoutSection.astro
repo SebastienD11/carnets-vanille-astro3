@@ -1,0 +1,134 @@
+---
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+import { useTranslations } from '../../i18n/ui'
+import CheckoutButton from './checkoutButton.astro'
+import DownloadButton from './downloadButton.astro'
+
+type Props = {
+  priceSlider: boolean
+  productPrice: string
+  productPriceSymbol: string
+  stripePriceId: string
+  stripeProductId: string
+  mailerliteGroup: string
+  productLink?: string
+}
+
+const {
+  stripePriceId,
+  stripeProductId,
+  mailerliteGroup,
+  priceSlider,
+  productPrice,
+  productPriceSymbol,
+  productLink
+}: Props = Astro.props
+---
+
+<div
+  class="fixed bottom-4 z-10 mx-auto flex w-full max-w-[94%] flex-col items-center justify-center lg:relative lg:bottom-0 lg:max-w-full"
+>
+  {
+    priceSlider && (
+      <div class="relative mb-2 w-full rounded-lg bg-stone-800 p-4 text-white">
+        <label for="steps-range" class="mb-2 block text-sm font-bold lg:text-base">
+          {t('product.common.select_price')}
+        </label>
+        <input
+          price-slider
+          id="steps-range"
+          type="range"
+          min="0"
+          max="10"
+          value={productPrice}
+          step="1"
+          class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-vanille dark:bg-gray-700"
+        />
+        <div class="flex items-center justify-between text-sm text-stone-400">
+          <span>Min (0{productPriceSymbol})</span>
+          <span>5{productPriceSymbol}</span>
+          <span>Max (10{productPriceSymbol})</span>
+        </div>
+      </div>
+    )
+  }
+
+  <CheckoutButton>
+    <span>
+      {t('product.common.buy')}&nbsp;<span checkout-price>{productPrice}</span>{productPriceSymbol}
+    </span>
+  </CheckoutButton>
+
+  {
+    productLink && (
+      <DownloadButton productLink={productLink}>
+        <span>{t('product.common.download')}</span>
+      </DownloadButton>
+    )
+  }
+</div>
+
+<script is:inline>
+  const range = document.querySelector('[price-slider]')
+  const checkoutButton = document.querySelector('[create-checkout]')
+  const downloadButton = document.querySelector('[download-button]')
+  const price = document.querySelector('[checkout-price]')
+
+  const initPrice = () => {
+    price.textContent = parseInt(range.value, 10).toFixed(2)
+    if (range.value === '0') {
+      checkoutButton.classList.add('!hidden')
+      downloadButton.classList.remove('!hidden')
+    } else {
+      checkoutButton.classList.remove('!hidden')
+      downloadButton.classList.add('!hidden')
+    }
+  }
+
+  if (range) {
+    initPrice()
+    range.addEventListener('change', () => {
+      initPrice()
+    })
+  } else {
+    console.log('Price slider is disabled')
+  }
+</script>
+
+<script define:vars={{ priceSlider, stripeProductId, stripePriceId, mailerliteGroup }}>
+  document.querySelectorAll('[create-checkout]').forEach((el) => {
+    el.addEventListener('click', () => {
+      createCheckout()
+    })
+  })
+
+  async function createCheckout() {
+    document.querySelectorAll('[create-checkout] > svg').forEach((el) => {
+      el.classList.toggle('hidden')
+    })
+    document.querySelectorAll('[create-checkout] > i').forEach((el) => {
+      el.classList.toggle('hidden')
+    })
+
+    const response = await fetch('/api/stripe/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        stripePriceId,
+        stripeProductId,
+        customPrice: priceSlider
+          ? parseInt(document.querySelector('[price-slider]').value, 10)
+          : null,
+        page: window.location,
+        mlGroup: mailerliteGroup
+      })
+    })
+
+    const { url } = await response.json()
+
+    window.location.href = url
+  }
+</script>

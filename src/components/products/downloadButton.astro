@@ -1,0 +1,49 @@
+---
+import Spinner from '../ui/spinner.astro'
+
+type Props = {
+  productLink: string
+}
+
+const { productLink }: Props = Astro.props
+---
+
+<button
+  type="button"
+  download-button
+  class="flex !hidden w-full cursor-pointer select-none
+            items-center justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille p-4
+            text-lg font-extrabold uppercase text-stone-900
+            transition-all duration-150
+            [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841] hover:bg-vanille/80
+            active:translate-y-2
+            active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]"
+>
+  <i class="icon-download"></i>
+  <Spinner className="hidden animate-spin" />
+  <slot />
+</button>
+
+<script define:vars={{ productLink }}>
+  document.querySelector('[download-button]').addEventListener('click', () => {
+    buildLink()
+  })
+
+  const buildLink = () => {
+    document.querySelectorAll('[download-button] > svg').forEach((el) => {
+      el.classList.toggle('hidden')
+    })
+    document.querySelectorAll('[download-button] > i').forEach((el) => {
+      el.classList.toggle('hidden')
+    })
+
+    if (productLink) {
+      const a = document.createElement('a')
+      a.href = productLink
+      a.download = true
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    }
+  }
+</script>
