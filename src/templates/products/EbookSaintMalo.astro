@@ -3,13 +3,15 @@ import type { Page } from '../../api/page'
 import { Image } from 'astro:assets'
 import ipadMockup from '../../images/ipad-mockup.png'
 import { getCommentsForPage } from '../../api/comment'
-import { decode } from 'html-entities'
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import Footer from '../../components/Footer/Footer.astro'
 import { useTranslations } from '../../i18n/ui'
-import Spinner from '../../components/ui/spinner.astro'
 import ThankYouModal from '../../components/ebook/thankYouModal.astro'
 import CheckoutButton from '../../components/products/checkoutButton.astro'
+import Testimonials from '../../components/products/testimonials.astro'
+import ProductNote from '../../components/products/productNote.astro'
+import SectionTitle from '../../components/products/sectionTitle.astro'
+import SectionAuthor from '../../components/products/sectionAuthor.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -167,29 +169,8 @@ const schema = {
           }
           {/* Metas */}
           {
-            aggregateRating && (
-              <>
-                <div class="flex flex-col items-center justify-center gap-2 md:flex-row">
-                  {aggregateRating && reviewsCount && (
-                    <div class="flex flex-row items-center justify-center gap-1 font-bold">
-                      <svg
-                        class="me-1 h-4 w-4 text-vanille"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 22 20"
-                      >
-                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                      </svg>
-                      <span>{aggregateRating}</span>
-                      <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
-                      <span>
-                        {reviewsCount} {t('product.common.reviews')}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </>
+            aggregateRating > 0 && (
+              <ProductNote aggregateRating={aggregateRating} reviewsCount={reviewsCount} />
             )
           }
           {/* Intro */}
@@ -296,9 +277,7 @@ const schema = {
         content && (
           <>
             <div class="flex flex-col items-center gap-3">
-              <h3 class="mark mx-auto inline-block text-xl font-bold">
-                {t('product.common.section.title.content')}
-              </h3>
+              <SectionTitle>{t('product.common.section.title.content')}</SectionTitle>
             </div>
             <div class="prose prose-stone dark:prose-invert" set:html={content} />
           </>
@@ -311,60 +290,11 @@ const schema = {
           <>
             {/* Separator */}
             <i class="icon-ermine mx-auto text-xl"> </i>
-            <div class="flex flex-col items-center gap-3">
-              <h3 class="mark mx-auto inline-block text-xl font-bold">
-                {t('product.common.section.title.testimonials')}
-              </h3>
-              <div class="flex flex-row items-center justify-center gap-1 font-bold">
-                <svg
-                  class="me-1 h-4 w-4 text-vanille"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                </svg>
-                <span>{aggregateRating}</span>
-                <span class="mx-1.5 h-1 w-1 rounded-full bg-stone-500 dark:bg-stone-50" />
-                <span>
-                  {reviewsCount} {t('product.common.reviews')}
-                </span>
-              </div>
-            </div>
-
-            <div class="grid gap-8 xl:grid-cols-2">
-              {comments.map((comment) => (
-                <div class="flex items-center justify-center rounded-lg bg-stone-100 p-6 shadow dark:bg-stone-800">
-                  <div class="flex flex-col items-center gap-3">
-                    {comment.meta.product_rating && (
-                      <div class="flex flex-row items-center justify-center">
-                        {new Array(comment.meta.product_rating).fill(0).map(() => {
-                          return (
-                            <svg
-                              class="me-1 h-4 w-4 text-vanille"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="currentColor"
-                              viewBox="0 0 22 20"
-                            >
-                              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                          )
-                        })}
-                      </div>
-                    )}
-                    <blockquote
-                      class="text-center font-medium italic"
-                      set:html={comment.content.rendered}
-                    />
-                    <figcaption class="text-center font-bold dark:text-vanille">
-                      {decode(comment.author_name)}
-                    </figcaption>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Testimonials
+              comments={comments}
+              aggregateRating={aggregateRating}
+              reviewsCount={reviewsCount}
+            />
           </>
         )
       }
@@ -375,17 +305,10 @@ const schema = {
       {/* Author */}
       {
         author.author_description && author.author_image && (
-          <div class="flex flex-col items-center justify-center">
-            <Image
-              src={author.author_image.url}
-              alt={author.author_image.alt || 'Sarah Lagache'}
-              width={author.author_image.width / 2}
-              height={author.author_image.height / 2}
-              densities={[1.5, 2]}
-              loading="lazy"
-            />
-            <div class="prose prose-stone dark:prose-invert" set:html={author.author_description} />
-          </div>
+          <SectionAuthor
+            author_description={author.author_description}
+            author_image={author.author_image}
+          />
         )
       }
 
@@ -397,9 +320,7 @@ const schema = {
         faq && (
           <>
             <div class="flex flex-col items-center gap-3">
-              <h3 class="mark mx-auto inline-block text-xl font-bold">
-                {t('product.common.section.title.faq')}
-              </h3>
+              <SectionTitle>{t('product.common.section.title.faq')}</SectionTitle>
             </div>
             <div class="prose prose-stone dark:prose-invert" set:html={faq} />
           </>
