@@ -77,7 +77,7 @@ const recursivePageFetch = async (lang: string, page: number) => {
     import.meta.env.WORDPRESS_REST_API_URL +
       `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug,id&lang=${lang}${
         page > 1 ? '&page=' + page : ''
-      }${import.meta.env.VERCEL_ENV === 'development' ? '&status=publish,draft' : ''}`,
+      }${import.meta.env.VERCEL_ENV === 'development' ? '' : '&status=publish,draft'}`,
     {
       headers: {
         'Content-Type': 'application/json',
