@@ -31,7 +31,7 @@ const {
 >
   {
     priceSlider && (
-      <div class="relative mb-2 w-full rounded-lg bg-stone-800 p-4 text-white">
+      <div class="relative mb-2 w-full rounded-lg bg-stone-700 p-4 text-white">
         <label for="steps-range" class="mb-2 block text-sm font-bold lg:text-base">
           {t('product.common.select_price')}
         </label>
@@ -43,9 +43,9 @@ const {
           max="10"
           value={productPrice}
           step="1"
-          class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-vanille dark:bg-gray-700"
+          class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-vanille "
         />
-        <div class="flex items-center justify-between text-sm text-stone-400">
+        <div class="flex items-center justify-between text-sm text-stone-200">
           <span>Min (0{productPriceSymbol})</span>
           <span>5{productPriceSymbol}</span>
           <span>Max (10{productPriceSymbol})</span>
