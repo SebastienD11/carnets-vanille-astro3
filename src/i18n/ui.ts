@@ -23,9 +23,6 @@ export const ui = {
       'Great! Check your inbox, you should receive the sample shortly!',
     'ebook.banner.sample.title':
       'Download a free extract from my ebook on Saint-Malo and the surrounding area',
-    'ebook.thankyou.text':
-      'Your support is not only a source of encouragement, but also contributes directly to the realisation of my writing project on Saint-Malo and Brittany. <strong>Keep an eye on your inbox, the ebook should be arriving soon!</strong> If you have any concerns, please don\'t hesitate to contact me on <a href="mailto:sarah@carnetsvanille.com">sarah@carnetsvanille.com</a>.',
-    'ebook.thankyou.title': 'Thank you for your purchase',
     'form.error.fields': 'Oups, at least one of the required field is incorrect!',
     'form.error.generic': 'Oups, sometthing went wrong. Please, contact me directly at: ',
     'form.input.email': 'Email',
@@ -73,15 +70,21 @@ export const ui = {
     'product.common.back': 'Back to the blog',
     'product.common.buy': 'Buy for',
     'product.common.download': 'Download for free',
-    'product.common.select_price': 'Choose a price',
     'product.common.reviews': 'reviews',
     'product.common.section.title.content': 'The Content',
     'product.common.section.title.faq': 'FAQ',
     'product.common.section.title.testimonials': 'Testimonials',
+    'product.common.select_price': 'Choose a price',
     'product.common.updatedIn': 'updated in',
     'product.common.writtenBy': 'Written by',
     'product.ebook.digitalProduct': 'Digital Product',
+    'product.ebook.thankyou.text':
+      'Your support is not only a source of encouragement, but also contributes directly to the realisation of my writing project on Saint-Malo and Brittany. <strong>Keep an eye on your inbox, the ebook should be arriving soon!</strong> If you have any concerns, please don\'t hesitate to contact me on <a href="mailto:sarah@carnetsvanille.com">sarah@carnetsvanille.com</a>.',
+    'product.ebook.thankyou.title': 'Thank you for your purchase',
     'product.playbook.digitalProduct': 'Digital Playbook',
+    'product.playbook.thankyou.text':
+      'Your support is not only a source of encouragement, but also contributes directly to the realisation of my writing project on Saint-Malo and Brittany. <strong>Keep an eye on your inbox, the playbook should be arriving soon!</strong> If you have any concerns, please don\'t hesitate to contact me on <a href="mailto:sarah@carnetsvanille.com">sarah@carnetsvanille.com</a>.',
+    'product.playbook.thankyou.title': 'Thank you for your purchase',
     'socialLinks.facebook.alt': 'Follow me on Facebook',
     'socialLinks.facebook.share': 'Share',
     'socialLinks.instagram.alt': 'Follow me on Instagram',
@@ -103,9 +106,6 @@ export const ui = {
       'Super ! Vérifiez votre boite mail, vous devriez recevoir le ebook sous peu !',
     'ebook.banner.sample.title':
       'Téléchargez gratuitement un extrait de mon ebook sur Saint-Malo et ses environs',
-    'ebook.thankyou.text':
-      "Votre soutien est non seulement une source d'encouragement, mais il contribue également directement à la réalisation de mon projet d'écriture sur Saint-Malo et la Bretagne. <strong>Surveillez votre boite email, l’ebook devrait arriver sous peu !</strong> En cas de soucis, n'hésitez pas à me contacter sur <a href=\"mailto:sarah@carnetsvanille.com\">sarah@carnetsvanille.com</a>.",
-    'ebook.thankyou.title': 'Merci pour votre achat',
     'form.error.fields': 'Oups, au moins un des champs obligatoires est incorrect !',
     'form.error.generic':
       "Oups, il y a eu un problème. Veuillez me contacter directement à l'adresse suivante : ",
@@ -156,15 +156,21 @@ export const ui = {
     'product.common.back': 'Retour au blog',
     'product.common.buy': 'Acheter pour',
     'product.common.download': 'Télécharger gratuitement',
-    'product.common.select_price': 'Choisir un prix',
     'product.common.reviews': 'notes',
     'product.common.section.title.content': 'Le Contenu',
     'product.common.section.title.faq': 'FAQ',
     'product.common.section.title.testimonials': 'Témoignages',
+    'product.common.select_price': 'Choisir un prix',
     'product.common.updatedIn': 'mis à jour en',
     'product.common.writtenBy': 'Écrit par',
     'product.ebook.digitalProduct': 'Livre numérique',
+    'product.ebook.thankyou.text':
+      "Votre soutien est non seulement une source d'encouragement, mais il contribue également directement à la réalisation de mon projet d'écriture sur Saint-Malo et la Bretagne. <strong>Surveillez votre boite email, l’ebook devrait arriver sous peu !</strong> En cas de soucis, n'hésitez pas à me contacter sur <a href=\"mailto:sarah@carnetsvanille.com\">sarah@carnetsvanille.com</a>.",
+    'product.ebook.thankyou.title': 'Merci pour votre achat',
     'product.playbook.digitalProduct': 'Carnet de jeux à télécharger',
+    'product.playbook.thankyou.text':
+      "Votre soutien est non seulement une source d'encouragement, mais il contribue également directement à la réalisation de mon projet d'écriture sur Saint-Malo et la Bretagne. <strong>Surveillez votre boite email, le carnet devrait arriver sous peu !</strong> En cas de soucis, n'hésitez pas à me contacter sur <a href=\"mailto:sarah@carnetsvanille.com\">sarah@carnetsvanille.com</a>.",
+    'product.playbook.thankyou.title': 'Merci pour votre achat',
     'socialLinks.facebook.alt': 'Suivez-moi sur Facebook',
     'socialLinks.facebook.share': 'Partager',
     'socialLinks.instagram.alt': 'Suivez-moi sur Instagram',

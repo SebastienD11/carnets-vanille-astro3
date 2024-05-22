@@ -306,4 +306,23 @@ const schema = {
   </div>
 </div>
 
-<ThankYouModal />
+<ThankYouModal>
+  <div slot="title">
+    <Image
+      src={image.url}
+      alt={page.acf.content_title}
+      width={image.width}
+      height={image.height}
+      loading="lazy"
+      class="mx-auto max-w-[200px]"
+    />
+    <h2 class="flex flex-col items-center justify-center gap-4 text-center text-3xl font-bold">
+      {t('product.playbook.thankyou.title')}
+    </h2>
+  </div>
+  <p
+    class="prose prose-stone text-balance text-center dark:prose-invert prose-a:underline"
+    set:html={t('product.playbook.thankyou.text')}
+    slot="content"
+  />
+</ThankYouModal>
