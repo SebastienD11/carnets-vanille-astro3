@@ -75,8 +75,6 @@ type Props = {
 
 const { node: page }: Props = Astro.props
 
-console.log(page.acf.content_gallery)
-
 // Todo : Conversion Tracking
 
 // Content
@@ -204,6 +202,7 @@ const schema = {
                 height={image.height}
                 densities={[1.5, 2]}
                 class="h-auto w-full lg:hidden"
+                loading={'eager'}
               />
             )
           }
@@ -249,6 +248,7 @@ const schema = {
             height={image.height}
             densities={[1.5, 2]}
             class="hidden h-auto w-full lg:block"
+            loading={'eager'}
           />
         )
       }
