@@ -1,7 +1,6 @@
 ---
 import type { Page } from '../../api/page'
 import { Image } from 'astro:assets'
-import ipadMockup from '../../images/ipad-mockup.png'
 import { getCommentsForPage } from '../../api/comment'
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import Footer from '../../components/Footer/Footer.astro'
@@ -12,6 +11,7 @@ import ProductNote from '../../components/products/productNote.astro'
 import SectionTitle from '../../components/products/sectionTitle.astro'
 import SectionAuthor from '../../components/products/sectionAuthor.astro'
 import CheckoutSection from '../../components/products/checkoutSection.astro'
+import IpadMockup from '../../components/ui/ipadMockup.astro'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
@@ -185,27 +185,20 @@ const schema = {
               />
             )
           }
-          {/* Mobile Ipad */}
           {
             image && (
               <div class="relative z-0 mx-auto max-w-full md:max-w-[450px] lg:hidden">
-                <Image
-                  src={image.url}
-                  alt={image.alt || title}
-                  width={image.width}
-                  height={image.height}
-                  densities={[1.5, 2]}
-                  loading="lazy"
-                  class="absolute z-10 h-auto w-full scale-[0.92] rounded-3xl"
-                />
-                <Image
-                  src={ipadMockup}
-                  alt="Ebook on Ipad"
-                  width={ipadMockup.width}
-                  densities={[1.5, 2]}
-                  loading="lazy"
-                  class="relative z-10 max-w-full"
-                />
+                <IpadMockup>
+                  <Image
+                    src={image.url}
+                    alt={image.alt || title}
+                    width={image.width}
+                    height={image.height}
+                    densities={[1.5, 2]}
+                    loading="lazy"
+                    class="h-full w-auto"
+                  />
+                </IpadMockup>
               </div>
             )
           }
@@ -242,27 +235,20 @@ const schema = {
       {/* Separator */}
       <i class="icon-ermine mx-auto mt-8 text-xl lg:hidden"> </i>
 
-      {/* Desktop Ipad */}
       {
         image && (
           <div class="relative mx-auto hidden max-w-[450px] lg:block">
-            <Image
-              src={image.url}
-              alt={image.alt || title}
-              width={image.width}
-              height={image.height}
-              densities={[1.5, 2]}
-              loading="lazy"
-              class="absolute z-10 h-auto w-full scale-[0.92] rounded-3xl"
-            />
-            <Image
-              src={ipadMockup}
-              alt="Ebook on Ipad"
-              width={ipadMockup.width}
-              densities={[1.5, 2]}
-              loading="lazy"
-              class="relative z-10 max-w-full"
-            />
+            <IpadMockup>
+              <Image
+                src={image.url}
+                alt={image.alt || title}
+                width={image.width}
+                height={image.height}
+                densities={[1.5, 2]}
+                loading="lazy"
+                class="h-full w-auto"
+              />
+            </IpadMockup>
           </div>
         )
       }
