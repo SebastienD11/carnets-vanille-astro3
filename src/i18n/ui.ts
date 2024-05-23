@@ -70,6 +70,8 @@ export const ui = {
     'product.common.back': 'Back to the blog',
     'product.common.buy': 'Buy for',
     'product.common.download': 'Download for free',
+    'product.common.gallery':
+      "Here is some content you'll find in the playbook. Click on the image to enlarge it.",
     'product.common.reviews': 'reviews',
     'product.common.section.title.content': 'The Content',
     'product.common.section.title.faq': 'FAQ',
@@ -156,6 +158,8 @@ export const ui = {
     'product.common.back': 'Retour au blog',
     'product.common.buy': 'Acheter pour',
     'product.common.download': 'Télécharger gratuitement',
+    'product.common.gallery':
+      "Voici des exemples de ce que vous trouverez dans le carnets. Cliquez sur une image pour l'agrandir.",
     'product.common.reviews': 'notes',
     'product.common.section.title.content': 'Le Contenu',
     'product.common.section.title.faq': 'FAQ',
