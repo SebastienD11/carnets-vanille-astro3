@@ -1,0 +1,344 @@
+---
+import type { Page } from '../../api/page'
+import { Image } from 'astro:assets'
+import { getCommentsForPage } from '../../api/comment'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import Footer from '../../components/Footer/Footer.astro'
+import { useTranslations } from '../../i18n/ui'
+import ThankYouModal from '../../components/ebook/thankYouModal.astro'
+import Testimonials from '../../components/products/testimonials.astro'
+import ProductNote from '../../components/products/productNote.astro'
+import SectionTitle from '../../components/products/sectionTitle.astro'
+import SectionAuthor from '../../components/products/sectionAuthor.astro'
+import CheckoutSection from '../../components/products/checkoutSection.astro'
+import Gallery from '../../components/products/gallery.astro'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+
+interface ACF extends Page {
+  acf: {
+    content_title: string
+    content_formats: string
+    content_version: string
+    content_intro: string
+    content_intro_bis: string
+    content_the_content: string
+    content_image: {
+      url: string
+      alt: string
+      width: number
+      height: number
+    }
+    content_gallery: {
+      alt: string
+      description: string
+      height: number
+      title: string
+      url: string
+      width: number
+    }[]
+    content_author: {
+      author_description: string
+      author_image: {
+        url: string
+        alt: string
+        width: number
+        height: number
+      }
+    }
+    mailerlite_group: string
+    content_faq: string
+    product_schema_name: string
+    product_schema_description: string
+    product_schema_sku: string
+    stripe_product_can_be_free: boolean
+    stripe_product_info: {
+      stripe_product_id: string
+      stripe_product_id_test: string
+    }
+    stripe_product_price_info: {
+      stripe_product_price_id: string
+      stripe_product_price_id_test: string
+    }
+    product_display_informations: {
+      content_product_price: string
+      product_link_pdf: string
+      product_link_epub: string
+    }
+  }
+}
+
+type Props = {
+  node: ACF
+}
+
+const { node: page }: Props = Astro.props
+
+// Todo : Conversion Tracking
+
+// Content
+const title = page.acf.content_title
+const intro = page.acf.content_intro
+const introBis = page.acf.content_intro_bis
+const content = page.acf.content_the_content
+const image = page.acf.content_image
+const author = page.acf.content_author
+const faq = page.acf.content_faq
+
+// Ratings & Testimonials
+const comments = await getCommentsForPage(page.id, lang)
+// Note: The value below are proper to my Carnets Vanille case. We account for previous reviews received on Gumroad before moving awayt from the plateform.
+let aggregateRating = 0
+let reviewsCount = 0
+
+comments?.map((comment) => {
+  aggregateRating = (aggregateRating + comment.meta.product_rating) / 2
+  reviewsCount += 1
+})
+
+aggregateRating = Math.round(aggregateRating * 100) / 100
+
+// Pricing
+const productPrice = page.acf.product_display_informations.content_product_price
+const productPriceSymbol = '€'
+const productPriceSymbolCode = 'EUR'
+
+// Stripe
+const testMode = import.meta.env.VERCEL_ENV === 'production' ? false : true
+const stripePriceId = testMode
+  ? page.acf.stripe_product_price_info.stripe_product_price_id_test
+  : page.acf.stripe_product_price_info.stripe_product_price_id
+const stripeProductId = testMode
+  ? page.acf.stripe_product_info.stripe_product_id_test
+  : page.acf.stripe_product_info.stripe_product_id
+
+// Mailerlite
+const mailerlite_group = page.acf.mailerlite_group
+
+// This section is to overide the Google Markup coming from Yoast. As in Wordpress, this ebook is created as a page, Yoast schema markup doesn't know it's a product. By passing this object to <script type="application/ld+json" set:html={JSON.stringify(schema)} />  in our DOM, it will override the one coming from Yoast above in the DOM.
+const schema = {
+  '@context': 'https://schema.org/',
+  '@type': 'Product',
+  name: page.acf.product_schema_name,
+  image: image.url,
+  description: page.acf.product_schema_description,
+  sku: page.acf.product_schema_sku,
+  brand: {
+    '@type': 'Brand',
+    name: 'Carnets Vanille'
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: aggregateRating,
+    reviewCount: reviewsCount
+  },
+  offers: {
+    '@type': 'Offer',
+    url: page.link,
+    priceCurrency: productPriceSymbolCode,
+    price: productPrice,
+    availability: 'https://schema.org/InStock'
+  }
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+<div class="flex flex-col border-b border-stone-200 lg:flex-row">
+  {/* Left column */}
+  <div
+    class="w-full px-4 pt-12 md:pt-6 lg:w-1/2 lg:border-r lg:border-stone-200 lg:bg-gradient-to-l lg:from-stone-100 lg:to-stone-100/10 lg:pt-0 dark:lg:border-stone-600 dark:lg:from-stone-800 dark:lg:to-stone-900"
+  >
+    <div
+      class="mx-auto flex max-w-[460px] shrink-0 flex-col justify-start gap-8 py-8 lg:sticky lg:top-0 lg:h-screen lg:justify-center xl:max-w-[550px]"
+    >
+      <div class="flex flex-col">
+        <div class="flex flex-col items-center gap-8 lg:items-start xl:gap-8">
+          <div
+            class="flex items-center justify-center gap-1 rounded-full border border-vanille bg-vanille/60 px-4 py-1 text-sm font-medium backdrop-blur-xl dark:bg-vanille"
+          >
+            <span class="mr-2 dark:text-stone-900">{t('product.playbook.digitalProduct')}</span>
+            <span
+              class="rounded bg-stone-600 px-1 py-[1px] text-xs font-bold uppercase text-vanille"
+              >PDF</span
+            >
+          </div>
+          {/* Title */}
+          {
+            title && (
+              <div class="flex flex-col gap-2 text-center lg:text-left">
+                <h1 class="text-2xl font-extrabold dark:text-vanille 2xl:text-4xl">{title}</h1>
+                <span class="block text-sm">
+                  <em>
+                    {t('product.common.writtenBy')}&nbsp;<strong>Sarah Lagache</strong>,{' '}
+                    {t('product.common.updatedIn')} Mai 2024
+                  </em>
+                </span>
+              </div>
+            )
+          }
+          {/* Metas */}
+          {
+            aggregateRating > 0 && (
+              <ProductNote aggregateRating={aggregateRating} reviewsCount={reviewsCount} />
+            )
+          }
+          {/* Intro */}
+          {
+            intro && (
+              <div
+                class="prose prose-stone mx-auto text-center dark:prose-invert lg:text-left"
+                set:html={intro}
+              />
+            )
+          }
+          {
+            image && (
+              <Image
+                src={image.url}
+                alt={image.alt || title}
+                width={image.width}
+                height={image.height}
+                densities={[1.5, 2]}
+                class="h-auto w-full lg:hidden"
+                loading={'eager'}
+              />
+            )
+          }
+
+          <CheckoutSection
+            priceSlider={page.acf.stripe_product_can_be_free}
+            productPrice={productPrice}
+            productPriceSymbol={productPriceSymbol}
+            stripePriceId={stripePriceId}
+            stripeProductId={stripeProductId}
+            mailerliteGroup={mailerlite_group}
+            productLink={page.acf.product_display_informations.product_link_pdf}
+          />
+
+          {/* Intro Bis */}
+          {
+            introBis && (
+              <div class="prose prose-stone mx-auto dark:prose-invert" set:html={introBis} />
+            )
+          }
+        </div>
+      </div>
+      <a
+        href={getRelativeLocaleUrl(lang, '/')}
+        class="hidden text-sm text-stone-600 hover:underline dark:text-stone-400 lg:block"
+      >
+        &#8592; {t('product.common.back')}
+      </a>
+    </div>
+  </div>
+  {/* End Left column */}
+  {/* Right column */}
+  <div class="w-full px-4 pb-12 lg:mx-auto lg:w-1/2 lg:max-w-prose lg:pt-24">
+    <div class="mx-auto flex max-w-[450px] flex-col justify-start gap-8 lg:max-w-none lg:gap-12">
+      {/* Separator */}
+      <i class="icon-ermine mx-auto mt-8 text-xl lg:hidden"> </i>
+      {
+        image && (
+          <Image
+            src={image.url}
+            alt={image.alt || title}
+            width={image.width}
+            height={image.height}
+            densities={[1.5, 2]}
+            class="hidden h-auto w-full lg:block"
+            loading={'eager'}
+          />
+        )
+      }
+
+      {/* The Content */}
+      {
+        page.acf.content_gallery.length > 0 && (
+          <div>
+            <Gallery images={page.acf.content_gallery} />
+            <p class="mx-auto mt-2 text-center text-sm italic lg:max-w-sm">
+              {t('product.common.gallery')}
+            </p>
+          </div>
+        )
+      }
+      {
+        content && (
+          <>
+            <div class="flex flex-col items-center gap-3">
+              <SectionTitle>{t('product.common.section.title.content')}</SectionTitle>
+            </div>
+            <div class="prose prose-stone dark:prose-invert" set:html={content} />
+          </>
+        )
+      }
+
+      {/* Testimonials */}
+      {
+        comments.length > 0 && (
+          <>
+            {/* Separator */}
+            <i class="icon-ermine mx-auto text-xl"> </i>
+            <Testimonials
+              comments={comments}
+              aggregateRating={aggregateRating}
+              reviewsCount={reviewsCount}
+            />
+          </>
+        )
+      }
+
+      {/* Separator */}
+      <i class="icon-ermine mx-auto text-xl"> </i>
+
+      {/* Author */}
+      {
+        author.author_description && author.author_image && (
+          <SectionAuthor
+            author_description={author.author_description}
+            author_image={author.author_image}
+          />
+        )
+      }
+
+      {/* Separator */}
+      <i class="icon-ermine mx-auto text-xl"> </i>
+
+      {/* The FAQ */}
+      {
+        faq && (
+          <>
+            <div class="flex flex-col items-center gap-3">
+              <SectionTitle>{t('product.common.section.title.faq')}</SectionTitle>
+            </div>
+            <div class="prose prose-stone dark:prose-invert" set:html={faq} />
+          </>
+        )
+      }
+    </div>
+    <Footer />
+  </div>
+</div>
+
+<ThankYouModal>
+  <div slot="title">
+    <Image
+      src={image.url}
+      alt={page.acf.content_title}
+      width={image.width}
+      height={image.height}
+      loading="lazy"
+      class="mx-auto max-w-[200px]"
+    />
+    <h2 class="flex flex-col items-center justify-center gap-4 text-center text-3xl font-bold">
+      {t('product.playbook.thankyou.title')}
+    </h2>
+  </div>
+  <p
+    class="prose prose-stone text-balance text-center dark:prose-invert prose-a:underline"
+    set:html={t('product.playbook.thankyou.text')}
+    slot="content"
+  />
+</ThankYouModal>

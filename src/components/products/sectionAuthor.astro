@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets'
+type Props = {
+  author_image: {
+    url: string
+    alt: string
+    width: number
+    height: number
+  }
+  author_description: string
+}
+
+const { author_image, author_description }: Props = Astro.props
+---
+
+<div class="flex flex-col items-center justify-center">
+  <Image
+    src={author_image.url}
+    alt={author_image.alt || 'Sarah Lagache'}
+    width={author_image.width / 2}
+    height={author_image.height / 2}
+    densities={[1.5, 2]}
+    loading="lazy"
+  />
+  <div class="prose prose-stone dark:prose-invert" set:html={author_description} />
+</div>

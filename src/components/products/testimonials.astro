@@ -1,0 +1,49 @@
+---
+import { decode } from 'html-entities'
+import { type Comment } from '../../api/comment'
+import { useTranslations } from '../../i18n/ui'
+import Star from './star.astro'
+import SectionTitle from './sectionTitle.astro'
+import ProductNote from './productNote.astro'
+
+type Props = {
+  reviewsCount: number
+  aggregateRating: number
+  comments: Comment[]
+}
+
+const { reviewsCount, aggregateRating, comments }: Props = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+---
+
+<div class="flex flex-col items-center gap-3">
+  <SectionTitle> {t('product.common.section.title.testimonials')}</SectionTitle>
+  {
+    aggregateRating > 0 && (
+      <ProductNote aggregateRating={aggregateRating} reviewsCount={reviewsCount} />
+    )
+  }
+</div>
+
+<div class="grid gap-8 xl:grid-cols-2">
+  {
+    comments.map((comment) => (
+      <div class="flex items-center justify-center rounded-lg bg-stone-100 p-6 shadow dark:bg-stone-800">
+        <div class="flex flex-col items-center gap-3">
+          {comment.meta.product_rating && (
+            <div class="flex flex-row items-center justify-center">
+              {new Array(comment.meta.product_rating).fill(0).map(() => {
+                return <Star />
+              })}
+            </div>
+          )}
+          <blockquote class="text-center font-medium italic" set:html={comment.content.rendered} />
+          <figcaption class="text-center font-bold dark:text-vanille">
+            {decode(comment.author_name)}
+          </figcaption>
+        </div>
+      </div>
+    ))
+  }
+</div>

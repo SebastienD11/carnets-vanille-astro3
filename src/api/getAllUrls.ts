@@ -69,13 +69,24 @@ const getAllPagesUrils = async (lang: string) => {
 }
 
 const recursivePageFetch = async (lang: string, page: number) => {
+  const headerAuth = `Basic ${btoa(
+    import.meta.env.WORDPRESS_APP_USERNAME + ':' + import.meta.env.WORDPRESS_APP_PASSWORD
+  )}`
+
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
       `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug,id&lang=${lang}${
         page > 1 ? '&page=' + page : ''
-      }`
+      }${import.meta.env.VERCEL_ENV === 'production' ? '' : '&status=publish,draft'}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: headerAuth
+      }
+    }
   )
   const pages: Page[] = await res.json()
+
   return pages
 }
 

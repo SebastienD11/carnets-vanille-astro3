@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'glace';
-  src: url('./font/glace.eot?63795850');
+  src: url('./font/glace.eot?19118008');
   src:
-    url('./font/glace.eot?63795850#iefix') format('embedded-opentype'),
-    url('./font/glace.woff2?63795850') format('woff2'),
-    url('./font/glace.woff?63795850') format('woff'),
-    url('./font/glace.ttf?63795850') format('truetype'),
-    url('./font/glace.svg?63795850#glace') format('svg');
+    url('./font/glace.eot?19118008#iefix') format('embedded-opentype'),
+    url('./font/glace.woff2?19118008') format('woff2'),
+    url('./font/glace.woff?19118008') format('woff'),
+    url('./font/glace.ttf?19118008') format('truetype'),
+    url('./font/glace.svg?19118008#glace') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -16,7 +16,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'glace';
-    src: url('.icons/font/glace.svg?63795850#glace') format('svg');
+    src: url('.icons/font/glace.svg?19118008#glace') format('svg');
   }
 }
 */
@@ -125,3 +125,6 @@
 .icon-comment:before {
   content: '\e816';
 } /* '' */
+.icon-download:before {
+  content: '\e817';
+} /* '' */

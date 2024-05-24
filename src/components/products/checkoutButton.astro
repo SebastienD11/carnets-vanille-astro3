@@ -1,0 +1,19 @@
+---
+import Spinner from '../ui/spinner.astro'
+---
+
+<button
+  type="button"
+  create-checkout
+  class="flex w-full cursor-pointer select-none
+            items-center justify-center gap-2 rounded-lg border-b-[1px] border-vanille/80 bg-vanille p-4
+            text-lg font-extrabold uppercase text-stone-900
+            transition-all duration-150
+            [box-shadow:0_5px_0_0_#c1a724,0_8px_0_0_#4e430841] hover:bg-vanille/80
+            active:translate-y-2
+            active:[box-shadow:0_0px_0_0_#c1a724,0_0px_0_0_#4e430841]"
+>
+  <i class="icon-icon-add-to-card"></i>
+  <Spinner className="hidden animate-spin" />
+  <slot />
+</button>

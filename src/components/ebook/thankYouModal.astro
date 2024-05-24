@@ -1,8 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import { useTranslations } from '../../i18n/ui'
-import image from '../../images/small-ebook-ipad.svg'
-import { Image } from 'astro:assets'
 import Sarah from '../sarah.astro'
 
 const lang = Astro.currentLocale as string
@@ -20,10 +18,7 @@ const t = useTranslations(lang)
   >
     <header class="p-6">
       <div class="flex flex-col items-center gap-4">
-        <Image src={image} alt="Saint-Malo Ebook" width={150} densities={[1.5, 2]} loading="lazy" />
-        <h2 class="flex flex-col items-center justify-center gap-4 text-center text-3xl font-bold">
-          {t('ebook.thankyou.title')}
-        </h2>
+        <slot name="title" />
       </div>
       <button
         aria-label="Close modal"
@@ -35,17 +30,14 @@ const t = useTranslations(lang)
     </header>
     <div class="flex flex-col items-center justify-center gap-8">
       <div class="flex flex-col items-center justify-center gap-4">
-        <p
-          class="prose prose-stone text-balance text-center dark:prose-invert prose-a:underline"
-          set:html={t('ebook.thankyou.text')}
-        />
+        <slot name="content" />
         <Sarah />
       </div>
       <a
         href={getRelativeLocaleUrl(lang, '/')}
         class="text-sm text-stone-600 hover:underline dark:text-stone-400"
       >
-        &#8592; {t('ebook.lp.back')}
+        &#8592; {t('product.common.back')}
       </a>
     </div>
   </div>
