@@ -93,9 +93,11 @@ let aggregateRating = 0
 let reviewsCount = 0
 
 comments?.map((comment) => {
-  aggregateRating = (aggregateRating + comment.meta.product_rating) / 2
   reviewsCount += 1
+  aggregateRating = (aggregateRating + comment.meta.product_rating) / reviewsCount
 })
+
+console.log('aggregateRating', aggregateRating)
 
 aggregateRating = Math.round(aggregateRating * 100) / 100
 
