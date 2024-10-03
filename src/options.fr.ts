@@ -16,7 +16,7 @@ export const THEME_OPTIONS = {
         }
       },
       {
-        img: 'https://content.carnetsvanille.com/wp-content/uploads/2019/06/jardinbotanique-montreal.jpg',
+        img: 'https://content.carnetsvanille.com/wp-content/uploads/2021/07/lac-automne-quebec.jpg',
         text: 'Montréal et le Quebec',
         icon: 'erable',
         link: {
