@@ -10,24 +10,16 @@ const t = useTranslations(lang)
 ---
 
 {
-  comments && (
-    <div>
-      <SectionTitle
-        as="h3"
-        title={`${comments.length} ${t('post.comments.title')}`}
-        subtitle={t('post.comments.subtitle')}
-      />
-      <div class="flex flex-col gap-12">
-        {comments.map((comment: CommentType) => (
-          <div class="relative flex flex-col gap-6 before:absolute before:left-[26px] before:top-[60px] before:z-0 before:block before:h-[calc(100%-60px)] before:w-px before:bg-vanille">
-            <Comment comment={comment} />
-            {comment.children &&
-              comment.children.map((comment: CommentType) => (
-                <Comment className="ml-16" comment={comment} />
-              ))}
-          </div>
-        ))}
-      </div>
+  comments.map((comment: CommentType) => (
+    <div
+      class={`relative flex flex-col gap-6  ${comment.parent === 0 ? 'before:absolute before:left-[26px] before:top-[60px] before:z-0 before:block before:h-[calc(100%-60px)] before:w-px before:bg-vanille' : ''}`}
+    >
+      <Comment comment={comment} />
+      {comment.children && (
+        <div class="ml-16">
+          <Astro.self comments={comment.children} />
+        </div>
+      )}
     </div>
-  )
+  ))
 }

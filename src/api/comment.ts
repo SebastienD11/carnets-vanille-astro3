@@ -18,7 +18,7 @@ export async function getCommentsForPost(postId: number, lang: string = 'fr') {
     comments = comments.concat(newComments)
   }
 
-  return comments
+  return createCommentHierarchy(comments)
 }
 
 const getRecursiveCommentsForPost = async (
@@ -34,7 +34,7 @@ const getRecursiveCommentsForPost = async (
   )
   const comments: Comment[] = await res.json()
 
-  return createCommentHierarchy(comments)
+  return comments
 }
 
 // PAGES

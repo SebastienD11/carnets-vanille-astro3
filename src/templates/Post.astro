@@ -116,7 +116,18 @@ const comments = await getCommentsForPost(post.id, lang)
             />
             <CommentForm postId={post.id} newsletterGroupId={post.acf.mailerlite} />
           </div>
-          <CommentList comments={comments} />
+          {comments && (
+            <div>
+              <SectionTitle
+                as="h3"
+                title={`${comments.length} ${t('post.comments.title')}`}
+                subtitle={t('post.comments.subtitle')}
+              />
+              <div class="flex flex-col gap-12">
+                <CommentList comments={comments} />
+              </div>
+            </div>
+          )}
         </div>
       )
     }
