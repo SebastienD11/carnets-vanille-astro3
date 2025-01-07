@@ -16,8 +16,8 @@ export const THEME_OPTIONS = {
         }
       },
       {
-        img: 'https://content.carnetsvanille.com/wp-content/uploads/2021/07/lac-automne-quebec.jpg',
-        text: 'Montréal et le Quebec',
+        img: 'https://content.carnetsvanille.com/wp-content/uploads/2024/12/skis-de-fond-parc-mont-royal-montreal-hiver.jpg',
+        text: 'Montréal et le Québec',
         icon: 'erable',
         link: {
           title: 'Au Québec',

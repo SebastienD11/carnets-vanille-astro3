@@ -98,5 +98,9 @@
   "/en/in-quebec": {
     "status": 301,
     "destination": "/en/quebec"
+  },
+  "/activites-hivernales-canada": {
+    "status": 301,
+    "destination": "/quebec-hiver"
   }
 }
