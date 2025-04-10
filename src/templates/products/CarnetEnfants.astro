@@ -94,12 +94,11 @@ let reviewsCount = 0
 
 comments?.map((comment) => {
   reviewsCount += 1
-  aggregateRating = (aggregateRating + comment.meta.product_rating) / reviewsCount
+  aggregateRating += comment.meta.product_rating
 })
 
-console.log('aggregateRating', aggregateRating)
-
-aggregateRating = Math.round(aggregateRating * 100) / 100
+aggregateRating = reviewsCount > 0 ? aggregateRating / reviewsCount : 0
+aggregateRating = Math.round(aggregateRating * 2) / 2
 
 // Pricing
 const productPrice = page.acf.product_display_informations.content_product_price

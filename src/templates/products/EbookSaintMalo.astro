@@ -82,15 +82,22 @@ const faq = page.acf.content_faq
 // Ratings & Testimonials
 const comments = await getCommentsForPage(page.id, lang)
 // Note: The value below are proper to my Carnets Vanille case. We account for previous reviews received on Gumroad before moving awayt from the plateform.
-let aggregateRating = 4.9
-let reviewsCount = 16
+let initialRating = 4.9
+let initialReviewsCount = 16
 
+// Start with the total from initial reviews
+let aggregateRating = initialRating * initialReviewsCount
+let reviewsCount = initialReviewsCount
+
+// Add new comments to the total
 comments?.map((comment) => {
-  aggregateRating = (aggregateRating + comment.meta.product_rating) / 2
+  aggregateRating += comment.meta.product_rating
   reviewsCount += 1
 })
 
-aggregateRating = Math.round(aggregateRating * 100) / 100
+// Calculate final average
+aggregateRating = reviewsCount > 0 ? aggregateRating / reviewsCount : 0
+aggregateRating = Math.round(aggregateRating * 2) / 2
 
 // Pricing
 const productPrice = page.acf.product_display_informations.content_product_price
