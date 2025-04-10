@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import lifecycleLogs from './src/integrations/lifecycle-logs'
 import tailwind from '@astrojs/tailwind'
-import vercel from '@astrojs/vercel/serverless'
+import vercel from '@astrojs/vercel'
 import redirectList from '/redirectsList.json'
 
 // https://astro.build/config
