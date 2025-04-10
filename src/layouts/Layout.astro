@@ -10,7 +10,6 @@ import NewsletterModal from '../components/newsletter/newsletterModal.astro'
 import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDrawer.astro'
 import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
 import ThemeColorScript from '../components/scripts/themeColor.astro'
-import Stay22 from '../components/thirdPartyScripts/Stay22.astro'
 import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
 import type { Yoast } from '../api/yoast'
 
@@ -56,6 +55,7 @@ const lang = Astro.currentLocale as string
 
   <body
     class="mx-auto bg-stone-50 px-4 py-6 font-mulish md:container dark:bg-stone-900 dark:text-white"
+    data-env={import.meta.env.VERCEL_ENV}
   >
     <Header />
     <ResponsiveMenuToggle />
@@ -69,17 +69,19 @@ const lang = Astro.currentLocale as string
     <NewsletterModal />
     <script is:inline>
       ;(function (s, t, a, y, twenty, two) {
-        s.Stay22 = s.Stay22 || {}
-        // Just fill out your configs here
-        s.Stay22.params = {
-          aid: 'carnetsvanille'
+        if (document.body.dataset.env === 'production') {
+          s.Stay22 = s.Stay22 || {}
+          // Just fill out your configs here
+          s.Stay22.params = {
+            aid: 'carnetsvanille'
+          }
+          // Leave this part as-is;
+          twenty = t.createElement(a)
+          two = t.getElementsByTagName(a)[0]
+          twenty.async = 1
+          twenty.src = y
+          two.parentNode.insertBefore(twenty, two)
         }
-        // Leave this part as-is;
-        twenty = t.createElement(a)
-        two = t.getElementsByTagName(a)[0]
-        twenty.async = 1
-        twenty.src = y
-        two.parentNode.insertBefore(twenty, two)
       })(window, document, 'script', 'https://scripts.stay22.com/letmeallez.js')
     </script>
   </body>
