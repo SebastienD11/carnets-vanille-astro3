@@ -3,6 +3,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import lifecycleLogs from './src/integrations/lifecycle-logs'
 import tailwind from '@astrojs/tailwind'
 import vercel from '@astrojs/vercel/serverless'
+import redirectList from '/redirectsList.json'
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,9 +18,10 @@ export default defineConfig({
     }
   },
   image: {
-    domains: ['carnetsvanille.com']
+    domains: ['content.carnetsvanille.com']
   },
   vite: {
     plugins: [basicSsl()]
-  }
+  },
+  redirects: redirectList
 })

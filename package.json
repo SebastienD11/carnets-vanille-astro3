@@ -10,28 +10,29 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^8.2.0",
+    "@astrojs/node": "^8.2.5",
     "@astrojs/tailwind": "^5.1.0",
-    "@astrojs/upgrade": "^0.2.2",
-    "@astrojs/vercel": "^7.1.1",
-    "@fontsource-variable/mulish": "^5.0.17",
+    "@astrojs/upgrade": "^0.2.3",
+    "@astrojs/vercel": "^7.4.0",
+    "@fontsource-variable/mulish": "^5.0.18",
     "@mailerlite/mailerlite-nodejs": "^1.2.1",
     "@radix-ui/react-dialog": "^1.0.5",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
-    "@wordpress/block-library": "^8.27.2",
-    "ansis": "^2.2.0",
+    "@wordpress/block-library": "^8.31.0",
+    "ansis": "^2.3.0",
     "astro": "^4.3.5",
-    "flowbite": "^2.2.1",
-    "html-entities": "^2.4.0",
+    "flowbite": "^2.3.0",
+    "glightbox": "^3.3.0",
+    "html-entities": "^2.5.2",
     "i": "^0.3.7",
-    "npm": "^10.2.5",
+    "npm": "^10.5.0",
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.13.0",
-    "prettier-plugin-tailwindcss": "^0.5.11",
-    "stripe": "^14.15.0",
-    "tailwindcss": "^3.4.1"
+    "prettier-plugin-tailwindcss": "^0.5.13",
+    "stripe": "^14.22.0",
+    "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.10"
+    "@tailwindcss/typography": "^0.5.12"
   }
 }

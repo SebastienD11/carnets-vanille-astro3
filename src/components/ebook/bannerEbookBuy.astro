@@ -4,10 +4,11 @@ import { getThemeOptions } from '../../api/options'
 import { replaceUrls } from '../../utils/parser'
 
 const lang = Astro.currentLocale as string
-const glaceOptions = await getThemeOptions(lang)
+const glaceOptions = getThemeOptions(lang)
 ---
 
 <div
+  astro-banner-ebook
   class="not-prose relative w-full gap-2 rounded-lg border border-vanille bg-beige text-black dark:border-vanille/50 dark:bg-stone-800 dark:text-stone-50 md:flex md:items-stretch md:gap-4"
 >
   <div
@@ -16,16 +17,19 @@ const glaceOptions = await getThemeOptions(lang)
   >
   </div>
   <div class="space-y-4 p-8 text-center md:w-2/3 md:text-left">
-    <h3 class="text-xl font-extrabold leading-normal" set:html={glaceOptions.banner_ebook_title} />
+    <h3
+      class="text-xl font-extrabold leading-normal"
+      set:html={glaceOptions.ebook.banners.buy.title}
+    />
 
-    <div set:html={glaceOptions.banner_ebook_content} />
+    <div set:html={glaceOptions.ebook.banners.buy.content} />
     <a
-      href={replaceUrls(glaceOptions.banner_ebook_button_link.url)}
-      title={glaceOptions.banner_ebook_button_link.title}
-      target={glaceOptions.banner_ebook_button_link.target}
+      href={replaceUrls(glaceOptions.ebook.banners.buy.button.link.url)}
+      title={glaceOptions.ebook.banners.buy.button.link.title}
+      target={glaceOptions.ebook.banners.buy.button.link.target}
       class="flex w-full items-center justify-center rounded bg-vanille px-4 py-4 text-center !font-bold text-stone-900 transition hover:-translate-y-1 hover:shadow-lg disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none md:px-16"
     >
-      <span>{glaceOptions.banner_ebook_button_label}</span>
+      <span>{glaceOptions.ebook.banners.buy.button.label}</span>
     </a>
   </div>
 </div>

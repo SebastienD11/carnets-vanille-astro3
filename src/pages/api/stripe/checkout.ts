@@ -7,13 +7,35 @@ export const POST: APIRoute = async ({ request }) => {
   if (request.headers.get('Content-Type') === 'application/json') {
     const stripe = new Stripe(import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY)
     const body = await request.json()
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
+
+    if (!body.customPrice && body.stripePriceId === '') return new Response(null, { status: 400 })
+    if (!body.mlGroup) return new Response(null, { status: 400 })
+    if (body.customPrice && body.stripeProductId === '') return new Response(null, { status: 400 })
+
+    let lineItems
+
+    if (body.customPrice) {
+      lineItems = [
+        {
+          price_data: {
+            currency: 'EUR',
+            product: body.stripeProductId,
+            unit_amount: body.customPrice.toFixed(2) * 100 // convert to cents
+          },
+          quantity: 1
+        }
+      ]
+    } else {
+      lineItems = [
         {
           price: body.stripePriceId,
           quantity: 1
         }
-      ],
+      ]
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      line_items: lineItems,
       allow_promotion_codes: true,
       mode: 'payment',
       success_url: `${body.page.origin + body.page.pathname}?session_id={CHECKOUT_SESSION_ID}`,

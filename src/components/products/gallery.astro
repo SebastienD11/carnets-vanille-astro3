@@ -1,0 +1,47 @@
+---
+import { Image, imageConfig } from 'astro:assets'
+
+type Props = {
+  images: {
+    alt: string
+    description: string
+    height: number
+    title: string
+    url: string
+    width: number
+  }[]
+}
+
+const { images }: Props = Astro.props
+---
+
+<div class="grid grid-cols-3 gap-4">
+  {
+    images.map((image) => (
+      <a
+        href={image.url}
+        data-gallery="gallery"
+        data-glightbox={`title: ${image.title}; description: ${image.description}`}
+      >
+        <Image
+          src={image.url}
+          alt={image.alt}
+          width={image.width}
+          height={image.height}
+          widths={[180]}
+          class="h-auto max-w-full rounded-lg border border-vanille"
+        />
+      </a>
+    ))
+  }
+</div>
+
+<script>
+  import GLightbox from 'glightbox'
+
+  GLightbox({
+    selector: "[data-gallery='gallery']",
+    touchNavigation: true,
+    loop: true
+  })
+</script>

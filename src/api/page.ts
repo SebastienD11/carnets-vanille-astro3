@@ -1,6 +1,17 @@
 export async function getPageBySlug(slug: string, lang: string): Promise<Page | null> {
+  const headerAuth = `Basic ${btoa(
+    import.meta.env.WORDPRESS_APP_USERNAME + ':' + import.meta.env.WORDPRESS_APP_PASSWORD
+  )}`
+
   const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL + `/pages/?slug=${slug}&lang=${lang}&acf_format=standard`
+    import.meta.env.WORDPRESS_REST_API_URL +
+      `/pages/?slug=${slug}&lang=${lang}&acf_format=standard${import.meta.env.VERCEL_ENV === 'production' ? '' : '&status=publish,draft'}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: headerAuth
+      }
+    }
   )
   const page: Page[] = await res.json()
 

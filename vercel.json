@@ -1,7 +1,13 @@
 {
+  "crons": [
+    {
+      "path": "/api/deploy",
+      "schedule": "0 3 * * *"
+    }
+  ],
   "headers": [
     {
-      "source": "/",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
@@ -16,7 +22,7 @@
       ]
     },
     {
-      "source": "/",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",

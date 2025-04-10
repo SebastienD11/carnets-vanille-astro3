@@ -1,0 +1,22 @@
+---
+import PreviewLayout from '../../layouts/Preview.astro'
+import Preview from '../../templates/Preview.astro'
+import { getPostRevisionsPerId, getRevisionsPerId } from '../../api/post'
+
+// For the current URI, return the corresponding node from the CMS.
+const id: number = parseInt(Astro.params.id, 10)
+const postRevisions = await getPostRevisionsPerId(id)
+const data = await getRevisionsPerId(id, postRevisions[0].id)
+
+function resolveContentTemplate() {
+  let template
+  let layout = PreviewLayout
+  template = Preview
+  return { template, layout }
+}
+const { template: Template, layout: Layout } = resolveContentTemplate()
+---
+
+<Layout>
+  <Template node={data} />
+</Layout>

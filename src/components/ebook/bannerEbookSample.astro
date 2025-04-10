@@ -11,7 +11,7 @@ import { ADMIN_EMAIL } from '../../constant'
 
 const lang = Astro.currentLocale as string
 const t = useTranslations(lang)
-const glaceOptions = await getThemeOptions(lang)
+const glaceOptions = getThemeOptions(lang)
 ---
 
 <div
@@ -43,7 +43,7 @@ const glaceOptions = await getThemeOptions(lang)
         <input
           type="hidden"
           name="mailerLiteGroupId"
-          value={glaceOptions.mailerlite_group_id_for_ebook}
+          value={glaceOptions.mailerlite.group_sample_ebook}
         />
       </div>
     </form>
@@ -51,15 +51,6 @@ const glaceOptions = await getThemeOptions(lang)
 </div>
 
 <script is:inline>
-  // Replace WP Shortcode by our component above
-  const bannerEbookSample = document.querySelector('[astro-banner-ebook-sample]')
-  const clone = bannerEbookSample.cloneNode(true)
-  bannerEbookSample.remove()
-  document.querySelectorAll('[shortcode_free_ebook_banner]').forEach((el) => {
-    el.after(clone)
-    el.remove()
-  })
-
   async function postFreeEbook(form) {
     const params = {
       email: form.email.value,
