@@ -1,3 +1,20 @@
+
+
+@import "tailwindcss";
+@config "../../tailwind.config.cjs";
+@plugin "@tailwindcss/typography";
+
+/* Conserver Tailwind V3 Border Color */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
 :root {
   --line-yellow: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='%23fc0' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   --line-yellow-dotted: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='%23fc0' stroke-width='2' stroke-dasharray='2 5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");

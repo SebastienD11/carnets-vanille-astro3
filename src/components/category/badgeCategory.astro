@@ -7,7 +7,7 @@ const category: Category = Astro.props.category
 ---
 
 <a
-  class="rounded bg-framboise p-2 py-1 text-sm text-black"
+  class="rounded-sm bg-framboise p-2 py-1 text-sm text-black"
   href={getRelativeLocaleUrl(lang, '/' + category.slug)}
 >
   {category.name}
