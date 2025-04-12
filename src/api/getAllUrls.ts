@@ -57,7 +57,7 @@ const getAllPagesUrils = async (lang: string) => {
     pages = pages.concat(newPages)
   }
 
-  const pagesUris: Uri[] = pages.map((page: Page) => {
+  const pagesUris: Uri[] = pages?.map((page: Page) => {
     return {
       params: {
         uri: page.slug
