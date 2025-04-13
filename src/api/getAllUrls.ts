@@ -74,8 +74,8 @@ const recursivePageFetch = async (lang: string, page: number) => {
       import.meta.env.WORDPRESS_APP_USERNAME + ':' + import.meta.env.WORDPRESS_APP_PASSWORD
     )}`
 
-    // Safely check VERCEL_ENV with a fallback
-    const env = import.meta.env.VERCEL_ENV || 'development'
+    // Safely check ENV with a fallback
+    const env = import.meta.env.ENV || 'development'
     const isProduction = env === 'production'
 
     const res = await fetch(
