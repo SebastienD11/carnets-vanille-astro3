@@ -3,15 +3,13 @@
 import type { APIRoute } from 'astro'
 import MailerLite from '@mailerlite/mailerlite-nodejs'
 
-export const POST: APIRoute = async (context) => {
-  const mailerLiteApiKey = (context.locals as any).runtime?.env?.MAILERLITE_KEY
+export const POST: APIRoute = async ({ request }) => {
+  // Try both import.meta.env (local) and process.env (Cloudflare)
+  const mailerLiteApiKey = import.meta.env.MAILERLITE_KEY || process.env.MAILERLITE_KEY
 
   // Add logging for debugging
   console.log('Mailerlite API Key exists:', !!mailerLiteApiKey)
-  console.log(
-    'Environment:',
-    (context.locals as any).runtime?.env?.MAILERLITE_KEY ? 'local' : 'cloudflare'
-  )
+  console.log('Environment:', import.meta.env.MAILERLITE_KEY ? 'local' : 'cloudflare')
 
   if (!mailerLiteApiKey) {
     return new Response(JSON.stringify({ error: 'Mailerlite API key is not configured' }), {
@@ -26,7 +24,7 @@ export const POST: APIRoute = async (context) => {
     api_key: mailerLiteApiKey
   })
 
-  if (context.request.headers.get('Content-Type') !== 'application/json') {
+  if (request.headers.get('Content-Type') !== 'application/json') {
     return new Response(JSON.stringify({ error: 'Content-Type must be application/json' }), {
       status: 400,
       headers: {
@@ -36,7 +34,7 @@ export const POST: APIRoute = async (context) => {
   }
 
   try {
-    const body = await context.request.json()
+    const body = await request.json()
     console.log('Request body:', body)
 
     const response = await mailerlite.subscribers.createOrUpdate(body)
