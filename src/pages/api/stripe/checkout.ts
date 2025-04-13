@@ -3,10 +3,13 @@
 import type { APIRoute } from 'astro'
 import Stripe from 'stripe'
 
-export const POST: APIRoute = async ({ request }) => {
-  if (request.headers.get('Content-Type') === 'application/json') {
-    const stripe = new Stripe(import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY)
-    const body = await request.json()
+export const POST: APIRoute = async (context) => {
+  if (context.request.headers.get('Content-Type') === 'application/json') {
+    const stripeSecretKey =
+      (context.locals as any).runtime?.env?.ASTRO_APP_STRIPE_SECRET_KEY ||
+      import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY
+    const stripe = new Stripe(stripeSecretKey)
+    const body = await context.request.json()
 
     if (!body.customPrice && body.stripePriceId === '') return new Response(null, { status: 400 })
     if (!body.mlGroup) return new Response(null, { status: 400 })
