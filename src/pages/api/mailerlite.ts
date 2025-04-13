@@ -4,10 +4,12 @@ import type { APIRoute } from 'astro'
 import MailerLite from '@mailerlite/mailerlite-nodejs'
 
 export const POST: APIRoute = async ({ request }) => {
-  const mailerLiteApiKey = process.env.MAILERLITE_KEY
+  // Try both import.meta.env (local) and process.env (Cloudflare)
+  const mailerLiteApiKey = import.meta.env.MAILERLITE_KEY || process.env.MAILERLITE_KEY
 
   // Add logging for debugging
   console.log('Mailerlite API Key exists:', !!mailerLiteApiKey)
+  console.log('Environment:', import.meta.env.MAILERLITE_KEY ? 'local' : 'cloudflare')
 
   if (!mailerLiteApiKey) {
     return new Response(JSON.stringify({ error: 'Mailerlite API key is not configured' }), {
