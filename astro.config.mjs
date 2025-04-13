@@ -11,7 +11,7 @@ export default defineConfig({
   adapter: cloudflare({
     routes: {
       strategy: 'include',
-      include: ['/api/*', '/api/mailerlite']
+      include: ['/api/*']
     }
   }),
   integrations: [tailwind(), lifecycleLogs()],
