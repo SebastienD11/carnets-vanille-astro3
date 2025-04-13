@@ -106,7 +106,7 @@ const productPriceSymbol = '€'
 const productPriceSymbolCode = 'EUR'
 
 // Stripe
-const testMode = import.meta.env.ENV === 'production' ? false : true
+const testMode = import.meta.env.CUSTOM_ENV === 'production' ? false : true
 const stripePriceId = testMode
   ? page.acf.stripe_product_price_info.stripe_product_price_id_test
   : page.acf.stripe_product_price_info.stripe_product_price_id

@@ -75,7 +75,7 @@ const recursivePageFetch = async (lang: string, page: number) => {
     )}`
 
     // Safely check ENV with a fallback
-    const env = import.meta.env.ENV || 'development'
+    const env = import.meta.env.CUSTOM_ENV || 'development'
     const isProduction = env === 'production'
 
     const res = await fetch(

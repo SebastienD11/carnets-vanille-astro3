@@ -5,7 +5,7 @@ export async function getPageBySlug(slug: string, lang: string): Promise<Page | 
 
   const res = await fetch(
     import.meta.env.WORDPRESS_REST_API_URL +
-      `/pages/?slug=${slug}&lang=${lang}&acf_format=standard${import.meta.env.ENV === 'production' ? '' : '&status=publish,draft'}`,
+      `/pages/?slug=${slug}&lang=${lang}&acf_format=standard${import.meta.env.CUSTOM_ENV === 'production' ? '' : '&status=publish,draft'}`,
     {
       headers: {
         'Content-Type': 'application/json',

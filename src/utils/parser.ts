@@ -1,5 +1,5 @@
 const url =
-  import.meta.env.ENV === 'production'
+  import.meta.env.CUSTOM_ENV === 'production'
     ? import.meta.env.BUILD_URL
     : import.meta.env.CF_PAGES_URL
       ? import.meta.env.CF_PAGES_URL
