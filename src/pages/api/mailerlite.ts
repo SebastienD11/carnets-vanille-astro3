@@ -9,29 +9,52 @@ export const POST: APIRoute = async ({ request }) => {
     api_key: mailerLiteApiKey
   })
 
-  if (request.headers.get('Content-Type') === 'application/json') {
-    const body = await request.json()
-    let error
-    let res
-
-    const response = await mailerlite.subscribers
-      .createOrUpdate(body)
-      .then((response) => {
-        res = response.data.data
-      })
-      .catch((error) => {
-        if (error.response) error = error.response.data
-      })
-
-    if (error) {
-      return new Response(error, { status: 400 })
-    }
-    if (res) {
-      return new Response(JSON.stringify(`Subscriber ${res.email} created/updated`), {
-        status: 200
-      })
-    }
-    return new Response(null, { status: 400 })
+  if (request.headers.get('Content-Type') !== 'application/json') {
+    return new Response(JSON.stringify({ error: 'Content-Type must be application/json' }), {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
-  return new Response(null, { status: 400 })
+
+  try {
+    const body = await request.json()
+    const response = await mailerlite.subscribers.createOrUpdate(body)
+
+    if (response.data?.data) {
+      return new Response(
+        JSON.stringify({
+          message: `Subscriber ${response.data.data.email} created/updated`,
+          data: response.data.data
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+    }
+
+    return new Response(JSON.stringify({ error: 'No data received from Mailerlite' }), {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  } catch (error: any) {
+    console.error('Mailerlite API error:', error)
+    return new Response(
+      JSON.stringify({
+        error: error.response?.data || 'An error occurred while processing your request'
+      }),
+      {
+        status: error.response?.status || 500,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+  }
 }
