@@ -6,13 +6,6 @@ import MailerLite from '@mailerlite/mailerlite-nodejs'
 export const POST: APIRoute = async (context) => {
   const mailerLiteApiKey = (context.locals as any).runtime?.env?.MAILERLITE_KEY
 
-  // Add logging for debugging
-  console.log('Mailerlite API Key exists:', !!mailerLiteApiKey)
-  console.log(
-    'Environment:',
-    (context.locals as any).runtime?.env?.MAILERLITE_KEY ? 'local' : 'cloudflare'
-  )
-
   if (!mailerLiteApiKey) {
     return new Response(JSON.stringify({ error: 'Mailerlite API key is not configured' }), {
       status: 500,
@@ -37,10 +30,7 @@ export const POST: APIRoute = async (context) => {
 
   try {
     const body = await context.request.json()
-    console.log('Request body:', body)
-
     const response = await mailerlite.subscribers.createOrUpdate(body)
-    console.log('Mailerlite response:', response)
 
     if (response.data?.data) {
       return new Response(
@@ -64,7 +54,6 @@ export const POST: APIRoute = async (context) => {
       }
     })
   } catch (error: any) {
-    console.error('Mailerlite API error:', error)
     return new Response(
       JSON.stringify({
         error: error.response?.data || 'An error occurred while processing your request',
