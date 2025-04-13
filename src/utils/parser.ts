@@ -2,7 +2,7 @@ const url =
   import.meta.env.ENV === 'production'
     ? import.meta.env.BUILD_URL
     : import.meta.env.CF_PAGES_URL
-      ? 'https://' + import.meta.env.CF_PAGES_URL
+      ? import.meta.env.CF_PAGES_URL
       : import.meta.env.BUILD_URL
 
 export function parseHtml(html: string) {
