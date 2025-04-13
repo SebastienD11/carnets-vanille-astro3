@@ -2,18 +2,28 @@ import MailerLite from '@mailerlite/mailerlite-nodejs'
 import type { APIRoute } from 'astro'
 import Stripe from 'stripe'
 
-export const POST: APIRoute = async ({ params, request }) => {
-  const stripe = new Stripe(import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY)
-  const endpointSecret = import.meta.env.ASTRO_APP_STRIPE_WEBHOOK
-  const sig = request.headers.get('stripe-signature')
-  const payload = await request.text()
+export const POST: APIRoute = async (context) => {
+  const stripeSecretKey =
+    (context.locals as any).runtime?.env?.ASTRO_APP_STRIPE_SECRET_KEY ||
+    import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY
+  const endpointSecret =
+    (context.locals as any).runtime?.env?.ASTRO_APP_STRIPE_WEBHOOK ||
+    import.meta.env.ASTRO_APP_STRIPE_WEBHOOK
+  const mailerLiteKey =
+    (context.locals as any).runtime?.env?.MAILERLITE_KEY || import.meta.env.MAILERLITE_KEY
+
+  const stripe = new Stripe(stripeSecretKey)
+  const sig = context.request.headers.get('stripe-signature')
+  const payload = await context.request.text()
   const buffer = Buffer.from(payload)
 
   let event
   try {
+    if (!sig) throw new Error('No stripe signature found')
     event = stripe.webhooks.constructEvent(buffer, sig, endpointSecret)
-  } catch (err) {
-    return new Response(JSON.stringify(`Webhook Error: ${err.message}`), { status: 400 })
+  } catch (err: unknown) {
+    const error = err as Error
+    return new Response(JSON.stringify(`Webhook Error: ${error.message}`), { status: 400 })
   }
 
   if (event.type === 'checkout.session.completed') {
@@ -38,7 +48,7 @@ export const POST: APIRoute = async ({ params, request }) => {
       }
 
       const mailerlite = new MailerLite({
-        api_key: import.meta.env.MAILERLITE_KEY
+        api_key: mailerLiteKey
       })
 
       return await mailerlite.subscribers

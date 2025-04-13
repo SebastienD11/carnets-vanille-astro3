@@ -57,7 +57,7 @@ const getAllPagesUrils = async (lang: string) => {
     pages = pages.concat(newPages)
   }
 
-  const pagesUris: Uri[] = pages.map((page: Page) => {
+  const pagesUris: Uri[] = pages?.map((page: Page) => {
     return {
       params: {
         uri: page.slug
@@ -69,25 +69,38 @@ const getAllPagesUrils = async (lang: string) => {
 }
 
 const recursivePageFetch = async (lang: string, page: number) => {
-  const headerAuth = `Basic ${btoa(
-    import.meta.env.WORDPRESS_APP_USERNAME + ':' + import.meta.env.WORDPRESS_APP_PASSWORD
-  )}`
+  try {
+    const headerAuth = `Basic ${btoa(
+      import.meta.env.WORDPRESS_APP_USERNAME + ':' + import.meta.env.WORDPRESS_APP_PASSWORD
+    )}`
 
-  const res = await fetch(
-    import.meta.env.WORDPRESS_REST_API_URL +
-      `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug,id&lang=${lang}${
-        page > 1 ? '&page=' + page : ''
-      }${import.meta.env.VERCEL_ENV === 'production' ? '' : '&status=publish,draft'}`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: headerAuth
+    // Safely check ENV with a fallback
+    const env = import.meta.env.ENV || 'development'
+    const isProduction = env === 'production'
+
+    const res = await fetch(
+      import.meta.env.WORDPRESS_REST_API_URL +
+        `/pages?per_page=${FETCH_PER_PAGE}&_fields=slug,id&lang=${lang}${
+          page > 1 ? '&page=' + page : ''
+        }${isProduction ? '' : '&status=publish,draft'}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: headerAuth
+        }
       }
-    }
-  )
-  const pages: Page[] = await res.json()
+    )
 
-  return pages
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`)
+    }
+
+    const pages: Page[] = await res.json()
+    return pages || []
+  } catch (error) {
+    console.error('Error fetching pages:', error)
+    return []
+  }
 }
 
 /*****************
