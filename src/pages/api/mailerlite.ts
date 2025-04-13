@@ -4,7 +4,7 @@ import type { APIRoute } from 'astro'
 import MailerLite from '@mailerlite/mailerlite-nodejs'
 
 export const POST: APIRoute = async ({ request }) => {
-  const mailerLiteApiKey = import.meta.env.MAILERLITE_KEY
+  const mailerLiteApiKey = process.env.MAILERLITE_KEY
 
   // Add logging for debugging
   console.log('Mailerlite API Key exists:', !!mailerLiteApiKey)
