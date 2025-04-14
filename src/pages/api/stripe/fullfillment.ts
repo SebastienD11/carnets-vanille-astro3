@@ -20,7 +20,7 @@ export const POST: APIRoute = async (context) => {
   let event
   try {
     if (!sig) throw new Error('No stripe signature found')
-    event = stripe.webhooks.constructEvent(buffer, sig, endpointSecret)
+    event = await stripe.webhooks.constructEventAsync(buffer, sig, endpointSecret)
   } catch (err: unknown) {
     const error = err as Error
     return new Response(JSON.stringify(`Webhook Error: ${error.message}`), { status: 400 })
