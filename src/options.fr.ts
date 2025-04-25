@@ -16,7 +16,7 @@ export const THEME_OPTIONS = {
         }
       },
       {
-        img: 'https://content.carnetsvanille.com/wp-content/uploads/2024/12/skis-de-fond-parc-mont-royal-montreal-hiver.jpg',
+        img: 'https://content.carnetsvanille.com/wp-content/uploads/2023/05/jardin-botanique-mtl.jpg',
         text: 'Montréal et le Québec',
         icon: 'erable',
         link: {
