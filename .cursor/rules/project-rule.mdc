@@ -1,4 +1,10 @@
-# Carnets Vanille - Astro Website
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Carnets Vanille x Astro
+
 
 ## 🚀 Tech Stack
 
@@ -66,6 +72,10 @@ Key dependencies are managed in `package.json`. The project uses:
 - `tailwind.config.cjs`: Tailwind CSS configuration
 - `tsconfig.json`: TypeScript configuration
 
+## CMS
+
+In developement, content would be fetch on demand.
+
 ## 📝 License
 
 This project is proprietary and confidential. All rights reserved.
@@ -74,9 +84,3 @@ This project is proprietary and confidential. All rights reserved.
 
 Custom font is using the Fontsource project which simplifies using Google Fonts and other open-source fonts. It provides npm modules you can install for the fonts you want to use.
 More with its Astro integration [here](https://docs.astro.build/en/guides/fonts/#using-fontsource)
-
-## Todo
-
-- [ ] Check https and non www redirection
-- [ ] Redirect https://carnets-vanille-astro3.pages.dev/ to https://carnetsvanille.com/
-- [ ] Add CRON Job to build every night
