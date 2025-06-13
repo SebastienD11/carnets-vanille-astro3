@@ -5,16 +5,17 @@ alwaysApply: true
 ---
 ## Carnets Vanille x Astro
 
+The below describe the project stack, structure and deployment process.
 
 ## 🚀 Tech Stack
 
-- **Framework**: [Astro](https://astro.build) v5
-- **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com) v3
-- **UI Components**: [Flowbite](https://flowbite.com) v2
-- **Payment Processing**: [Stripe](https://stripe.com) v18
-- **Email Marketing**: [MailerLite](https://www.mailerlite.com) Node.js SDK
-- **Fonts**: [Fontsource](https://fontsource.org) - Mulish Variable
+- **Framework**: [Astro](mdc:https:/astro.build) v5
+- **Deployment**: [Cloudflare Pages](mdc:https:/pages.cloudflare.com)
+- **Styling**: [Tailwind CSS](mdc:https:/tailwindcss.com) v3
+- **UI Components**: [Flowbite](mdc:https:/flowbite.com) v2
+- **Payment Processing**: [Stripe](mdc:https:/stripe.com) v18
+- **Email Marketing**: [MailerLite](mdc:https:/www.mailerlite.com) Node.js SDK
+- **Fonts**: [Fontsource](mdc:https:/fontsource.org) - Mulish Variable
 - **Development Tools**:
   - TypeScript
   - Prettier
@@ -35,6 +36,13 @@ alwaysApply: true
 ├── .astro/            # Astro cache
 └── .github/           # GitHub configuration
 ```
+
+## Content
+
+The Carnets Vanille blog will offer 2 main types of content:
+- Blog post. This represent 90% of the pages.
+- Landing page for paid ebook product. At this time, we have 2 ebook.
+- Usual page for a blog like the home page, categories pages, tag pages
 
 ## 🛠️ Available Scripts
 
@@ -83,4 +91,4 @@ This project is proprietary and confidential. All rights reserved.
 ## Fonts
 
 Custom font is using the Fontsource project which simplifies using Google Fonts and other open-source fonts. It provides npm modules you can install for the fonts you want to use.
-More with its Astro integration [here](https://docs.astro.build/en/guides/fonts/#using-fontsource)
+More with its Astro integration [here](mdc:https:/docs.astro.build/en/guides/fonts/#using-fontsource)
