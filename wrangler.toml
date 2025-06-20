@@ -1,0 +1,6 @@
+name = "carnets-vanille-astro3"
+compatibility_date = "2024-05-01"
+
+[triggers]
+# Runs every night at 3:00 AM UTC
+crons = ["0 3 * * *"]
