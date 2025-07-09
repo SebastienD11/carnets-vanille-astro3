@@ -11,15 +11,15 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.0",
-    "@astrojs/node": "^9.2.2",
+    "@astrojs/node": "^9.3.0",
     "@astrojs/tailwind": "^6.0.2",
     "@astrojs/upgrade": "^0.6.0",
     "@fontsource-variable/mulish": "^5.2.6",
     "@mailerlite/mailerlite-nodejs": "^1.4.0",
-    "@vitejs/plugin-basic-ssl": "^2.0.0",
+    "@vitejs/plugin-basic-ssl": "^2.1.0",
     "@wordpress/block-library": "^9.25.0",
     "ansis": "4.1.0",
-    "astro": "^5.10.1",
+    "astro": "^5.11.0",
     "flowbite": "^2.5.2",
     "glightbox": "^3.3.1",
     "html-entities": "^2.6.0",
@@ -28,11 +28,11 @@
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.5.13",
-    "stripe": "^18.2.1",
+    "stripe": "^18.3.0",
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250620.0",
+    "@cloudflare/workers-types": "^4.20250709.0",
     "@tailwindcss/typography": "^0.5.16"
   }
 }
