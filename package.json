@@ -32,7 +32,7 @@
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250712.0",
+    "@cloudflare/workers-types": "^4.20250715.0",
     "@tailwindcss/typography": "^0.5.16"
   }
 }
