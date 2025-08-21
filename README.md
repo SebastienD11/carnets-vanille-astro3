@@ -77,6 +77,5 @@ More with its Astro integration [here](https://docs.astro.build/en/guides/fonts/
 
 ## Todo
 
-- [ ] Check https and non www redirection
 - [ ] Redirect https://carnets-vanille-astro3.pages.dev/ to https://carnetsvanille.com/
 - [ ] Add CRON Job to build every night
