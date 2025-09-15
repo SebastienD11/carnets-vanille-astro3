@@ -10,8 +10,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.4",
-    "@astrojs/node": "^9.4.2",
+    "@astrojs/cloudflare": "^12.6.8",
+    "@astrojs/node": "^9.4.3",
     "@astrojs/tailwind": "^6.0.2",
     "@astrojs/upgrade": "^0.6.2",
     "@fontsource-variable/mulish": "^5.2.6",
@@ -19,7 +19,7 @@
     "@vitejs/plugin-basic-ssl": "^2.1.0",
     "@wordpress/block-library": "^9.28.0",
     "ansis": "4.1.0",
-    "astro": "^5.13.2",
+    "astro": "^5.13.7",
     "flowbite": "^2.5.2",
     "glightbox": "^3.3.1",
     "html-entities": "^2.6.0",
@@ -32,7 +32,7 @@
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250813.0",
+    "@cloudflare/workers-types": "^4.20250913.0",
     "@tailwindcss/typography": "^0.5.16"
   }
 }
