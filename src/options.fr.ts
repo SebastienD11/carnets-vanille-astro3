@@ -16,7 +16,7 @@ export const THEME_OPTIONS = {
         }
       },
       {
-        img: 'https://content.carnetsvanille.com/wp-content/uploads/2023/05/jardin-botanique-mtl.jpg',
+        img: 'https://content.carnetsvanille.com/wp-content/uploads/2021/06/belvedere-mont-royal-automne.jpg',
         text: 'Montréal et le Québec',
         icon: 'erable',
         link: {
