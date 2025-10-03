@@ -45,15 +45,15 @@ const commentCount = post.yoast_head_json.schema['@graph'].find(
       )
     }
     <div class="flex flex-col gap-2 p-6">
-      <p class="flex items-center justify-between text-sm text-stone-700 dark:text-stone-300">
+      <p class="flex items-start justify-between text-xs text-stone-700 dark:text-stone-300">
         <span>
           {t('card.date.modified')}
           <FormattedDate date={post.modified} />
         </span>
         {
           commentCount > 0 && (
-            <span>
-              <i class="icon-comment text-md" /> {commentCount}
+            <span class="shrink-0">
+              <i class="icon-comment" /> {commentCount}
             </span>
           )
         }
