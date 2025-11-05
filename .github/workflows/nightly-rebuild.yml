@@ -1,0 +1,17 @@
+name: Nightly Rebuild
+
+on:
+  schedule:
+    # Runs at 3:00 AM UTC every day
+    - cron: '0 3 * * *'
+  # Also allow manual triggers for testing
+  workflow_dispatch:
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages Deploy
+        run: |
+          curl -X POST "${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}"
+

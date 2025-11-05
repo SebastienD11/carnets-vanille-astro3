@@ -50,6 +50,8 @@ The project is automatically deployed to Cloudflare Pages on every commit to the
 4. Global CDN distribution
 5. Edge Functions for API routes
 
+A Github Action is running every night to trigger a new deployment.
+
 ## 📦 Dependencies
 
 Key dependencies are managed in `package.json`. The project uses:
@@ -78,4 +80,3 @@ More with its Astro integration [here](https://docs.astro.build/en/guides/fonts/
 ## Todo
 
 - [ ] Redirect https://carnets-vanille-astro3.pages.dev/ to https://carnetsvanille.com/
-- [ ] Add CRON Job to build every night
