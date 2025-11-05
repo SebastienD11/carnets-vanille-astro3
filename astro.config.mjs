@@ -13,9 +13,6 @@ export default defineConfig({
       strategy: 'include',
       include: ['/api/*']
     },
-    workerEntryPoint: {
-      path: 'src/cron.ts'
-    }
   }),
   integrations: [tailwind(), lifecycleLogs()],
   i18n: {
