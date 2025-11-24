@@ -93,6 +93,12 @@ export const ui = {
     'socialLinks.pinterest.alt': 'Follow me on Pinterest',
     'socialLinks.twitter.alt': 'Follow me on Twitter',
     'socialLinks.twitter.share': 'Share',
+    'search.ariaLabel': 'Search',
+    'search.placeholder': 'Search...',
+    'search.results.placeholder': 'Search for a topic...',
+    'search.results.empty': 'No results found.',
+    'search.submit': 'Search',
+    'search.error': 'An error occurred during the search.',
     'tag.grid.title': 'Tag: '
   },
   fr: {
@@ -181,6 +187,12 @@ export const ui = {
     'socialLinks.pinterest.alt': 'Suivez-moi sur Pinterest',
     'socialLinks.twitter.alt': 'Suivez-moi sur Twitter',
     'socialLinks.twitter.share': 'Partager',
+    'search.ariaLabel': 'Rechercher',
+    'search.placeholder': 'Rechercher...',
+    'search.results.placeholder': 'Rechercher un sujet...',
+    'search.results.empty': 'Aucun résultat trouvé.',
+    'search.submit': 'Rechercher',
+    'search.error': 'Une erreur s\'est produite lors de la recherche.',
     'tag.grid.title': 'Tag : '
   }
 } as const

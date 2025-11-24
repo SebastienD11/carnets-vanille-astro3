@@ -1,0 +1,261 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { useTranslations } from '../../i18n/ui'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+---
+
+<div id="search-container" class="relative">
+  <!-- Search Icon Button -->
+  <button
+    id="search-toggle"
+    type="button"
+    class="group relative flex gap-1 text-lg font-bold uppercase transition-opacity hover:opacity-80"
+    aria-label={t('search.ariaLabel')}
+  >
+    <span class="absolute -right-2 -top-2 hidden h-2 w-2 rounded-full bg-vanille group-hover:block" />
+    <i class="icon-search" />
+  </button>
+
+  <!-- Search Dropdown -->
+  <div
+    id="search-dropdown"
+    class="absolute right-0 top-full z-50 mt-4 hidden w-96 max-w-[calc(100vw-2rem)] rounded-lg border border-black bg-vanille shadow-lg"
+  >
+    <!-- Search Input -->
+    <div class="border-b border-black p-4">
+      <form id="search-form" class="flex gap-2">
+        <input
+          type="text"
+          id="search-input"
+          name="q"
+          placeholder={t('search.placeholder')}
+          class="flex-1 rounded border border-black bg-white px-3 py-2 text-sm text-black placeholder:text-black/50 focus:border-black focus:outline-none"
+          autocomplete="off"
+        />
+        <button
+          type="submit"
+          id="search-submit-btn"
+          class="relative flex min-w-[100px] items-center justify-center rounded bg-black px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-black/90 disabled:cursor-wait disabled:hover:bg-black"
+        >
+          <span id="search-submit-text" class="block">{t('search.submit')}</span>
+          <div id="search-submit-spinner" class="hidden absolute inset-0 flex items-center justify-center">
+            <div class="search-spinner-custom">
+              <div class="spinner-dot"></div>
+              <div class="spinner-dot"></div>
+              <div class="spinner-dot"></div>
+            </div>
+          </div>
+        </button>
+      </form>
+    </div>
+
+    <!-- Search Results -->
+    <div id="search-results" class="max-h-96 overflow-y-auto p-4">
+      <div id="search-placeholder" class="text-center text-sm text-black/70">
+        {t('search.results.placeholder')}
+      </div>
+      <div id="search-empty" class="hidden text-center text-sm text-black/70">
+        {t('search.results.empty')}
+      </div>
+      <div id="search-error" class="hidden text-center text-sm text-red-700">
+        {t('search.error')}
+      </div>
+      <div id="search-results-list" class="hidden flex flex-col gap-4"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const lang = '${lang}'
+  const searchContainer = document.getElementById('search-container')
+  const searchToggle = document.getElementById('search-toggle')
+  const searchDropdown = document.getElementById('search-dropdown')
+  const searchForm = document.getElementById('search-form')
+  const searchInput = document.getElementById('search-input')
+  const searchSubmitBtn = document.getElementById('search-submit-btn')
+  const searchSubmitText = document.getElementById('search-submit-text')
+  const searchSubmitSpinner = document.getElementById('search-submit-spinner')
+  const searchPlaceholder = document.getElementById('search-placeholder')
+  const searchEmpty = document.getElementById('search-empty')
+  const searchError = document.getElementById('search-error')
+  const searchResultsList = document.getElementById('search-results-list')
+
+  let isOpen = false
+
+  // Toggle search dropdown
+  searchToggle?.addEventListener('click', (e) => {
+    e.stopPropagation()
+    isOpen = !isOpen
+    if (isOpen) {
+      searchDropdown?.classList.remove('hidden')
+      searchInput?.focus()
+      // Reset to initial state
+      searchPlaceholder?.classList.remove('hidden')
+      searchEmpty?.classList.add('hidden')
+      searchError?.classList.add('hidden')
+      searchResultsList?.classList.add('hidden')
+      // Reset submit button
+      searchSubmitBtn?.removeAttribute('disabled')
+      searchSubmitText?.classList.remove('hidden')
+      searchSubmitSpinner?.classList.add('hidden')
+    } else {
+      searchDropdown?.classList.add('hidden')
+    }
+  })
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (isOpen && searchContainer && !searchContainer.contains(e.target as Node)) {
+      isOpen = false
+      searchDropdown?.classList.add('hidden')
+    }
+  })
+
+  // Handle search form submission
+  searchForm?.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const query = (searchInput as HTMLInputElement)?.value.trim()
+
+    if (!query) {
+      return
+    }
+
+    // Show loading state - update submit button
+    searchSubmitBtn?.setAttribute('disabled', 'true')
+    searchSubmitText?.classList.add('hidden')
+    searchSubmitSpinner?.classList.remove('hidden')
+    
+    // Hide other states
+    searchPlaceholder?.classList.add('hidden')
+    searchEmpty?.classList.add('hidden')
+    searchError?.classList.add('hidden')
+    searchResultsList?.classList.add('hidden')
+
+    try {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&lang=${lang}`)
+      const data = await response.json()
+
+      // Hide loading - restore submit button
+      searchSubmitBtn?.removeAttribute('disabled')
+      searchSubmitText?.classList.remove('hidden')
+      searchSubmitSpinner?.classList.add('hidden')
+
+      if (!response.ok || data.error) {
+        searchError?.classList.remove('hidden')
+        return
+      }
+
+      if (!data.results || data.results.length === 0) {
+        searchEmpty?.classList.remove('hidden')
+        searchPlaceholder?.classList.add('hidden')
+        return
+      }
+
+      // Display results
+      if (searchResultsList) {
+        searchPlaceholder?.classList.add('hidden')
+        const basePath = (lang as string) === 'en' ? '/en' : ''
+        searchResultsList.innerHTML = data.results
+          .map(
+            (result: any) => `
+          <a
+            href="${basePath}/${result.slug}"
+            class="group flex gap-4 rounded-lg border border-black bg-white p-3 transition-all hover:shadow-lg"
+          >
+            ${
+              result.featured_media_data
+                ? `
+              <img
+                src="${result.featured_media_data.url}"
+                alt="${result.featured_media_data.alt_text}"
+                class="h-20 w-20 shrink-0 rounded object-cover border border-black"
+                loading="lazy"
+              />
+            `
+                : '<div class="h-20 w-20 shrink-0 rounded border border-black bg-vanille"></div>'
+            }
+            <div class="flex min-w-0 flex-1 flex-col gap-1">
+              <h3 class="text-sm font-bold text-black line-clamp-2">
+                ${result.title}
+              </h3>
+              ${
+                result.excerpt
+                  ? `<div class="text-xs text-black line-clamp-2">${result.excerpt.replace(/<[^>]*>/g, '')}</div>`
+                  : ''
+              }
+            </div>
+          </a>
+        `
+          )
+          .join('')
+        searchResultsList.classList.remove('hidden')
+      }
+    } catch (error) {
+      console.error('Search error:', error)
+      // Restore submit button
+      searchSubmitBtn?.removeAttribute('disabled')
+      searchSubmitText?.classList.remove('hidden')
+      searchSubmitSpinner?.classList.add('hidden')
+      searchError?.classList.remove('hidden')
+    }
+  })
+
+  // Close dropdown on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen) {
+      isOpen = false
+      searchDropdown?.classList.add('hidden')
+    }
+  })
+</script>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .search-spinner-custom {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: white;
+    animation: spinnerPulse 1.4s ease-in-out infinite;
+  }
+
+  .spinner-dot:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .spinner-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .spinner-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes spinnerPulse {
+    0%,
+    100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+</style>
+
