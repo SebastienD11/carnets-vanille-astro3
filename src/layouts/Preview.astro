@@ -9,6 +9,7 @@ import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDra
 import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
 import ThemeColorScript from '../components/scripts/themeColor.astro'
 import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
+import SearchDrawerMobile from '../components/search/SearchDrawerMobile.astro'
 const lang = Astro.currentLocale as string
 ---
 
@@ -45,6 +46,7 @@ const lang = Astro.currentLocale as string
     <ResponsiveMenuDrawer>
       <ResponsiveMenuContent />
     </ResponsiveMenuDrawer>
+    <SearchDrawerMobile />
     <slot />
     <Footer />
     <FormScript />

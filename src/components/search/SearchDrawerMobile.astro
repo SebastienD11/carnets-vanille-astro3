@@ -1,0 +1,208 @@
+---
+import { useTranslations } from '../../i18n/ui'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang)
+---
+
+<div
+  id="search-drawer-mobile"
+  class="fixed bottom-0 left-0 right-0 z-40 h-[90vh] translate-y-full flex flex-col bg-vanille shadow-2xl transition-transform duration-300 ease-out"
+  tabindex="-1"
+  aria-labelledby="search-drawer-mobile"
+>
+  <!-- Header with placeholder and close button -->
+  <div class="flex items-center justify-between border-b-2 border-black p-4 shrink-0">
+    <div id="search-placeholder-mobile" class="text-sm font-bold text-black">
+      {t('search.results.placeholder')}
+    </div>
+    <button
+      type="button"
+      close-search-drawer
+      class="rounded-sm p-1"
+      aria-label="Close search"
+    >
+      <i class="icon-close text-sm"></i>
+    </button>
+  </div>
+
+  <!-- Search Form -->
+  <div class="border-b-2 border-black p-4 shrink-0">
+    <form id="search-form-mobile" class="flex gap-2">
+      <input
+        type="text"
+        id="search-input-mobile"
+        name="q"
+        placeholder={t('search.placeholder')}
+        class="flex-1 rounded border-2 border-black bg-white px-3 py-2 text-sm text-black placeholder:text-black/50 focus:border-black focus:outline-none"
+        autocomplete="off"
+      />
+      <button
+        type="submit"
+        id="search-submit-btn-mobile"
+        class="relative flex min-w-[100px] items-center justify-center rounded bg-black px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-black/90 disabled:cursor-wait disabled:hover:bg-black"
+      >
+        <span id="search-submit-text-mobile" class="block">{t('search.submit')}</span>
+        <div id="search-submit-spinner-mobile" class="hidden absolute inset-0 flex items-center justify-center">
+          <div class="search-spinner-custom">
+            <div class="spinner-dot"></div>
+            <div class="spinner-dot"></div>
+            <div class="spinner-dot"></div>
+          </div>
+        </div>
+      </button>
+    </form>
+  </div>
+
+  <!-- Search Results -->
+  <div id="search-results-mobile" class="flex-1 overflow-y-auto p-4 min-h-0">
+    <div id="search-loading-mobile" class="hidden text-center text-sm text-black">
+      {t('search.loading')}
+    </div>
+    <div id="search-empty-mobile" class="hidden text-center text-sm text-black">
+      {t('search.results.empty')}
+    </div>
+    <div id="search-error-mobile" class="hidden text-center text-sm text-red-700">
+      {t('search.error')}
+    </div>
+    <div id="search-results-list-mobile" class="hidden flex flex-col gap-4"></div>
+  </div>
+</div>
+
+<script>
+  import { Drawer } from 'flowbite'
+  import type { DrawerOptions, DrawerInterface } from 'flowbite'
+  import type { InstanceOptions } from 'flowbite'
+  import { initializeSearch, resetSearchState, type SearchElements } from '../../utils/search'
+
+  const lang = '${lang}'
+  const $targetEl: HTMLElement = document.getElementById('search-drawer-mobile')
+  const searchForm = document.getElementById('search-form-mobile')
+  const searchInput = document.getElementById('search-input-mobile')
+  const searchSubmitBtn = document.getElementById('search-submit-btn-mobile')
+  const searchSubmitText = document.getElementById('search-submit-text-mobile')
+  const searchSubmitSpinner = document.getElementById('search-submit-spinner-mobile')
+  const searchPlaceholder = document.getElementById('search-placeholder-mobile')
+  const searchLoading = document.getElementById('search-loading-mobile')
+  const searchEmpty = document.getElementById('search-empty-mobile')
+  const searchError = document.getElementById('search-error-mobile')
+  const searchResultsList = document.getElementById('search-results-list-mobile')
+
+  // Initialize search functionality
+  // Note: placeholder is null because it's always visible in the header
+  const searchElements: SearchElements = {
+    form: searchForm as HTMLFormElement,
+    input: searchInput as HTMLInputElement,
+    submitBtn: searchSubmitBtn as HTMLButtonElement,
+    submitText: searchSubmitText,
+    submitSpinner: searchSubmitSpinner,
+    placeholder: null, // Always visible in header, don't manage it
+    loading: searchLoading,
+    empty: searchEmpty,
+    error: searchError,
+    resultsList: searchResultsList
+  }
+
+  initializeSearch({
+    lang: lang as string,
+    elements: searchElements,
+    renderOptions: {
+      borderWidth: 'border-2',
+      onResultClick: "if (window.searchDrawerMobile) { window.searchDrawerMobile.hide(); }"
+    }
+  })
+
+  const options: DrawerOptions = {
+    placement: 'bottom',
+    backdrop: true,
+    bodyScrolling: false,
+    edge: false,
+    edgeOffset: '',
+    backdropClasses: 'bg-black/50 backdrop-blur-sm fixed inset-0 z-30',
+    onHide: () => {
+      $targetEl.setAttribute('data-state', 'closed')
+      resetSearchState(searchElements)
+    },
+    onShow: () => {
+      $targetEl.setAttribute('data-state', 'open')
+      resetSearchState(searchElements)
+      if (searchInput) {
+        searchInput.focus()
+      }
+    },
+    onToggle: () => {}
+  }
+
+  const instanceOptions: InstanceOptions = {
+    id: 'search-drawer-mobile',
+    override: true
+  }
+
+  const drawer: DrawerInterface = new Drawer($targetEl, options, instanceOptions)
+
+  // Make drawer accessible globally for onclick handlers
+  ;(window as any).searchDrawerMobile = drawer
+
+  // Event listener to toggle the drawer
+  document.querySelectorAll('[toggle-search-drawer]').forEach((el) => {
+    el.addEventListener('click', () => {
+      drawer.toggle()
+    })
+  })
+
+  // Event listener to close the drawer
+  document.querySelectorAll('[close-search-drawer]').forEach((el) => {
+    el.addEventListener('click', () => {
+      drawer.hide()
+    })
+  })
+</script>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .search-spinner-custom {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: white;
+    animation: spinnerPulse 1.4s ease-in-out infinite;
+  }
+
+  .spinner-dot:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .spinner-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .spinner-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes spinnerPulse {
+    0%,
+    100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+</style>
+

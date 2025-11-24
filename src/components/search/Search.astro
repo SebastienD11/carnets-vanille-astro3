@@ -56,6 +56,9 @@ const t = useTranslations(lang)
       <div id="search-placeholder" class="text-center text-sm text-black/70">
         {t('search.results.placeholder')}
       </div>
+      <div id="search-loading" class="hidden text-center text-sm text-black/70">
+        {t('search.loading')}
+      </div>
       <div id="search-empty" class="hidden text-center text-sm text-black/70">
         {t('search.results.empty')}
       </div>
@@ -68,6 +71,8 @@ const t = useTranslations(lang)
 </div>
 
 <script>
+  import { initializeSearch, resetSearchState, type SearchElements } from '../../utils/search'
+
   const lang = '${lang}'
   const searchContainer = document.getElementById('search-container')
   const searchToggle = document.getElementById('search-toggle')
@@ -78,11 +83,34 @@ const t = useTranslations(lang)
   const searchSubmitText = document.getElementById('search-submit-text')
   const searchSubmitSpinner = document.getElementById('search-submit-spinner')
   const searchPlaceholder = document.getElementById('search-placeholder')
+  const searchLoading = document.getElementById('search-loading')
   const searchEmpty = document.getElementById('search-empty')
   const searchError = document.getElementById('search-error')
   const searchResultsList = document.getElementById('search-results-list')
 
   let isOpen = false
+
+  // Initialize search functionality
+  const searchElements: SearchElements = {
+    form: searchForm as HTMLFormElement,
+    input: searchInput as HTMLInputElement,
+    submitBtn: searchSubmitBtn as HTMLButtonElement,
+    submitText: searchSubmitText,
+    submitSpinner: searchSubmitSpinner,
+    placeholder: searchPlaceholder,
+    loading: searchLoading,
+    empty: searchEmpty,
+    error: searchError,
+    resultsList: searchResultsList
+  }
+
+  initializeSearch({
+    lang: lang as string,
+    elements: searchElements,
+    renderOptions: {
+      borderWidth: 'border'
+    }
+  })
 
   // Toggle search dropdown
   searchToggle?.addEventListener('click', (e) => {
@@ -92,14 +120,7 @@ const t = useTranslations(lang)
       searchDropdown?.classList.remove('hidden')
       searchInput?.focus()
       // Reset to initial state
-      searchPlaceholder?.classList.remove('hidden')
-      searchEmpty?.classList.add('hidden')
-      searchError?.classList.add('hidden')
-      searchResultsList?.classList.add('hidden')
-      // Reset submit button
-      searchSubmitBtn?.removeAttribute('disabled')
-      searchSubmitText?.classList.remove('hidden')
-      searchSubmitSpinner?.classList.add('hidden')
+      resetSearchState(searchElements)
     } else {
       searchDropdown?.classList.add('hidden')
     }
@@ -110,95 +131,6 @@ const t = useTranslations(lang)
     if (isOpen && searchContainer && !searchContainer.contains(e.target as Node)) {
       isOpen = false
       searchDropdown?.classList.add('hidden')
-    }
-  })
-
-  // Handle search form submission
-  searchForm?.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const query = (searchInput as HTMLInputElement)?.value.trim()
-
-    if (!query) {
-      return
-    }
-
-    // Show loading state - update submit button
-    searchSubmitBtn?.setAttribute('disabled', 'true')
-    searchSubmitText?.classList.add('hidden')
-    searchSubmitSpinner?.classList.remove('hidden')
-    
-    // Hide other states
-    searchPlaceholder?.classList.add('hidden')
-    searchEmpty?.classList.add('hidden')
-    searchError?.classList.add('hidden')
-    searchResultsList?.classList.add('hidden')
-
-    try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&lang=${lang}`)
-      const data = await response.json()
-
-      // Hide loading - restore submit button
-      searchSubmitBtn?.removeAttribute('disabled')
-      searchSubmitText?.classList.remove('hidden')
-      searchSubmitSpinner?.classList.add('hidden')
-
-      if (!response.ok || data.error) {
-        searchError?.classList.remove('hidden')
-        return
-      }
-
-      if (!data.results || data.results.length === 0) {
-        searchEmpty?.classList.remove('hidden')
-        searchPlaceholder?.classList.add('hidden')
-        return
-      }
-
-      // Display results
-      if (searchResultsList) {
-        searchPlaceholder?.classList.add('hidden')
-        const basePath = (lang as string) === 'en' ? '/en' : ''
-        searchResultsList.innerHTML = data.results
-          .map(
-            (result: any) => `
-          <a
-            href="${basePath}/${result.slug}"
-            class="group flex gap-4 rounded-lg border border-black bg-white p-3 transition-all hover:shadow-lg"
-          >
-            ${
-              result.featured_media_data
-                ? `
-              <img
-                src="${result.featured_media_data.url}"
-                alt="${result.featured_media_data.alt_text}"
-                class="h-20 w-20 shrink-0 rounded object-cover border border-black"
-                loading="lazy"
-              />
-            `
-                : '<div class="h-20 w-20 shrink-0 rounded border border-black bg-vanille"></div>'
-            }
-            <div class="flex min-w-0 flex-1 flex-col gap-1">
-              <h3 class="text-sm font-bold text-black line-clamp-2">
-                ${result.title}
-              </h3>
-              ${
-                result.excerpt
-                  ? `<div class="text-xs text-black line-clamp-2">${result.excerpt.replace(/<[^>]*>/g, '')}</div>`
-                  : ''
-              }
-            </div>
-          </a>
-        `
-          )
-          .join('')
-        searchResultsList.classList.remove('hidden')
-      }
-    } catch (error) {
-      console.error('Search error:', error)
-      // Restore submit button
-      searchSubmitBtn?.removeAttribute('disabled')
-      searchSubmitText?.classList.remove('hidden')
-      searchSubmitSpinner?.classList.add('hidden')
-      searchError?.classList.remove('hidden')
     }
   })
 

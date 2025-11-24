@@ -11,6 +11,7 @@ import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDra
 import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
 import ThemeColorScript from '../components/scripts/themeColor.astro'
 import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
+import SearchDrawerMobile from '../components/search/SearchDrawerMobile.astro'
 import type { Yoast } from '../api/yoast'
 
 interface Props {
@@ -64,6 +65,7 @@ const lang = Astro.currentLocale as string
     <ResponsiveMenuDrawer>
       <ResponsiveMenuContent />
     </ResponsiveMenuDrawer>
+    <SearchDrawerMobile />
     <FormScript />
     <ThemeColorScript />
     <NewsletterModal />
