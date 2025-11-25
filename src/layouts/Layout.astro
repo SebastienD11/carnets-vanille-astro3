@@ -61,7 +61,7 @@ const lang = Astro.currentLocale as string
     <Header />
     <ResponsiveMenuToggle />
     <slot />
-    <Footer />
+    <Footer alternates={seo.alternates} />
     <ResponsiveMenuDrawer>
       <ResponsiveMenuContent />
     </ResponsiveMenuDrawer>

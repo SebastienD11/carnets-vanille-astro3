@@ -1,5 +1,5 @@
 import type { Node } from '../api/node'
-const buildAlternates = (node: Node) => {
+export const buildAlternates = (node: Node) => {
   if (!node.wpml_translations || node.wpml_translations.length === 0) return []
 
   const alternates = []

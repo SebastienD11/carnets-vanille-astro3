@@ -1,7 +1,36 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import { locales } from '../../i18n/ui'
+
+interface Props {
+  alternates?: {
+    hrefLang: string
+    href: string
+  }[]
+}
+
+const { alternates } = Astro.props
 const currentLang = Astro.currentLocale as string
+
+// Helper function to get the URL for a given locale
+function getLocaleUrl(lang: string): string {
+  // If we have alternates, try to find a translation for this locale
+  if (alternates && alternates.length > 0) {
+    const translation = alternates.find((alt) => alt.hrefLang === lang)
+    if (translation) {
+      // Convert absolute URL to relative path if needed
+      try {
+        const url = new URL(translation.href)
+        return url.pathname + url.search + url.hash
+      } catch {
+        // If it's already a relative path, use it as is
+        return translation.href
+      }
+    }
+  }
+  // Fallback to home page if no translation exists
+  return getRelativeLocaleUrl(lang as string, '/')
+}
 ---
 
 <ul class="flex items-center justify-center gap-4">
@@ -14,7 +43,7 @@ const currentLang = Astro.currentLocale as string
           </strong>
         ) : (
           <a
-            href={getRelativeLocaleUrl(lang as string, '/')}
+            href={getLocaleUrl(lang)}
             class="text-sm uppercase text-stone-600 hover:underline dark:text-stone-300"
           >
             {lang}

@@ -2,10 +2,19 @@
 import FooterMenu from './FooterMenu.astro'
 import ToggleThemeIcon from '../../components/theme/Icon.astro'
 import LanguagePicker from '../../components/theme/LanguagePicker.astro'
+
+interface Props {
+  alternates?: {
+    hrefLang: string
+    href: string
+  }[]
+}
+
+const { alternates } = Astro.props
 ---
 
 <footer class="mt-32 flex flex-col items-center gap-4">
   <FooterMenu />
-  <LanguagePicker />
+  <LanguagePicker alternates={alternates} />
   <ToggleThemeIcon color="text-black dark:text-white" />
 </footer>
