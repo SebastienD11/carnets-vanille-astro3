@@ -7,65 +7,59 @@ const t = useTranslations(lang)
 
 <div
   id="search-drawer-mobile"
-  class="fixed bottom-0 left-0 right-0 z-40 h-[90vh] translate-y-full flex flex-col bg-vanille shadow-2xl transition-transform duration-300 ease-out"
+  class="fixed right-0 top-0 z-40 h-screen w-full translate-x-full overflow-y-auto bg-black/90 text-white backdrop-blur data-[state=closed]:animate-responsiveMenuHide data-[state=open]:animate-responsiveMenuShow"
   tabindex="-1"
   aria-labelledby="search-drawer-mobile"
 >
-  <!-- Header with placeholder and close button -->
-  <div class="flex items-center justify-between border-b-2 border-black p-4 shrink-0">
-    <div id="search-placeholder-mobile" class="text-sm font-bold text-black">
-      {t('search.results.placeholder')}
-    </div>
-    <button
-      type="button"
-      close-search-drawer
-      class="rounded-sm p-1"
-      aria-label="Close search"
-    >
-      <i class="icon-close text-sm"></i>
-    </button>
-  </div>
-
-  <!-- Search Form -->
-  <div class="border-b-2 border-black p-4 shrink-0">
-    <form id="search-form-mobile" class="flex gap-2">
-      <input
-        type="text"
-        id="search-input-mobile"
-        name="q"
-        placeholder={t('search.placeholder')}
-        class="flex-1 rounded border-2 border-black bg-white px-3 py-2 text-sm text-black placeholder:text-black/50 focus:border-black focus:outline-none"
-        autocomplete="off"
-      />
-      <button
-        type="submit"
-        id="search-submit-btn-mobile"
-        class="relative flex min-w-[100px] items-center justify-center rounded bg-black px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-black/90 disabled:cursor-wait disabled:hover:bg-black"
-      >
-        <span id="search-submit-text-mobile" class="block">{t('search.submit')}</span>
-        <div id="search-submit-spinner-mobile" class="hidden absolute inset-0 flex items-center justify-center">
-          <div class="search-spinner-custom">
-            <div class="spinner-dot"></div>
-            <div class="spinner-dot"></div>
-            <div class="spinner-dot"></div>
-          </div>
+  <div class="flex h-full flex-col items-stretch">
+    <!-- Yellow rounded section with search form and close button -->
+    <div class="prose prose-stone w-full max-w-full shrink-0 rounded-bl-3xl bg-vanille p-8 text-sm">
+      <div class="flex items-center justify-between">
+        <div id="search-placeholder-mobile" class="text-sm font-bold text-black">
+          {t('search.results.placeholder')}
         </div>
-      </button>
-    </form>
-  </div>
-
-  <!-- Search Results -->
-  <div id="search-results-mobile" class="flex-1 overflow-y-auto p-4 min-h-0">
-    <div id="search-loading-mobile" class="hidden text-center text-sm text-black">
-      {t('search.loading')}
+        <button type="button" close-search-drawer class="icon-close h-6 w-6 text-black" aria-label="Close search"></button>
+      </div>
+      <div class="mt-4">
+        <form id="search-form-mobile" class="flex gap-2">
+          <input
+            type="text"
+            id="search-input-mobile"
+            name="q"
+            placeholder={t('search.placeholder')}
+            class="flex-1 rounded border-2 border-black bg-white px-3 py-2 text-sm text-black placeholder:text-black/50 focus:border-black focus:outline-none"
+            autocomplete="off"
+          />
+          <button
+            type="submit"
+            id="search-submit-btn-mobile"
+            class="relative flex min-w-[100px] items-center justify-center rounded bg-black px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-black/90 disabled:cursor-wait disabled:hover:bg-black"
+          >
+            <span id="search-submit-text-mobile" class="block">{t('search.submit')}</span>
+            <div id="search-submit-spinner-mobile" class="hidden absolute inset-0 flex items-center justify-center">
+              <div class="search-spinner-custom">
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+              </div>
+            </div>
+          </button>
+        </form>
+      </div>
     </div>
-    <div id="search-empty-mobile" class="hidden text-center text-sm text-black">
-      {t('search.results.empty')}
+    <!-- Black scrolling section for results -->
+    <div id="search-results-mobile" class="grow-1 overflow-y-scroll p-8">
+      <div id="search-loading-mobile" class="hidden text-center text-sm text-white">
+        {t('search.loading')}
+      </div>
+      <div id="search-empty-mobile" class="hidden text-center text-sm text-white">
+        {t('search.results.empty')}
+      </div>
+      <div id="search-error-mobile" class="hidden text-center text-sm text-red-400">
+        {t('search.error')}
+      </div>
+      <div id="search-results-list-mobile" class="hidden flex flex-col gap-4"></div>
     </div>
-    <div id="search-error-mobile" class="hidden text-center text-sm text-red-700">
-      {t('search.error')}
-    </div>
-    <div id="search-results-list-mobile" class="hidden flex flex-col gap-4"></div>
   </div>
 </div>
 
@@ -113,12 +107,12 @@ const t = useTranslations(lang)
   })
 
   const options: DrawerOptions = {
-    placement: 'bottom',
+    placement: 'right',
     backdrop: true,
     bodyScrolling: false,
     edge: false,
     edgeOffset: '',
-    backdropClasses: 'bg-black/50 backdrop-blur-sm fixed inset-0 z-30',
+    backdropClasses: 'bg-stone-900/50 dark:bg-stone-900/80 fixed inset-0 z-30',
     onHide: () => {
       $targetEl.setAttribute('data-state', 'closed')
       resetSearchState(searchElements)
@@ -177,7 +171,7 @@ const t = useTranslations(lang)
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: white;
+    background-color: currentColor;
     animation: spinnerPulse 1.4s ease-in-out infinite;
   }
 
