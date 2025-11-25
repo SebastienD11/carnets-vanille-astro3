@@ -4,13 +4,19 @@ import ToggleThemeIcon from '../../components/theme/Icon.astro'
 
 <div
   id="responsive-menu-toggle"
-  class="fixed right-4 top-4 z-10 flex -translate-y-full flex-col items-center gap-4 rounded-full bg-vanille bg-vanille/80 px-1 py-2 text-stone-900 opacity-50 shadow-md backdrop-blur transition duration-300 md:hidden"
+  class="fixed right-4 top-4 z-10 flex flex-col items-center gap-2 rounded-full bg-vanille bg-vanille/80 px-0 py-2 text-stone-900 opacity-100 shadow-md backdrop-blur transition duration-300 md:hidden"
 >
-  <button type="button" toggle-drawer class="flex appearance-none flex-col items-center font-bold">
-    <span>M</span>
-    <span>E</span>
-    <span>N</span>
-    <span>U</span>
+  <button type="button" toggle-drawer class="group flex appearance-none items-center justify-center p-1" aria-label="Menu">
+    <svg
+      class="h-7 w-7 transition-all duration-300 group-hover:scale-110 group-hover:rotate-90"
+      fill="none"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect x="4" y="6" width="16" height="2" rx="1" fill="currentColor" />
+      <rect x="4" y="11" width="16" height="2" rx="1" fill="currentColor" />
+      <rect x="4" y="16" width="16" height="2" rx="1" fill="currentColor" />
+    </svg>
   </button>
   <button
     type="button"
@@ -33,36 +39,31 @@ import ToggleThemeIcon from '../../components/theme/Icon.astro'
       responsiveMenuToggle.classList.remove('opacity-50', '-translate-y-full')
     }
 
-    // Function to hide the toggle (default state - slightly visible)
+    // Function to hide the toggle (barely visible - moved up)
     function hideToggle() {
       responsiveMenuToggle.classList.remove('opacity-100', 'translate-y-0')
       responsiveMenuToggle.classList.add('opacity-50', '-translate-y-full')
     }
-
-    // Handle tap/click on the toggle container - show it fully when tapped
-    responsiveMenuToggle.addEventListener('click', function () {
-      showToggle()
-    })
 
     // Handle scroll direction
     window.addEventListener('scroll', function () {
       const currentScrollY = window.scrollY
       const scrollDifference = currentScrollY - lastScrollY
 
-      // Reset to default state when at the top
+      // At the top: show toggle (default state)
       if (currentScrollY <= 10) {
-        hideToggle()
+        showToggle()
         lastScrollY = currentScrollY
         return
       }
 
-      // Scroll down: show toggle
+      // Scroll down: hide toggle (move up, barely visible)
       if (scrollDifference > 0) {
-        showToggle()
-      }
-      // Scroll up: hide toggle (back to default state)
-      else if (scrollDifference < 0) {
         hideToggle()
+      }
+      // Scroll up: show toggle (bring it down, fully visible)
+      else if (scrollDifference < 0) {
+        showToggle()
       }
 
       lastScrollY = currentScrollY
