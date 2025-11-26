@@ -1,43 +1,118 @@
 ---
 interface Props {
   scrollable?: boolean
+  scrollSync?: boolean
+  pageCount?: number
 }
 
-const { scrollable = false } = Astro.props
+const { scrollable = false, scrollSync = false, pageCount = 1 } = Astro.props
 ---
 
-<div
-  class="ipad-frame relative mx-auto w-[91%] max-w-[328px] rounded-[1.5rem] border-[10px] border-gray-800 bg-gray-800 dark:border-gray-800 min-[360px]:w-auto min-[360px]:rounded-[2.5rem] min-[360px]:border-[14px] md:max-w-[448px]"
->
-  <div
-    class="absolute -start-[13px] top-[16%] h-[7%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"
+{scrollSync ? (
+  <div 
+    class="ipad-scroll-sync-wrapper relative"
+    style={`--pages: ${pageCount - 1};`}
   >
+    <div class="ipad-sticky-container sticky top-[10vh] flex flex-col items-center md:top-[calc(50vh-311px)]">
+      <div
+        class="ipad-frame ipad-scroll-sync relative mx-auto w-[91%] max-w-[328px] rounded-[1.5rem] border-[10px] border-gray-800 bg-gray-800 dark:border-gray-800 min-[360px]:w-auto min-[360px]:rounded-[2.5rem] min-[360px]:border-[14px] md:max-w-[448px]"
+        data-page-count={pageCount}
+      >
+        <div class="absolute -start-[13px] top-[16%] h-[7%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"></div>
+        <div class="absolute -start-[13px] top-[26%] h-[10%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"></div>
+        <div class="absolute -start-[13px] top-[39%] h-[10%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"></div>
+        <div class="absolute -end-[13px] top-[31%] h-[14%] w-[3px] rounded-e-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-end-[17px]"></div>
+        <div class="ipad-screen ipad-sync-screen overflow-hidden rounded-[1rem] bg-white dark:bg-gray-800 min-[360px]:rounded-[2rem]">
+          <slot />
+        </div>
+      </div>
+      <slot name="hint" />
+    </div>
   </div>
+) : (
   <div
-    class="absolute -start-[13px] top-[26%] h-[10%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"
+    class="ipad-frame relative mx-auto w-[91%] max-w-[328px] rounded-[1.5rem] border-[10px] border-gray-800 bg-gray-800 dark:border-gray-800 min-[360px]:w-auto min-[360px]:rounded-[2.5rem] min-[360px]:border-[14px] md:max-w-[448px]"
   >
+    <div class="absolute -start-[13px] top-[16%] h-[7%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"></div>
+    <div class="absolute -start-[13px] top-[26%] h-[10%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"></div>
+    <div class="absolute -start-[13px] top-[39%] h-[10%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"></div>
+    <div class="absolute -end-[13px] top-[31%] h-[14%] w-[3px] rounded-e-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-end-[17px]"></div>
+    <div
+      class:list={[
+        'ipad-screen rounded-[1rem] bg-white dark:bg-gray-800 min-[360px]:rounded-[2rem]',
+        scrollable
+          ? 'ipad-scroll-container snap-y snap-mandatory overflow-y-auto scroll-smooth'
+          : 'overflow-hidden'
+      ]}
+    >
+      <slot />
+    </div>
   </div>
-  <div
-    class="absolute -start-[13px] top-[39%] h-[10%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"
-  >
-  </div>
-  <div
-    class="absolute -end-[13px] top-[31%] h-[14%] w-[3px] rounded-e-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-end-[17px]"
-  >
-  </div>
-  <div
-    class:list={[
-      'ipad-screen rounded-[1rem] bg-white dark:bg-gray-800 min-[360px]:rounded-[2rem]',
-      scrollable
-        ? 'ipad-scroll-container snap-y snap-mandatory overflow-y-auto scroll-smooth'
-        : 'overflow-hidden'
-    ]}
-  >
-    <slot />
-  </div>
-</div>
+)}
+
+<script>
+  function initScrollSync() {
+    const wrappers = document.querySelectorAll('.ipad-scroll-sync-wrapper');
+    
+    wrappers.forEach(wrapper => {
+      const ipad = wrapper.querySelector('.ipad-scroll-sync') as HTMLElement;
+      const screen = wrapper.querySelector('.ipad-sync-screen') as HTMLElement;
+      if (!ipad || !screen) return;
+      
+      const pageCount = parseInt(ipad.dataset.pageCount || '1');
+      const pages = screen.querySelectorAll('.ipad-page');
+      if (pages.length === 0) return;
+      
+      const updateScroll = () => {
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const wrapperTop = window.scrollY + wrapperRect.top;
+        const wrapperHeight = wrapper.clientHeight;
+        const viewportHeight = window.innerHeight;
+        
+        // Calculate scroll progress within the wrapper (0 to 1)
+        const scrollInWrapper = window.scrollY - wrapperTop;
+        const scrollableDistance = wrapperHeight - viewportHeight;
+        const progress = Math.max(0, Math.min(1, scrollInWrapper / scrollableDistance));
+        
+        // Calculate which page to show
+        const totalScrollHeight = screen.scrollHeight - screen.clientHeight;
+        screen.scrollTop = progress * totalScrollHeight;
+      };
+      
+      // Use requestAnimationFrame for smooth updates
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateScroll();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+      
+      // Initial update
+      updateScroll();
+    });
+  }
+  
+  // Run on page load and after view transitions
+  document.addEventListener('astro:page-load', initScrollSync);
+  initScrollSync();
+</script>
 
 <style>
+  /* Scroll sync wrapper - smaller scroll distance on mobile */
+  .ipad-scroll-sync-wrapper {
+    height: calc(100vh + calc(var(--pages) * 35vh));
+  }
+  
+  @media (min-width: 768px) {
+    .ipad-scroll-sync-wrapper {
+      height: calc(100vh + calc(var(--pages) * 60vh));
+    }
+  }
+
   /* Fluid sizing below 360px using aspect-ratio */
   .ipad-frame {
     aspect-ratio: 328 / 452;
