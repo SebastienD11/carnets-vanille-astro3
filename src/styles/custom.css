@@ -89,3 +89,20 @@ mark a {
 .dark .prose :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply bg-stone-700;
 }
+
+/**
+    * Swipe animation for mobile hint
+*/
+
+@keyframes swipe-up {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-swipe-up {
+  animation: swipe-up 1.2s ease-in-out infinite;
+}
