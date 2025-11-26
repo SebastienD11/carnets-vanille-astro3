@@ -30,7 +30,20 @@ interface ACF extends Page {
       width: number
       height: number
     }
-    content_gallery: string[]
+    content_gallery: {
+      url: string
+      alt: string
+      width: number
+      height: number
+      sizes: {
+        'medium-2x': string
+        'medium-2x-width': number
+        'medium-2x-height': number
+        'large-2x': string
+        'large-2x-width': number
+        'large-2x-height': number
+      }
+    }[]
     content_author: {
       author_description: string
       author_image: {
@@ -76,6 +89,7 @@ const intro = page.acf.content_intro
 const introBis = page.acf.content_intro_bis
 const content = page.acf.content_the_content
 const image = page.acf.content_image
+const gallery = page.acf.content_gallery || []
 const author = page.acf.content_author
 const faq = page.acf.content_faq
 
@@ -196,17 +210,39 @@ const schema = {
           {
             image && (
               <div class="relative z-0 mx-auto max-w-full md:max-w-[450px] lg:hidden">
-                <IpadMockup>
-                  <Image
-                    src={image.url}
-                    alt={image.alt || title}
-                    width={image.width}
-                    height={image.height}
-                    densities={[1.5, 2]}
-                    loading="lazy"
-                    class="h-full w-auto"
-                  />
+                <IpadMockup scrollable>
+                  {/* Cover */}
+                  <div class="ipad-page flex w-full shrink-0 snap-start items-center justify-center">
+                    <Image
+                      src={image.url}
+                      alt={image.alt || title}
+                      width={image.width}
+                      height={image.height}
+                      densities={[1.5, 2]}
+                      loading="lazy"
+                      class="h-full w-auto"
+                    />
+                  </div>
+                  {/* Gallery preview pages - using medium-2x for mobile (497x702) */}
+                  {gallery.map((img, index) => (
+                    <div class="ipad-page flex w-full shrink-0 snap-start items-center justify-center bg-stone-100">
+                      <Image
+                        src={img.sizes['medium-2x']}
+                        alt={img.alt || `${title} - Preview ${index + 1}`}
+                        width={img.sizes['medium-2x-width']}
+                        height={img.sizes['medium-2x-height']}
+                        loading="lazy"
+                        class="h-full w-auto object-contain"
+                      />
+                    </div>
+                  ))}
                 </IpadMockup>
+                {/* Mobile scroll hint */}
+                {gallery.length > 0 && (
+                  <p class="mt-4 text-center text-sm text-stone-500 dark:text-stone-400">
+                    {t('product.ebook.scrollHint')}
+                  </p>
+                )}
               </div>
             )
           }
@@ -246,17 +282,42 @@ const schema = {
       {
         image && (
           <div class="relative mx-auto hidden max-w-[450px] lg:block">
-            <IpadMockup>
-              <Image
-                src={image.url}
-                alt={image.alt || title}
-                width={image.width}
-                height={image.height}
-                densities={[1.5, 2]}
-                loading="lazy"
-                class="h-full w-auto"
-              />
+            <IpadMockup scrollable>
+              {/* Cover */}
+              <div class="ipad-page flex w-full shrink-0 snap-start items-center justify-center">
+                <Image
+                  src={image.url}
+                  alt={image.alt || title}
+                  width={image.width}
+                  height={image.height}
+                  densities={[1.5, 2]}
+                  loading="lazy"
+                  class="h-full w-auto"
+                />
+              </div>
+              {/* Gallery preview pages - using large-2x for desktop (559x790) */}
+              {gallery.map((img, index) => (
+                <div class="ipad-page flex w-full shrink-0 snap-start items-center justify-center bg-stone-100">
+                  <Image
+                    src={img.sizes['large-2x']}
+                    alt={img.alt || `${title} - Preview ${index + 1}`}
+                    width={img.sizes['large-2x-width']}
+                    height={img.sizes['large-2x-height']}
+                    loading="lazy"
+                    class="h-full w-auto object-contain"
+                  />
+                </div>
+              ))}
             </IpadMockup>
+            {/* Desktop scroll hint */}
+            {gallery.length > 0 && (
+              <div class="mt-6 flex items-center justify-center gap-3 text-stone-500 dark:text-stone-400">
+                <div class="flex h-10 w-6 items-start justify-center rounded-full border-2 border-current p-1">
+                  <div class="h-2 w-1 animate-pulse rounded-full bg-current"></div>
+                </div>
+                <span class="text-sm">{t('product.ebook.scrollHintDesktop')}</span>
+              </div>
+            )}
           </div>
         )
       }
