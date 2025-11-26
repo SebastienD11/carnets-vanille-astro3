@@ -35,6 +35,14 @@ interface ACF extends Page {
       alt: string
       width: number
       height: number
+      sizes: {
+        'medium-2x': string
+        'medium-2x-width': number
+        'medium-2x-height': number
+        'large-2x': string
+        'large-2x-width': number
+        'large-2x-height': number
+      }
     }[]
     content_author: {
       author_description: string
@@ -215,12 +223,14 @@ const schema = {
                       class="h-full w-auto"
                     />
                   </div>
-                  {/* Gallery preview pages */}
+                  {/* Gallery preview pages - using medium-2x for mobile (497x702) */}
                   {gallery.map((img, index) => (
                     <div class="ipad-page flex w-full shrink-0 snap-start items-center justify-center bg-stone-100">
-                      <img
-                        src={img.url}
+                      <Image
+                        src={img.sizes['medium-2x']}
                         alt={img.alt || `${title} - Preview ${index + 1}`}
+                        width={img.sizes['medium-2x-width']}
+                        height={img.sizes['medium-2x-height']}
                         loading="lazy"
                         class="h-full w-auto object-contain"
                       />
@@ -285,12 +295,14 @@ const schema = {
                   class="h-full w-auto"
                 />
               </div>
-              {/* Gallery preview pages */}
+              {/* Gallery preview pages - using large-2x for desktop (559x790) */}
               {gallery.map((img, index) => (
                 <div class="ipad-page flex w-full shrink-0 snap-start items-center justify-center bg-stone-100">
-                  <img
-                    src={img.url}
+                  <Image
+                    src={img.sizes['large-2x']}
                     alt={img.alt || `${title} - Preview ${index + 1}`}
+                    width={img.sizes['large-2x-width']}
+                    height={img.sizes['large-2x-height']}
                     loading="lazy"
                     class="h-full w-auto object-contain"
                   />
