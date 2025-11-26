@@ -219,7 +219,7 @@ const schema = {
                       width={image.width}
                       height={image.height}
                       densities={[1.5, 2]}
-                      loading="lazy"
+                      loading="eager"
                       class="h-full w-auto"
                     />
                   </div>
@@ -237,12 +237,6 @@ const schema = {
                     </div>
                   ))}
                 </IpadMockup>
-                {/* Mobile scroll hint */}
-                {gallery.length > 0 && (
-                  <p class="mt-4 text-center text-sm text-stone-500 dark:text-stone-400">
-                    {t('product.ebook.scrollHint')}
-                  </p>
-                )}
               </div>
             )
           }
@@ -282,9 +276,9 @@ const schema = {
       {
         image && (
           <div class="relative mx-auto hidden max-w-[450px] lg:block">
-            <IpadMockup scrollable>
+            <IpadMockup scrollSync pageCount={1 + gallery.length}>
               {/* Cover */}
-              <div class="ipad-page flex w-full shrink-0 snap-start items-center justify-center">
+              <div class="ipad-page flex w-full shrink-0 items-center justify-center">
                 <Image
                   src={image.url}
                   alt={image.alt || title}
@@ -297,7 +291,7 @@ const schema = {
               </div>
               {/* Gallery preview pages - using large-2x for desktop (559x790) */}
               {gallery.map((img, index) => (
-                <div class="ipad-page flex w-full shrink-0 snap-start items-center justify-center bg-stone-100">
+                <div class="ipad-page flex w-full shrink-0 items-center justify-center bg-stone-100">
                   <Image
                     src={img.sizes['large-2x']}
                     alt={img.alt || `${title} - Preview ${index + 1}`}
@@ -309,15 +303,6 @@ const schema = {
                 </div>
               ))}
             </IpadMockup>
-            {/* Desktop scroll hint */}
-            {gallery.length > 0 && (
-              <div class="mt-6 flex items-center justify-center gap-3 text-stone-500 dark:text-stone-400">
-                <div class="flex h-10 w-6 items-start justify-center rounded-full border-2 border-current p-1">
-                  <div class="h-2 w-1 animate-pulse rounded-full bg-current"></div>
-                </div>
-                <span class="text-sm">{t('product.ebook.scrollHintDesktop')}</span>
-              </div>
-            )}
           </div>
         )
       }
