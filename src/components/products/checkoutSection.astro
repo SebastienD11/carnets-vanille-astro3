@@ -13,6 +13,7 @@ type Props = {
   stripeProductId: string
   mailerliteGroup: string
   productLink?: string
+  productName?: string
 }
 
 const {
@@ -22,7 +23,8 @@ const {
   priceSlider,
   productPrice,
   productPriceSymbol,
-  productLink
+  productLink,
+  productName
 }: Props = Astro.props
 ---
 
@@ -96,7 +98,7 @@ const {
   }
 </script>
 
-<script define:vars={{ priceSlider, stripeProductId, stripePriceId, mailerliteGroup }}>
+<script define:vars={{ priceSlider, stripeProductId, stripePriceId, mailerliteGroup, productName }}>
   document.querySelectorAll('[create-checkout]').forEach((el) => {
     el.addEventListener('click', () => {
       createCheckout()
@@ -126,6 +128,8 @@ const {
         mlGroup: mailerliteGroup
       })
     })
+
+    window.plausible(`${productName}-checkout-button-clicked`)
 
     const { url } = await response.json()
 

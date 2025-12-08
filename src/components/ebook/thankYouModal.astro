@@ -84,6 +84,7 @@ const t = useTranslations(lang)
 
   document.addEventListener('DOMContentLoaded', () => {
     if (isSessionPresent) {
+      window.plausible("ebook-page-with-checkout-session-id")
       modal.show()
     }
   })
