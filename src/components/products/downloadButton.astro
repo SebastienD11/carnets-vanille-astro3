@@ -3,9 +3,10 @@ import Spinner from '../ui/spinner.astro'
 
 type Props = {
   productLink: string
+  productName?: string
 }
 
-const { productLink }: Props = Astro.props
+const { productLink, productName }: Props = Astro.props
 ---
 
 <button
@@ -24,7 +25,7 @@ const { productLink }: Props = Astro.props
   <slot />
 </button>
 
-<script define:vars={{ productLink }}>
+<script define:vars={{ productLink, productName }}>
   document.querySelector('[download-button]').addEventListener('click', () => {
     buildLink()
   })
@@ -36,6 +37,8 @@ const { productLink }: Props = Astro.props
     document.querySelectorAll('[download-button] > i').forEach((el) => {
       el.classList.toggle('hidden')
     })
+
+    window.plausible(`${productName}-download-button-clicked`)
 
     if (productLink) {
       const a = document.createElement('a')

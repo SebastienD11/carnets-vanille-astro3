@@ -64,7 +64,7 @@ const {
 
   {
     productLink && (
-      <DownloadButton productLink={productLink}>
+      <DownloadButton productLink={productLink} productName={productName}>
         <span>{t('product.common.download')}</span>
       </DownloadButton>
     )
@@ -94,7 +94,7 @@ const {
       initPrice()
     })
   } else {
-    console.log('Price slider is disabled')
+    console.log('Price slider is disabled for this product')
   }
 </script>
 
