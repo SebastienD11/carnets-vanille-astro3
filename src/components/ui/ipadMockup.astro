@@ -1,27 +1,90 @@
 ---
+interface Props {
+  scrollable?: boolean
+}
 
+const { scrollable = false } = Astro.props
 ---
 
 <div
-  class="relative mx-auto h-[454px] max-w-[341px] rounded-[2.5rem] border-[14px] border-gray-800 bg-gray-800 dark:border-gray-800 md:h-[682px] md:max-w-[512px]"
+  class="ipad-frame relative mx-auto w-[91%] max-w-[328px] rounded-[1.5rem] border-[10px] border-gray-800 bg-gray-800 dark:border-gray-800 min-[360px]:w-auto min-[360px]:rounded-[2.5rem] min-[360px]:border-[14px] md:max-w-[448px]"
 >
   <div
-    class="absolute -start-[17px] top-[72px] h-[32px] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800"
+    class="absolute -start-[13px] top-[16%] h-[7%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"
   >
   </div>
   <div
-    class="absolute -start-[17px] top-[124px] h-[46px] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800"
+    class="absolute -start-[13px] top-[26%] h-[10%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"
   >
   </div>
   <div
-    class="absolute -start-[17px] top-[178px] h-[46px] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800"
+    class="absolute -start-[13px] top-[39%] h-[10%] w-[3px] rounded-s-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-start-[17px]"
   >
   </div>
   <div
-    class="absolute -end-[17px] top-[142px] h-[64px] w-[3px] rounded-e-lg bg-gray-800 dark:bg-gray-800"
+    class="absolute -end-[13px] top-[31%] h-[14%] w-[3px] rounded-e-lg bg-gray-800 dark:bg-gray-800 min-[360px]:-end-[17px]"
   >
   </div>
-  <div class="h-[426px] overflow-hidden rounded-[2rem] bg-white dark:bg-gray-800 md:h-[654px]">
+  <div
+    class:list={[
+      'ipad-screen rounded-[1rem] bg-gray-800 min-[360px]:rounded-[2rem]',
+      scrollable
+        ? 'ipad-scroll-container snap-y snap-mandatory overflow-y-auto scroll-smooth'
+        : 'overflow-hidden'
+    ]}
+  >
     <slot />
   </div>
 </div>
+
+<style>
+  /* Fluid sizing below 360px using aspect-ratio */
+  .ipad-frame {
+    aspect-ratio: 328 / 452;
+  }
+  
+  .ipad-screen {
+    height: 100%;
+  }
+
+  .ipad-screen :global(.ipad-page) {
+    height: 100%;
+    aspect-ratio: 300 / 424;
+  }
+
+  /* Fixed heights for screens >= 360px */
+  @media (min-width: 360px) {
+    .ipad-frame {
+      height: 452px;
+      aspect-ratio: auto;
+    }
+    .ipad-screen {
+      height: 424px;
+    }
+    .ipad-screen :global(.ipad-page) {
+      height: 424px;
+      aspect-ratio: auto;
+    }
+  }
+
+  /* Desktop sizes */
+  @media (min-width: 768px) {
+    .ipad-frame {
+      height: 622px;
+    }
+    .ipad-screen {
+      height: 594px;
+    }
+    .ipad-screen :global(.ipad-page) {
+      height: 594px;
+    }
+  }
+
+  .ipad-scroll-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .ipad-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+</style>

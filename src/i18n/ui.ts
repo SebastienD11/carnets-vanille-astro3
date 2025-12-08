@@ -80,6 +80,8 @@ export const ui = {
     'product.common.updatedIn': 'updated in',
     'product.common.writtenBy': 'Written by',
     'product.ebook.digitalProduct': 'Digital Product',
+    'product.ebook.scrollHint': 'Scroll vertically to see a preview of some pages',
+    'product.ebook.scrollHintDesktop': 'Scroll inside to see a preview of some pages',
     'product.ebook.thankyou.text':
       'Your support is not only a source of encouragement, but also contributes directly to the realisation of my writing project on Saint-Malo and Brittany. <strong>Keep an eye on your inbox, the ebook should be arriving soon!</strong> If you have any concerns, please don\'t hesitate to contact me on <a href="mailto:sarah@carnetsvanille.com">sarah@carnetsvanille.com</a>.',
     'product.ebook.thankyou.title': 'Thank you for your purchase',
@@ -175,6 +177,8 @@ export const ui = {
     'product.common.updatedIn': 'mis à jour en',
     'product.common.writtenBy': 'Écrit par',
     'product.ebook.digitalProduct': 'Livre numérique',
+    'product.ebook.scrollHint': 'Faites défiler verticalement pour voir un aperçu de quelques pages',
+    'product.ebook.scrollHintDesktop': 'Scrollez dans la tablette pour voir un aperçu de quelques pages',
     'product.ebook.thankyou.text':
       "Votre soutien est non seulement une source d'encouragement, mais il contribue également directement à la réalisation de mon projet d'écriture sur Saint-Malo et la Bretagne. <strong>Surveillez votre boite email, l’ebook devrait arriver sous peu !</strong> En cas de soucis, n'hésitez pas à me contacter sur <a href=\"mailto:sarah@carnetsvanille.com\">sarah@carnetsvanille.com</a>.",
     'product.ebook.thankyou.title': 'Merci pour votre achat',
