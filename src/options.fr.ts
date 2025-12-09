@@ -16,7 +16,7 @@ export const THEME_OPTIONS = {
         }
       },
       {
-        img: 'https://content.carnetsvanille.com/wp-content/uploads/2021/06/belvedere-mont-royal-automne.jpg',
+        img: 'https://content.carnetsvanille.com/wp-content/uploads/2025/02/patinoire-parc-molson-montreal.jpg',
         text: 'Montréal et le Québec',
         icon: 'erable',
         link: {
