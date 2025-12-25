@@ -38,7 +38,9 @@ const { productLink, productName }: Props = Astro.props
       el.classList.toggle('hidden')
     })
 
-    window.plausible(`${productName}-download-button-clicked`)
+    if(window.plausible) {
+      window.plausible(`${productName}-download-button-clicked`)
+    }
 
     if (productLink) {
       const a = document.createElement('a')

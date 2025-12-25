@@ -129,7 +129,9 @@ const {
       })
     })
 
-    window.plausible(`${productName}-checkout-button-clicked`)
+    if(window.plausible) {
+      window.plausible(`${productName}-checkout-button-clicked`)
+    }
 
     const { url } = await response.json()
 
