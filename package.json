@@ -24,7 +24,7 @@
     "glightbox": "^3.3.1",
     "html-entities": "^2.6.0",
     "i": "^0.3.7",
-    "npm": "^11.8.0",
+    "npm": "^11.9.0",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.5.14",
@@ -32,7 +32,7 @@
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260130.0",
+    "@cloudflare/workers-types": "^4.20260206.0",
     "@tailwindcss/typography": "^0.5.19"
   }
 }
