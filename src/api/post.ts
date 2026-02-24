@@ -23,6 +23,7 @@ export async function getPostById(id: number, lang: string): Promise<Post | null
   if (cacheExist(`${CACHE_FOLDER}/${lang}/postsUris.json`)) {
     const raw = getCache(`${CACHE_FOLDER}/${lang}/postsUris.json`)
     const post = raw.find((post: Post) => post.id === id)
+    if (!post) return null
     return getPostBySlug(post.slug, lang)
   }
   return null
