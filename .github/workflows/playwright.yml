@@ -1,6 +1,8 @@
 name: Smoke Tests
 
 on:
+  push:
+    branches: [master]
   schedule:
     # Runs at 7:00 AM UTC (9:00 AM Paris) every day
     - cron: '0 7 * * *'
