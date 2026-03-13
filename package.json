@@ -7,7 +7,10 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed --workers=1",
+    "test:ui": "npx playwright test --ui"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
@@ -33,6 +36,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260305.1",
-    "@tailwindcss/typography": "^0.5.19"
+    "@playwright/test": "^1.58.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/node": "^25.5.0"
   }
 }
