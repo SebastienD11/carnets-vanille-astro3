@@ -3,13 +3,13 @@
 import { copyFile, readFile, writeFile } from 'node:fs/promises'
 import sharp from 'sharp'
 
-const INK = '#1C1917'
+const VANILLE = '#FFE14C'
 const source = await readFile('public/logos/icon.svg')
 const render = (size) => sharp(source, { density: 600 }).resize(size, size).png().toBuffer()
 
-// Phones crop home screen icons themselves, so these fill the square with the icon's own ink.
+// Phones crop home screen icons themselves, so these fill the square with the icon's own vanilla.
 async function homeScreenIcon(size) {
-  return sharp({ create: { width: size, height: size, channels: 4, background: INK } })
+  return sharp({ create: { width: size, height: size, channels: 4, background: VANILLE } })
     .composite([{ input: await render(size), gravity: 'center' }])
     .png()
     .toBuffer()
