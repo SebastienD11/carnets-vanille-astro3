@@ -1,0 +1,20 @@
+---
+import type { Segment } from '../lib/content'
+import EbookCard from './EbookCard.astro'
+import EbookSample from './EbookSample.astro'
+
+type Props = { segments: Segment[]; banners?: boolean; class?: string }
+
+const { segments, banners = true, class: className } = Astro.props
+---
+
+<div class:list={['cv-prose', className]}>
+  {
+    segments.map((segment, index) => {
+      if (segment.type === 'html') return <Fragment set:html={segment.html} />
+      if (!banners) return null
+      if (segment.type === 'ebook-buy') return <EbookCard />
+      return <EbookSample uid={index} />
+    })
+  }
+</div>

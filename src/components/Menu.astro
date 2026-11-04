@@ -1,0 +1,93 @@
+---
+import { useTranslations } from '../i18n/ui'
+import { getSite } from '../lib/site'
+import { getEbookPrice } from '../lib/wordpress'
+import type { Alternate } from '../lib/content'
+import Icon from './Icon.astro'
+import Logo from './Logo.astro'
+import LanguagePicker from './LanguagePicker.astro'
+
+type Props = { alternates?: Alternate[] }
+
+const { alternates } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+const prefix = lang === 'en' ? '/en' : ''
+const price = site.ebook ? await getEbookPrice() : null
+---
+
+<dialog id="cv-menu" class="cv-dialog cv-dialog-sheet" aria-label={t('nav.main')}>
+  <div class="flex min-h-full flex-col gap-6 p-4">
+    <div class="flex items-center justify-between">
+      <Logo class="w-[178px]" />
+      <button type="button" data-dialog-close class="-mr-2 flex h-11 w-11 items-center justify-center" aria-label={t('nav.close')}>
+        <Icon name="close" />
+      </button>
+    </div>
+    <button
+      type="button"
+      data-dialog-open="cv-search"
+      class="flex min-h-11 w-full items-center gap-3 rounded-md bg-sunken px-4 py-3 text-left text-muted"
+    >
+      <Icon name="search" size={20} class="text-body" />
+      {t('search.placeholder')}
+    </button>
+    <nav>
+      <ul class="flex flex-col gap-3">
+        {
+          site.nav.map((link) => (
+            <li>
+              <a href={link.href} class="block font-display text-[28px] leading-tight font-extrabold tracking-tight">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div>
+      <p class="mb-2 text-sm font-bold text-muted">{t('home.around')}</p>
+      <ul class="flex flex-wrap gap-2">
+        {
+          site.around.map((place) => (
+            <li>
+              <a href={`${prefix}/${place.slug}/`} class="cv-chip">
+                {place.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    {
+      site.ebook && (
+        <a href={site.ebook.href} class="flex items-center justify-between gap-4 rounded-md bg-vanille p-4 font-extrabold text-ink">
+          <span>{t('nav.ebook')}</span>
+          {price && <span>{price}</span>}
+        </a>
+      )
+    }
+    <ul class="flex flex-col gap-2 text-[15px]">
+      {
+        site.more.map((link) => (
+          <li>
+            <a href={link.href} class="hover:underline">{link.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="flex items-center justify-between gap-4">
+      <ul class="flex flex-wrap gap-x-3 text-[15px] font-bold">
+        {
+          site.socials.map((social) => (
+            <li>
+              <a href={social.href} target="_blank" rel="noopener">{social.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <LanguagePicker alternates={alternates} />
+    </div>
+  </div>
+</dialog>

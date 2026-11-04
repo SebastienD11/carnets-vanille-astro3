@@ -1,0 +1,58 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { useTranslations } from '../i18n/ui'
+import { getSite } from '../lib/site'
+import type { Alternate } from '../lib/content'
+import Icon from './Icon.astro'
+import Logo from './Logo.astro'
+import LanguagePicker from './LanguagePicker.astro'
+
+type Props = { alternates?: Alternate[] }
+
+const { alternates } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+---
+
+<header class="sticky top-0 z-30 border-b border-line bg-page">
+  <div class="cv-container flex h-14 items-center justify-between gap-4 lg:h-[72px]">
+    <a href={getRelativeLocaleUrl(lang, '/')} class="shrink-0" aria-label="Carnets Vanille">
+      <Logo class="w-[178px] lg:w-[230px]" />
+    </a>
+    <div class="flex items-center gap-1 lg:gap-6">
+      <nav class="hidden lg:block" aria-label={t('nav.main')}>
+        <ul class="flex items-center gap-5 xl:gap-6">
+          {
+            site.nav.map((link) => (
+              <li>
+                <a href={link.href} class="text-[15px] font-bold hover:underline">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <button
+        type="button"
+        data-dialog-open="cv-search"
+        class="flex h-11 w-11 items-center justify-center"
+        aria-label={t('search.ariaLabel')}
+      >
+        <Icon name="search" />
+      </button>
+      <div class="hidden lg:block">
+        <LanguagePicker alternates={alternates} />
+      </div>
+      <button
+        type="button"
+        data-dialog-open="cv-menu"
+        class="-mr-2 flex h-11 w-11 items-center justify-center lg:hidden"
+        aria-label={t('nav.open')}
+      >
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>

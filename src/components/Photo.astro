@@ -1,0 +1,43 @@
+---
+// Every WordPress photo in templates goes through here, so size budgets live in one place.
+// The old build generated 6 sizes per photo at default quality, some bigger than the source.
+import { Image } from 'astro:assets'
+import type { Photo } from '../lib/content'
+
+// Budgets share widths on purpose: one file can serve the card, the feature and the hero.
+const budgets = {
+  thumb: { widths: [420], sizes: '80px' },
+  card: { widths: [420, 840], sizes: '(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw' },
+  feature: { widths: [840, 1200], sizes: '(min-width: 1024px) 600px, 100vw' },
+  hero: { widths: [840, 1200, 1600], sizes: '(min-width: 1248px) 1200px, 100vw' }
+} as const
+
+type Props = {
+  photo: Photo
+  budget: keyof typeof budgets
+  priority?: boolean
+  class?: string
+}
+
+const { photo, budget, priority, class: className } = Astro.props
+const { sizes } = budgets[budget]
+// Never upscale: the largest size stays at the source's own width.
+const widths = [...new Set(budgets[budget].widths.map((width) => Math.min(width, photo.width)))]
+// Astro always writes a file at `width`, so passing the source width would add a full-size copy.
+const width = Math.max(...widths)
+const height = Math.round((photo.height / photo.width) * width)
+---
+
+<Image
+  src={photo.src}
+  alt={photo.alt}
+  width={width}
+  height={height}
+  widths={widths}
+  sizes={sizes}
+  quality={72}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? 'sync' : 'async'}
+  fetchpriority={priority ? 'high' : undefined}
+  class={className}
+/>

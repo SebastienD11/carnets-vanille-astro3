@@ -1,0 +1,30 @@
+---
+// Off by default, see FEATURES.mobileBottomBar in src/lib/site.ts.
+// Map and agenda are not in it because those pages do not exist yet.
+import { useTranslations } from '../i18n/ui'
+import Icon from './Icon.astro'
+
+type Props = { hasToc?: boolean }
+
+const { hasToc } = Astro.props
+const t = useTranslations(Astro.currentLocale as 'fr')
+---
+
+<nav
+  class="fixed inset-x-0 bottom-0 z-30 flex border-t border-line bg-page pb-[env(safe-area-inset-bottom)] lg:hidden"
+  aria-label={t('nav.main')}
+>
+  {
+    hasToc && (
+      <button type="button" data-dialog-open="cv-toc" class="flex min-h-14 flex-1 items-center justify-center gap-2 font-bold">
+        <Icon name="list" size={20} />
+        {t('article.toc')}
+      </button>
+    )
+  }
+  <button type="button" data-dialog-open="cv-menu" class="flex min-h-14 flex-1 items-center justify-center gap-2 font-bold">
+    <Icon name="menu" size={20} />
+    {t('nav.menu')}
+  </button>
+</nav>
+<div class="h-14 lg:hidden" aria-hidden="true"></div>

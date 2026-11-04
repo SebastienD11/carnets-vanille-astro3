@@ -1,16 +1,19 @@
+import { env } from '../../../lib/env'
 import MailerLite from '@mailerlite/mailerlite-nodejs'
 import type { APIRoute } from 'astro'
 import Stripe from 'stripe'
 
+export const prerender = false
+
 export const POST: APIRoute = async (context) => {
   const stripeSecretKey =
-    (context.locals as any).runtime?.env?.ASTRO_APP_STRIPE_SECRET_KEY ||
+    env.ASTRO_APP_STRIPE_SECRET_KEY ||
     import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY
   const endpointSecret =
-    (context.locals as any).runtime?.env?.ASTRO_APP_STRIPE_WEBHOOK ||
+    env.ASTRO_APP_STRIPE_WEBHOOK ||
     import.meta.env.ASTRO_APP_STRIPE_WEBHOOK
   const mailerLiteKey =
-    (context.locals as any).runtime?.env?.MAILERLITE_KEY || import.meta.env.MAILERLITE_KEY
+    env.MAILERLITE_KEY || import.meta.env.MAILERLITE_KEY
 
   const stripe = new Stripe(stripeSecretKey)
   const sig = context.request.headers.get('stripe-signature')

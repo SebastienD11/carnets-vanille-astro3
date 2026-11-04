@@ -1,163 +1,267 @@
 ---
-import '@wordpress/block-library/build-style/common.css'
-import '@wordpress/block-library/build-style/style.css'
-import '@wordpress/block-library/build-style/theme.css'
 import { Image } from 'astro:assets'
+import { getRelativeLocaleUrl } from 'astro:i18n'
 import { decode } from 'html-entities'
-import { getCommentsForPost } from '../api/comment'
-import { parseHtml } from '../utils/parser'
+import portrait from '../images/sarah-carnets-vanille.png'
 import { useTranslations } from '../i18n/ui'
-import AuthorCard from '../components/post/authorCard.astro'
-import BannerEbookSample from '../components/ebook/bannerEbookSample.astro'
-import CommentForm from '../components/post/commentForm.astro'
-import CommentList from '../components/post/commentList.astro'
-import FormattedDate from '../components/formatedDate.astro'
-import RelatedPost from '../components/post/relatedPost.astro'
-import SectionTitle from '../components/ui/sectionTitle.astro'
-import ShareButtons from '../components/post/shareButtons.astro'
-import TagList from '../components/post/tagList.astro'
-import type { Post } from '../api/post'
-import BannerEbookBuy from '../components/ebook/bannerEbookBuy.astro'
+import { featuredPhoto, formatDate, formatMonth, processContent } from '../lib/content'
+import { AUTHOR_PHOTO_ALT, getSite } from '../lib/site'
+import { getCommentsFor, getRelatedPosts, getTermsOf, type Post } from '../lib/wordpress'
+import ArticleBody from '../components/ArticleBody.astro'
+import CommentForm from '../components/CommentForm.astro'
+import CommentItem from '../components/CommentItem.astro'
+import EbookCard from '../components/EbookCard.astro'
+import Icon from '../components/Icon.astro'
+import NewsletterCard from '../components/NewsletterCard.astro'
+import Photo from '../components/Photo.astro'
+import PostCard from '../components/PostCard.astro'
+import SarahCard from '../components/SarahCard.astro'
 
+type Props = { node: Post }
+
+const { node: post } = Astro.props
 const lang = Astro.currentLocale as string
-const t = useTranslations(lang)
-const post: Post = Astro.props.node
-const comments = await getCommentsForPost(post.id, lang)
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+
+const title = decode(post.title.rendered)
+const photo = featuredPhoto(post)
+const { segments, toc } = processContent(post.content.rendered)
+const { categories, tags } = await getTermsOf(post, lang)
+const related = await getRelatedPosts(post, lang)
+const comments = await getCommentsFor(post.id, lang)
+const commentsPreview = comments.slice(0, 5)
+const commentsRest = comments.slice(5)
+const commentsOpen = post.comment_status === 'open'
+
+const shareUrl = post.yoast_head_json?.canonical || post.link
+const encodedUrl = encodeURIComponent(shareUrl)
+const encodedTitle = encodeURIComponent(title)
+const shareImage = photo ? encodeURIComponent(photo.src) : ''
+const shares = [
+  { label: 'WhatsApp', href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}` },
+  { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
+  { label: 'Pinterest', href: `https://www.pinterest.com/pin/create/button/?url=${encodedUrl}&media=${shareImage}&description=${encodedTitle}` }
+]
+
+const TOC_PREVIEW = 3
 ---
 
-<div class="flex flex-col gap-12">
-  <div
-    class="relative mx-auto w-full max-w-screen-md after:absolute after:inset-0 after:block after:h-full after:rounded-lg after:bg-stone-900/50"
-  >
-    {
-      post.featured_media_data[0] && (
-        <Image
-          src={post.featured_media_data[0]}
-          alt={
-            post.featured_media_data['alt_text']
-              ? post.featured_media_data['alt_text']
-              : post.title.rendered
-          }
-          width={post.featured_media_data[1]}
-          widths={[330, 450, 768]}
-          sizes={`(max-width: 360px) 330, (max-width: 480px) 450px, (max-width: 1024px) 768px, 768px`}
-          loading={'eager'}
-          height={post.featured_media_data[2]}
-          class="mx-auto h-auto w-full rounded-lg"
-        />
-      )
-    }
-    <div
-      class="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4"
-    >
-      <h1
-        class="inline-block text-balance text-center text-xl font-extrabold leading-tight text-white drop-shadow-lg md:text-2xl lg:text-3xl xl:text-4xl"
-      >
-        {decode(post.title.rendered)}
-      </h1>
-
-      <p class="text-center text-sm italic text-white">
-        <FormattedDate date={post.modified} />
-      </p>
-    </div>
-  </div>
-
-  <TagList post={post} />
-
-  <article
-    class="prose prose-stone mx-auto dark:prose-invert"
-    set:html={parseHtml(post.content.rendered)}
-  />
-
-  <div class="mx-auto flex w-full max-w-screen-md flex-col gap-24">
-    <div>
-      <SectionTitle as="h3" title={t('post.footer.title')} subtitle={t('post.footer.subtitle')} />
-      <div class="flex flex-col gap-4">
-        <ShareButtons post={post} />
-        <p class="text-center text-stone-500 dark:text-stone-300">
-          {
-            post.modified !== post.date && (
-              <>
-                {t('post.footer.date_modified')}
-                <FormattedDate date={post.modified} />
-              </>
-            )
-          }
-        </p>
-        <TagList post={post} />
+<main>
+  <article>
+    <div class="cv-container flex flex-col gap-3 pt-0 lg:gap-4 lg:pt-10">
+      {photo && (
+        <div class="order-first -mx-4 lg:order-last lg:mx-0 lg:mt-3">
+          <Photo photo={photo} budget="hero" priority class="aspect-[3/2] w-full object-cover lg:aspect-[7/3] lg:rounded-lg" />
+        </div>
+      )}
+      <div class="flex flex-col gap-3 lg:gap-4">
+        {
+          categories.length > 0 && (
+            <p class="text-sm font-bold text-muted">
+              {categories.map((category, index) => (
+                <>
+                  {index > 0 && ' · '}
+                  <a href={getRelativeLocaleUrl(lang, `/${category.slug}`)} class="hover:underline">{decode(category.name)}</a>
+                </>
+              ))}
+            </p>
+          )
+        }
+        <h1 class="text-[2rem] leading-[1.08] tracking-[-0.03em] lg:text-[3.5rem]">{title}</h1>
+        <div class="flex items-center gap-3">
+          <Image src={portrait} alt={AUTHOR_PHOTO_ALT} width={44} height={44} densities={[1, 2]} class="h-11 w-11 shrink-0 rounded-full object-cover" />
+          <p class="text-sm leading-tight lg:text-[15px]">
+            <strong class="font-extrabold">{site.byline}</strong>
+            <br class="lg:hidden" />
+            <span class="hidden lg:inline"> · </span>
+            <span class="text-muted">{t('card.date.modified')} {formatMonth(post.modified, lang)}</span>
+          </p>
+        </div>
       </div>
     </div>
 
-    <AuthorCard />
+    <div class="cv-container mt-6 lg:mt-10 lg:grid lg:grid-cols-[260px_minmax(0,760px)] lg:justify-between lg:gap-12">
+      <aside class="hidden lg:block">
+        <div class="sticky top-[96px] flex max-h-[calc(100dvh-112px)] flex-col gap-6 overflow-y-auto">
+          {
+            toc.length > 1 && (
+              <nav aria-label={t('article.toc')}>
+                <p class="mb-3 font-display text-lg font-extrabold tracking-tight">{t('article.toc')}</p>
+                <ol class="flex flex-col gap-2.5 text-sm leading-snug" data-toc>
+                  {toc.map((entry) => (
+                    <li>
+                      <a href={`#${entry.id}`} class="text-muted hover:text-body aria-[current=true]:font-extrabold aria-[current=true]:text-body">{entry.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )
+          }
+          <EbookCard compact />
+        </div>
+      </aside>
+
+      <div class="min-w-0">
+        {
+          toc.length > 2 && (
+            <nav aria-label={t('article.toc')} class="mb-8 lg:hidden">
+              <p class="mb-1 font-display text-[22px] font-extrabold tracking-tight">{t('article.programme')}</p>
+              <ol class="text-[15px]">
+                {toc.slice(0, TOC_PREVIEW).map((entry, index) => (
+                  <li class="border-b border-line">
+                    <a href={`#${entry.id}`} class="flex gap-3 py-2.5"><strong class="w-5 shrink-0">{index + 1}</strong>{entry.text}</a>
+                  </li>
+                ))}
+              </ol>
+              {toc.length > TOC_PREVIEW && (
+                <details class="group">
+                  <summary class="cv-text-link list-none py-2.5 text-[15px] group-open:hidden [&::-webkit-details-marker]:hidden">
+                    {t('article.tocAll')} ({toc.length})
+                  </summary>
+                  <ol class="text-[15px]" start={TOC_PREVIEW + 1}>
+                    {toc.slice(TOC_PREVIEW).map((entry, index) => (
+                      <li class="border-b border-line">
+                        <a href={`#${entry.id}`} class="flex gap-3 py-2.5"><strong class="w-5 shrink-0">{index + TOC_PREVIEW + 1}</strong>{entry.text}</a>
+                      </li>
+                    ))}
+                  </ol>
+                </details>
+              )}
+            </nav>
+          )
+        }
+        <ArticleBody segments={segments} />
+        {post.acf?.display_banner && <EbookCard class="mt-8" />}
+      </div>
+    </div>
+  </article>
+
+  {
+    toc.length > 1 && (
+      <dialog id="cv-toc" class="cv-dialog cv-dialog-sheet" aria-label={t('article.toc')}>
+        <div class="flex flex-col gap-4 p-4">
+          <div class="flex items-center justify-between">
+            <p class="font-display text-2xl font-extrabold tracking-tight">{t('article.toc')}</p>
+            <button type="button" data-dialog-close class="-mr-2 flex h-11 w-11 items-center justify-center" aria-label={t('nav.close')}>
+              <Icon name="close" />
+            </button>
+          </div>
+          <ol>
+            {toc.map((entry) => (
+              <li class="border-b border-line">
+                <a href={`#${entry.id}`} class="block py-3">{entry.text}</a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </dialog>
+    )
+  }
+
+  <div class="cv-container flex flex-col gap-10 py-10 lg:gap-14 lg:py-16">
+    <section class="grid gap-8 lg:grid-cols-[1.6fr_1fr] lg:items-center lg:gap-10">
+      <div class="order-last lg:order-first"><SarahCard /></div>
+      <div class="flex flex-col gap-3">
+        <h2 class="text-2xl">{t('article.helpful')}</h2>
+        <div class="flex flex-wrap gap-2">
+          {
+            shares.map((share) => (
+              <a href={share.href} target="_blank" rel="noopener" class="cv-btn cv-btn-dark !min-h-10 rounded-full !px-4 !py-2 text-sm">{share.label}</a>
+            ))
+          }
+          <button type="button" data-copy-link={shareUrl} data-copied={t('article.copied')} class="cv-btn cv-btn-soft !min-h-10 rounded-full !px-4 !py-2 text-sm">{t('article.copy')}</button>
+          {commentsOpen && <a href="#comments" class="cv-btn cv-btn-soft !min-h-10 rounded-full !px-4 !py-2 text-sm">{t('post.footer.comment')}</a>}
+        </div>
+        <p class="text-sm text-muted">
+          {t('article.published')} {formatDate(post.date, lang)}
+          {post.modified.slice(0, 10) !== post.date.slice(0, 10) && <> · {t('article.updated')} {formatDate(post.modified, lang)}</>}
+        </p>
+        {
+          tags.length > 0 && (
+            <ul class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <li><a href={getRelativeLocaleUrl(lang, `/tag/${tag.slug}`)} class="cv-chip">{decode(tag.name)}</a></li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </section>
 
     {
-      post.acf.related_posts.length > 0 && (
-        <div>
-          <SectionTitle as="h3" title={t('post.relatedPost.title')} />
-          <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-            {post.acf.related_posts.map((postId) => (
-              <RelatedPost postId={postId} />
-            ))}
-          </div>
-        </div>
+      related.length > 0 && (
+        <section class="flex flex-col gap-4">
+          <h2 class="cv-h2">{t('post.relatedPost.title')}</h2>
+          <ul class="hidden gap-6 lg:grid lg:grid-cols-3">
+            {related.map((item) => <li><PostCard post={item} /></li>)}
+          </ul>
+          <ul class="flex flex-col gap-3 lg:hidden">
+            {related.map((item) => <li><PostCard post={item} layout="row" /></li>)}
+          </ul>
+        </section>
       )
     }
 
-    {post.acf.display_banner && <BannerEbookBuy />}
+    <NewsletterCard />
 
     {
-      post.comment_status === 'open' && (
-        <div id="comments" class="flex flex-col gap-24">
-          <div>
-            <SectionTitle
-              as="h3"
-              title={`${t('post.comments.form.title')}`}
-              subtitle={t('post.comments.form.subtitle')}
-            />
-            <CommentForm postId={post.id} newsletterGroupId={post.acf.mailerlite} />
+      (commentsOpen || comments.length > 0) && (
+        <section id="comments" class="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-12">
+          <div class="flex flex-col gap-5">
+            <h2 class="cv-h2">{t('post.comments.title')} {comments.length > 0 && <span class="text-muted">({comments.length})</span>}</h2>
+            {commentsPreview.map((comment) => <CommentItem comment={comment} />)}
+            {
+              commentsRest.length > 0 && (
+                <details class="group">
+                  <summary class="cv-btn w-full list-none border-2 border-body group-open:hidden [&::-webkit-details-marker]:hidden">
+                    {t('article.commentsAll')} ({comments.length})
+                  </summary>
+                  <div class="flex flex-col gap-5">
+                    {commentsRest.map((comment) => <CommentItem comment={comment} />)}
+                  </div>
+                </details>
+              )
+            }
           </div>
-          {comments && (
-            <div>
-              <SectionTitle
-                as="h3"
-                title={`${comments.length} ${t('post.comments.title')}`}
-                subtitle={t('post.comments.subtitle')}
-              />
-              <div class="flex flex-col gap-12">
-                <CommentList comments={comments} />
+          {
+            commentsOpen && (
+              <div class="flex h-fit flex-col gap-4 lg:rounded-lg lg:bg-sunken lg:p-6">
+                <h2 class="text-2xl">{t('post.comments.form.title')}</h2>
+                <CommentForm postId={post.id} newsletterGroupId={post.acf?.mailerlite} />
               </div>
-            </div>
-          )}
-        </div>
+            )
+          }
+        </section>
       )
     }
   </div>
-</div>
+</main>
 
-{/* Shortcode Original Components */}
-<div astro-shortcode>
-  <BannerEbookSample />
-  <BannerEbookBuy />
-</div>
-
-<script is:inline>
-  // Banner Sample Ebook
-  const bannerEbookSample = document.querySelector(
-    '[astro-shortcode] > [astro-banner-ebook-sample]'
-  )
-  const clone = bannerEbookSample.cloneNode(true)
-  bannerEbookSample.remove()
-  document.querySelectorAll('[shortcode_free_ebook_banner]').forEach((el) => {
-    el.after(clone)
-    el.remove()
+<script>
+  // Copy-link button.
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-link]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(button.dataset.copyLink ?? '')
+      button.textContent = button.dataset.copied ?? ''
+    })
   })
 
-  // Banner Buy Ebook
-  const bannerEbookBuyElt = document.querySelector('[astro-shortcode] > [astro-banner-ebook]')
-  const cloneBannerEbookBuyElt = bannerEbookBuyElt.cloneNode(true)
-  bannerEbookBuyElt.remove()
-  document.querySelectorAll('[shortcode_ebook_banner]').forEach((el) => {
-    el.after(cloneBannerEbookBuyElt)
-    el.remove()
-  })
+  // Highlights the current section in the desktop table of contents.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc] a')]
+  if (links.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          links.forEach((link) => link.setAttribute('aria-current', String(link.hash === `#${entry.target.id}`)))
+        }
+      },
+      { rootMargin: '-15% 0px -75% 0px' }
+    )
+    links.forEach((link) => {
+      const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)))
+      if (heading) observer.observe(heading)
+    })
+  }
 </script>

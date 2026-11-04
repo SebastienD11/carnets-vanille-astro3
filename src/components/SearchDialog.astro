@@ -1,0 +1,101 @@
+---
+import { useTranslations } from '../i18n/ui'
+import Icon from './Icon.astro'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+---
+
+<dialog id="cv-search" class="cv-dialog cv-dialog-sheet" aria-label={t('search.ariaLabel')}>
+  <div class="flex flex-col gap-6 p-4">
+    <form data-search-form data-lang={lang} role="search" class="flex items-center gap-3">
+      <label class="flex min-h-12 flex-1 items-center gap-2 rounded-md border-2 border-body px-3">
+        <Icon name="search" size={20} />
+        <span class="sr-only">{t('search.ariaLabel')}</span>
+        <input
+          data-search-input
+          type="search"
+          name="q"
+          autocomplete="off"
+          enterkeyhint="search"
+          placeholder={t('search.placeholder')}
+          class="w-full bg-transparent py-2 outline-none placeholder:text-subtle"
+        />
+      </label>
+      <button type="button" data-dialog-close class="min-h-11 font-extrabold">{t('search.close')}</button>
+    </form>
+    <div aria-live="polite">
+      <p data-search-status="loading" class="hidden text-muted">{t('search.loading')}</p>
+      <p data-search-status="empty" class="hidden text-muted">{t('search.results.empty')}</p>
+      <p data-search-status="error" class="hidden text-danger">{t('search.error')}</p>
+      <ul data-search-results class="flex flex-col gap-4"></ul>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  type Result = {
+    slug: string
+    title: string
+    featured_media_data: { url: string; alt_text: string } | null
+  }
+
+  const form = document.querySelector<HTMLFormElement>('[data-search-form]')
+  const input = document.querySelector<HTMLInputElement>('[data-search-input]')
+  const list = document.querySelector<HTMLElement>('[data-search-results]')
+
+  const decode = (text: string) => {
+    const area = document.createElement('textarea')
+    area.innerHTML = text
+    return area.value
+  }
+
+  const setStatus = (status: 'loading' | 'empty' | 'error' | null) => {
+    document.querySelectorAll<HTMLElement>('[data-search-status]').forEach((el) => {
+      el.classList.toggle('hidden', el.dataset.searchStatus !== status)
+    })
+  }
+
+  function renderResult(result: Result, prefix: string) {
+    const item = document.createElement('li')
+    const link = document.createElement('a')
+    link.href = `${prefix}/${result.slug}/`
+    link.className = 'flex items-center gap-3'
+    const thumb = document.createElement(result.featured_media_data ? 'img' : 'div') as HTMLImageElement
+    thumb.className = 'h-16 w-16 shrink-0 rounded-md bg-vanille object-cover'
+    if (result.featured_media_data) {
+      thumb.src = result.featured_media_data.url
+      thumb.alt = ''
+      thumb.loading = 'lazy'
+    }
+    const title = document.createElement('span')
+    title.className = 'font-display text-lg leading-tight font-extrabold tracking-tight'
+    title.textContent = decode(result.title)
+    link.append(thumb, title)
+    item.append(link)
+    return item
+  }
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const query = input?.value.trim()
+    if (!query || !list) return
+
+    const lang = form.dataset.lang ?? 'fr'
+    list.replaceChildren()
+    setStatus('loading')
+    try {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&lang=${lang}`)
+      const data = await response.json()
+      if (!response.ok || data.error) return setStatus('error')
+      if (!data.results?.length) return setStatus('empty')
+      setStatus(null)
+      const prefix = lang === 'en' ? '/en' : ''
+      list.replaceChildren(...data.results.map((result: Result) => renderResult(result, prefix)))
+    } catch {
+      setStatus('error')
+    }
+  })
+
+  document.querySelector('#cv-search')?.addEventListener('cv:open', () => input?.focus())
+</script>

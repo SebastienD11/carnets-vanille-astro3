@@ -1,12 +1,15 @@
+import { env } from '../../../lib/env'
 // SSR API used client side at runtime.
 
 import type { APIRoute } from 'astro'
 import Stripe from 'stripe'
 
+export const prerender = false
+
 export const POST: APIRoute = async (context) => {
   if (context.request.headers.get('Content-Type') === 'application/json') {
     const stripeSecretKey =
-      (context.locals as any).runtime?.env?.ASTRO_APP_STRIPE_SECRET_KEY ||
+      env.ASTRO_APP_STRIPE_SECRET_KEY ||
       import.meta.env.ASTRO_APP_STRIPE_SECRET_KEY
     const stripe = new Stripe(stripeSecretKey)
     const body = await context.request.json()

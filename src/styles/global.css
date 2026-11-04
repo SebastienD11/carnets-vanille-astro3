@@ -1,0 +1,567 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Identity tokens. These are the Paper "Blog - 2027" values.
+   Fixed colors never change with the theme; semantic colors do (see :root and .dark).
+--------------------------------------------------------------------------- */
+@theme {
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Mulish Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-voice: 'Newsreader', ui-serif, Georgia, serif;
+
+  --color-ink: #1c1917;
+  --color-vanille: #ffe14c;
+  --color-vanille-soft: #fff6cc;
+  --color-vanille-ink: #6b5800;
+  --color-framboise: #ff8b99;
+  --color-framboise-soft: #ffeef0;
+  --color-framboise-ink: #a3192f;
+  --color-pistache: #a9de63;
+  --color-pistache-soft: #eef8e1;
+  --color-pistache-ink: #3d6b12;
+  --color-myrtille: #5b6cd6;
+  --color-myrtille-soft: #eef0fb;
+  --color-myrtille-ink: #36439a;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --container-site: 1200px;
+  --container-reading: 760px;
+}
+
+/* Semantic colors, usable as bg-page, text-muted, border-line... */
+@theme inline {
+  --color-page: var(--cv-page);
+  --color-surface: var(--cv-surface);
+  --color-sunken: var(--cv-sunken);
+  --color-line: var(--cv-line);
+  --color-line-strong: var(--cv-line-strong);
+  --color-body: var(--cv-body);
+  --color-muted: var(--cv-muted);
+  --color-subtle: var(--cv-subtle);
+  --color-link: var(--cv-link);
+  --color-tint: var(--cv-tint);
+  --color-tint-ink: var(--cv-tint-ink);
+  --color-card-dark: var(--cv-card-dark);
+  --color-foot: var(--cv-foot);
+  --color-danger: var(--cv-danger);
+}
+
+:root {
+  --cv-page: #ffffff;
+  --cv-surface: #ffffff;
+  --cv-sunken: #f5f5f4;
+  --cv-line: #e7e5e4;
+  --cv-line-strong: #8c857f;
+  --cv-body: #1c1917;
+  --cv-muted: #57534e;
+  --cv-subtle: #78716c;
+  --cv-link: #36439a;
+  --cv-tint: #fff6cc;
+  --cv-tint-ink: #1c1917;
+  --cv-card-dark: #1c1917;
+  --cv-foot: #1c1917;
+  --cv-danger: #a3192f;
+  color-scheme: light;
+}
+
+.dark {
+  --cv-page: #1c1917;
+  --cv-surface: #2b2724;
+  --cv-sunken: #2b2724;
+  --cv-line: #3a3531;
+  --cv-line-strong: #78716c;
+  --cv-body: #fafaf9;
+  --cv-muted: #a8a29e;
+  --cv-subtle: #a8a29e;
+  --cv-link: #aeb8f2;
+  --cv-tint: #3a3220;
+  --cv-tint-ink: #fafaf9;
+  --cv-card-dark: #2b2724;
+  --cv-foot: #0f0d0c;
+  --cv-danger: #ff8b99;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 88px;
+  }
+
+  body {
+    background: var(--cv-page);
+    color: var(--cv-body);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  button,
+  summary {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-myrtille);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  dialog {
+    margin: 0;
+    max-width: none;
+    max-height: none;
+    color: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .cv-container {
+    width: 100%;
+    max-width: calc(var(--container-site) + 32px);
+    margin-inline: auto;
+    padding-inline: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .cv-container {
+      max-width: calc(var(--container-site) + 64px);
+      padding-inline: 32px;
+    }
+  }
+
+  .cv-h1 {
+    font-size: clamp(2.25rem, 1.6rem + 3vw, 4.5rem);
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+  }
+
+  .cv-h2 {
+    font-size: clamp(1.625rem, 1.35rem + 1.2vw, 2.5rem);
+    letter-spacing: -0.03em;
+  }
+
+  .cv-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-weight: 800;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    text-align: center;
+    transition:
+      background-color 150ms,
+      transform 150ms;
+  }
+
+  .cv-btn:active {
+    transform: translateY(1px);
+  }
+
+  .cv-btn:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  .cv-btn-primary {
+    background: var(--color-vanille);
+    color: var(--color-ink);
+  }
+
+  .cv-btn-primary:hover {
+    background: #f5d52f;
+  }
+
+  .cv-btn-dark {
+    background: var(--color-ink);
+    color: #fff;
+  }
+
+  .cv-btn-dark:hover {
+    background: #3a3531;
+  }
+
+  .dark .cv-btn-dark {
+    background: var(--color-vanille);
+    color: var(--color-ink);
+  }
+
+  .cv-btn-soft {
+    background: var(--cv-sunken);
+    color: var(--cv-body);
+  }
+
+  .cv-btn-soft:hover {
+    background: var(--cv-line);
+  }
+
+  .cv-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 6px 14px;
+    border: 1.5px solid var(--cv-line-strong);
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    transition: background-color 150ms;
+  }
+
+  .cv-chip:hover {
+    background: var(--cv-sunken);
+  }
+
+  .cv-input {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--cv-line-strong);
+    border-radius: var(--radius-md);
+    background: var(--cv-surface);
+    color: var(--cv-body);
+    font-size: 1rem;
+  }
+
+  .cv-input::placeholder {
+    color: var(--cv-subtle);
+  }
+
+  .cv-input.is-invalid {
+    border-color: var(--cv-danger);
+  }
+
+  .cv-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .cv-text-link {
+    color: var(--cv-link);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Native <dialog> panels: menu, search, newsletter, purchase confirmation. */
+  .cv-dialog::backdrop {
+    background: rgb(15 13 12 / 0.6);
+  }
+
+  .cv-dialog-sheet {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    background: var(--cv-surface);
+    overflow-y: auto;
+  }
+
+  @media (min-width: 768px) {
+    .cv-dialog-sheet {
+      inset: 0 0 0 auto;
+      width: 440px;
+    }
+  }
+
+  .cv-dialog-modal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    background: var(--cv-surface);
+    overflow-y: auto;
+  }
+
+  @media (min-width: 768px) {
+    .cv-dialog-modal {
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -50%);
+      width: 640px;
+      height: auto;
+      max-height: 90dvh;
+      border-radius: var(--radius-lg);
+    }
+  }
+}
+
+/* The buy button is fixed to the bottom on mobile: keep the footer clear of it. */
+@media (max-width: 1023px) {
+  body:has([data-checkout]) {
+    padding-bottom: 72px;
+  }
+}
+
+.cv-prose .cv-embed {
+  margin-top: 1.6em;
+}
+
+.cv-prose .cv-embed h3 {
+  margin-top: 0;
+}
+
+.cv-prose .cv-embed a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------------------------------
+   WordPress content. Styled from a scan of all 167 articles: only blocks really
+   in use are covered, so @wordpress/block-library is no longer needed.
+--------------------------------------------------------------------------- */
+.cv-prose {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.cv-prose > * + * {
+  margin-top: 1.1em;
+}
+
+.cv-prose h2 {
+  margin-top: 2.25em;
+  font-size: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  letter-spacing: -0.03em;
+}
+
+.cv-prose h3 {
+  margin-top: 1.9em;
+  font-size: clamp(1.25rem, 1.15rem + 0.45vw, 1.5rem);
+}
+
+.cv-prose h4,
+.cv-prose h5 {
+  margin-top: 1.6em;
+  font-size: 1.125rem;
+  letter-spacing: -0.015em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.cv-prose h2 + *,
+.cv-prose h3 + *,
+.cv-prose h4 + *,
+.cv-prose h5 + * {
+  margin-top: 0.7em;
+}
+
+.cv-prose a {
+  color: var(--cv-link);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.cv-prose a:hover {
+  text-decoration-thickness: 2.5px;
+}
+
+.cv-prose strong {
+  font-weight: 800;
+}
+
+.cv-prose ul,
+.cv-prose ol {
+  padding-left: 1.4em;
+}
+
+.cv-prose ul {
+  list-style: disc;
+}
+
+.cv-prose ol {
+  list-style: decimal;
+}
+
+.cv-prose li + li {
+  margin-top: 0.4em;
+}
+
+.cv-prose li::marker {
+  color: var(--cv-subtle);
+}
+
+/* Highlights: a highlighter stroke rather than a filled badge. */
+.cv-prose mark {
+  background: linear-gradient(transparent 58%, var(--color-vanille) 58%);
+  color: inherit;
+  padding-inline: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.dark .cv-prose mark {
+  background: linear-gradient(transparent 58%, rgb(255 225 76 / 0.35) 58%);
+}
+
+/* Sarah's tips ("Le +") are stored as verse blocks in WordPress. */
+.cv-prose pre {
+  margin-top: 1.4em;
+  padding: 2px 0 2px 16px;
+  border-left: 3px solid var(--color-vanille);
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-voice);
+  font-size: 1.1875rem;
+  font-style: italic;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.cv-prose pre strong {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-style: normal;
+}
+
+.cv-prose blockquote {
+  margin-top: 1.4em;
+  padding-left: 16px;
+  border-left: 3px solid var(--color-vanille);
+}
+
+.cv-prose figure {
+  margin-top: 1.6em;
+}
+
+.cv-prose img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  background: var(--cv-sunken);
+}
+
+/* Images keep their intended size when WordPress resized them on purpose. */
+.cv-prose figure.is-resized img {
+  width: auto;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.cv-prose figcaption {
+  margin-top: 8px;
+  color: var(--cv-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.cv-prose hr {
+  margin-block: 2.5em;
+  border: 0;
+  border-top: 1px solid var(--cv-line);
+}
+
+.cv-prose .has-text-align-center {
+  text-align: center;
+}
+
+.cv-prose .has-text-align-right {
+  text-align: right;
+}
+
+.cv-prose .has-text-align-left {
+  text-align: left;
+}
+
+.cv-prose .wp-block-columns {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .cv-prose .wp-block-columns {
+    flex-direction: row;
+  }
+
+  .cv-prose .wp-block-column {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+.cv-prose .wp-block-column > * + * {
+  margin-top: 1em;
+}
+
+.cv-prose .wp-block-column > figure:first-child {
+  margin-top: 0;
+}
+
+.cv-prose .wp-block-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.cv-prose .wp-block-gallery figure {
+  margin: 0;
+}
+
+.cv-prose .wp-block-table {
+  overflow-x: auto;
+}
+
+.cv-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.cv-prose td,
+.cv-prose th {
+  padding: 8px 10px;
+  border: 1px solid var(--cv-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.cv-prose iframe {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+}

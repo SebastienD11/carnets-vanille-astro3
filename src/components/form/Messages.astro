@@ -1,0 +1,11 @@
+---
+type Props = { requiredError: string; callbackError: string; success: string }
+
+const { requiredError, callbackError, success } = Astro.props
+---
+
+<div aria-live="polite" class="contents">
+  <p data-form-required-error class="hidden rounded-md bg-framboise-soft p-3 text-sm font-bold text-framboise-ink">{requiredError}</p>
+  <p data-form-callback-error class="hidden rounded-md bg-framboise-soft p-3 text-sm font-bold text-framboise-ink">{callbackError}</p>
+  <p data-form-success class="hidden rounded-md bg-pistache-soft p-3 text-sm font-bold text-pistache-ink">{success}</p>
+</div>

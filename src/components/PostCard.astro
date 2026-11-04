@@ -1,0 +1,47 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { decode } from 'html-entities'
+import { useTranslations } from '../i18n/ui'
+import { featuredPhoto, formatMonth } from '../lib/content'
+import type { Post } from '../lib/wordpress'
+import Photo from './Photo.astro'
+
+type Props = { post: Post; layout?: 'card' | 'row'; priority?: boolean; as?: 'h2' | 'h3' }
+
+const { post, layout = 'card', priority, as: Heading = 'h3' } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const photo = featuredPhoto(post)
+const href = getRelativeLocaleUrl(lang, `/${post.slug}`)
+const title = decode(post.title.rendered)
+---
+
+{
+  layout === 'row' ? (
+    <a href={href} class="group flex items-center gap-3">
+      {photo ? (
+        <Photo photo={photo} budget="thumb" class="h-20 w-20 shrink-0 rounded-md object-cover" />
+      ) : (
+        <div class="h-20 w-20 shrink-0 rounded-md bg-vanille" />
+      )}
+      <Heading class="text-[17px] leading-tight group-hover:underline">{title}</Heading>
+    </a>
+  ) : (
+    <a href={href} class="group flex flex-col gap-3">
+      {photo ? (
+        <Photo
+          photo={photo}
+          budget="card"
+          priority={priority}
+          class="aspect-[3/2] w-full rounded-lg object-cover"
+        />
+      ) : (
+        <div class="aspect-[3/2] w-full rounded-lg bg-vanille" />
+      )}
+      <div class="flex flex-col gap-1">
+        <Heading class="text-xl leading-tight group-hover:underline lg:text-[22px]">{title}</Heading>
+        <p class="text-sm text-muted">{t('card.date.modified')} {formatMonth(post.modified, lang)}</p>
+      </div>
+    </a>
+  )
+}

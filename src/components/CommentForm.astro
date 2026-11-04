@@ -1,0 +1,43 @@
+---
+import { ADMIN_EMAIL } from '../constant'
+import { useTranslations } from '../i18n/ui'
+import { getSite } from '../lib/site'
+import Field from './form/Field.astro'
+import Messages from './form/Messages.astro'
+import Submit from './form/Submit.astro'
+
+type Props = { postId: number; newsletterGroupId?: string }
+
+const { postId, newsletterGroupId } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const { mailerlite } = getSite(lang)
+const group = mailerlite.groups.find((candidate) => candidate.id === newsletterGroupId)
+---
+
+<form onsubmit="formSubmit(event, postComment)" class="flex flex-col gap-4" novalidate>
+  <input type="hidden" name="postId" value={postId} />
+  <Messages
+    requiredError={t('post.comments.form.errors.fields')}
+    callbackError={t('post.comments.form.errors.callback') + ADMIN_EMAIL}
+    success={t('post.comments.form.success')}
+  />
+  <div class="grid gap-4 sm:grid-cols-2">
+    <Field required id="cm-firstName" name="firstName" label={t('post.comments.form.firstName')} autocomplete="given-name" />
+    <Field required id="cm-email" name="email" type="email" label={t('post.comments.form.email')} autocomplete="email" />
+  </div>
+  <Field required id="cm-comment" name="comment" type="textarea" label={t('post.comments.form.comment')} />
+  {
+    group && (
+      <label class="flex cursor-pointer items-start gap-2 text-sm">
+        <input type="checkbox" name="mailerlite_group_id" value={group.id} class="mt-0.5 h-4 w-4 shrink-0 accent-ink dark:accent-vanille" />
+        <span>
+          {t('post.comments.form.newsletter')}
+          <strong>{group.label}</strong>{' '}
+          {mailerlite.groupCommentEbook === group.id && <Fragment set:html={t('post.comments.form.newsletter.ebook')} />}
+        </span>
+      </label>
+    )
+  }
+  <Submit label={t('post.comments.form.submit')} />
+</form>

@@ -1,22 +1,17 @@
 ---
-export const prerender = true
-
 import Layout from '../layouts/Layout.astro'
 
 const seo = {
-	yoast:{
-		title: "Page non trouvée - Carnets Vanille",
-		robots: {
-			index: 'noindex',
-			follow: 'nofollow'
-		}
-	},
-	alternates: []
+  yoast: { title: 'Page non trouvée - Carnets Vanille', robots: { index: 'noindex', follow: 'nofollow' } },
+  alternates: []
 }
 ---
 
 <Layout seo={seo}>
-  <main class="flex items-center justify-center">
-    <span class="text-[100px] font-black text-vanille md:text-[160px] lg:text-[200px]">404</span>
+  <main class="cv-container flex flex-col items-start gap-3 py-12 lg:py-24">
+    <p class="font-display text-[120px] leading-none font-extrabold tracking-tight lg:text-[200px]">404</p>
+    <h1 class="text-3xl">Cette page a fondu</h1>
+    <p>Essayez la recherche ou revenez à l'accueil.</p>
+    <a href="/" class="cv-btn cv-btn-dark">Revenir à l'accueil</a>
   </main>
 </Layout>

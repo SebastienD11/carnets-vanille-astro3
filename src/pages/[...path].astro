@@ -1,0 +1,107 @@
+---
+// One route for every WordPress page in both languages: French at the root, English under /en/.
+// Astro.currentLocale is read from the URL, so components work the same in both.
+import { decode } from 'html-entities'
+import { useTranslations } from '../i18n/ui'
+import Layout from '../layouts/Layout.astro'
+import { buildSeo, homeAlternates } from '../lib/content'
+import {
+  getContentPaths,
+  getHomePaths,
+  getLatestPosts,
+  getPostsByCategory,
+  getPostsByTag,
+  getResourceByUri,
+  getSnapshot,
+  type Category,
+  type Page,
+  type Post as PostNode,
+  type Tag
+} from '../lib/wordpress'
+import Home from '../templates/Home.astro'
+import Landing from '../templates/Landing.astro'
+import Linktree from '../templates/Linktree.astro'
+import ListPage from '../templates/ListPage.astro'
+import PageTemplate from '../templates/Page.astro'
+import Post from '../templates/Post.astro'
+import Product from '../templates/Product.astro'
+
+export async function getStaticPaths() {
+  const routes = []
+  for (const lang of ['fr', 'en']) {
+    const prefix = lang === 'en' ? 'en/' : ''
+    routes.push({ params: { path: lang === 'en' ? 'en' : undefined }, props: { lang, kind: 'home', page: 1 } })
+    for (const { params } of await getHomePaths(lang)) {
+      routes.push({
+        params: { path: `${prefix}page/${params.page}` },
+        props: { lang, kind: 'home', page: Number(params.page) }
+      })
+    }
+    for (const { params } of await getContentPaths(lang)) {
+      const page = Number(params.uri.match(/\/page\/(\d+)$/)?.[1] ?? 1)
+      routes.push({
+        params: { path: `${prefix}${params.uri}` },
+        props: { lang, kind: 'node', uri: `/${params.uri}/`, page }
+      })
+    }
+  }
+  return routes
+}
+
+type Props = { lang: 'fr' | 'en'; kind: 'home' | 'node'; uri?: string; page: number }
+
+const { lang, kind, uri, page } = Astro.props
+const t = useTranslations(lang)
+const node = kind === 'node' ? await getResourceByUri(uri as string, lang) : null
+if (kind === 'node' && !node) throw new Error(`No WordPress content for ${uri} (${lang})`)
+
+const template = (node as Page | null)?.acf?.template as string | undefined
+const type = node && ('taxonomy' in node ? node.taxonomy : node.type)
+
+const home = kind === 'home' ? await getLatestPosts(lang, page) : null
+const homeSeo = kind === 'home' ? (await getSnapshot(lang)).home : null
+const seo = node
+  ? buildSeo(node)
+  : { yoast: homeSeo!, alternates: page === 1 ? homeAlternates : [] }
+
+const isProduct = template === 'ebook-landing-page' || template === 'carnet-enfants-landing-page'
+const categoryList = type === 'category' ? await getPostsByCategory(lang, node!.id, page) : null
+const tagList = type === 'post_tag' ? await getPostsByTag(lang, node!.id, page) : null
+---
+
+<Layout seo={seo} bare={template === 'linktree'} affiliate={!isProduct} hasToc={type === 'post'}>
+  {kind === 'home' && page === 1 && <Home list={home!} />}
+  {kind === 'home' && page > 1 && <ListPage title={t('index.posts.title')} list={home!} baseUrl="" />}
+  {type === 'post' && <Post node={node as PostNode} />}
+  {type === 'page' && template === 'category-landing-page' && <Landing node={node as Page} />}
+  {type === 'page' && template === 'linktree' && <Linktree node={node as Page} />}
+  {type === 'page' && template === 'ebook-landing-page' && <Product node={node as Page} variant="ebook" />}
+  {type === 'page' && template === 'carnet-enfants-landing-page' && <Product node={node as Page} variant="carnet" />}
+  {
+    type === 'page' &&
+      !['category-landing-page', 'linktree', 'ebook-landing-page', 'carnet-enfants-landing-page'].includes(template ?? '') && (
+        <PageTemplate node={node as Page} />
+      )
+  }
+  {
+    type === 'category' && (
+      <ListPage
+        title={decode((node as Category).name)}
+        description={(node as Category).description}
+        list={categoryList!}
+        baseUrl={`/${(node as Category).slug}`}
+      />
+    )
+  }
+  {
+    type === 'post_tag' && (
+      <ListPage
+        kicker={t('tag.grid.title').replace(/\s*:\s*$/, '')}
+        title={decode((node as Tag).name)}
+        description={(node as Tag).description}
+        list={tagList!}
+        baseUrl={`/tag/${(node as Tag).slug}`}
+      />
+    )
+  }
+</Layout>

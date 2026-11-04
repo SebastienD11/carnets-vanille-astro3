@@ -1,0 +1,26 @@
+---
+import type { Post } from '../lib/wordpress'
+import PostCard from './PostCard.astro'
+import NewsletterCard from './NewsletterCard.astro'
+
+type Props = { posts: Post[]; newsletter?: boolean; as?: 'h2' | 'h3' }
+
+const { posts, newsletter = true, as } = Astro.props
+---
+
+<ul class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    posts.map((post, index) => (
+      <li>
+        <PostCard post={post} priority={index === 0} as={as} />
+      </li>
+    ))
+  }
+  {
+    newsletter && posts.length >= 5 && (
+      <li>
+        <NewsletterCard />
+      </li>
+    )
+  }
+</ul>

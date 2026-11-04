@@ -1,0 +1,33 @@
+---
+// The price is read from the ebook page's ACF field, so it can never disagree with the checkout.
+import { getSite } from '../lib/site'
+import { getEbookPrice } from '../lib/wordpress'
+
+type Props = { compact?: boolean; class?: string }
+
+const { compact, class: className } = Astro.props
+const site = getSite(Astro.currentLocale as string)
+const ebook = site.ebook
+const price = ebook ? await getEbookPrice() : null
+const cta = ebook && price ? `${ebook.cta} · ${price}` : ebook?.cta
+---
+
+{
+  ebook && (
+    <aside
+      class:list={[
+        'cv-embed rounded-lg bg-card-dark text-white',
+        compact ? 'flex flex-col gap-3 p-4' : 'flex flex-col gap-3 p-5 lg:p-7',
+        className
+      ]}
+    >
+      <h3 class={compact ? 'text-lg' : 'text-2xl lg:text-3xl'}>{ebook.title}</h3>
+      {!compact && <p class="text-[15px] leading-snug text-white/85">{ebook.text}</p>}
+      <div>
+        <a href={ebook.href} class:list={['cv-btn cv-btn-primary', { 'w-full lg:w-auto': !compact, 'w-full': compact }]}>
+          {cta}
+        </a>
+      </div>
+    </aside>
+  )
+}

@@ -1,0 +1,37 @@
+---
+// To change the logo, replace the files in public/logos/ (same names). Nothing else to touch.
+// The "on-light" and "on-dark" files name the background they sit on.
+type Props = { variant?: 'header' | 'footer'; class?: string }
+
+const { variant = 'header', class: className } = Astro.props
+---
+
+{
+  variant === 'header' ? (
+    <>
+      <img
+        src="/logos/header-on-light.svg"
+        width="655"
+        height="106"
+        alt="Carnets Vanille"
+        class:list={['h-auto dark:hidden', className]}
+      />
+      <img
+        src="/logos/header-on-dark.svg"
+        width="655"
+        height="106"
+        alt="Carnets Vanille"
+        class:list={['hidden h-auto dark:block', className]}
+      />
+    </>
+  ) : (
+    <img
+      src="/logos/footer-on-dark.svg"
+      width="373"
+      height="163"
+      alt="Carnets Vanille"
+      loading="lazy"
+      class:list={['h-auto', className]}
+    />
+  )
+}

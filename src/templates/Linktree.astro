@@ -1,66 +1,53 @@
 ---
-import type { Page } from '../api/page'
-import BannerEbookBuy from '../components/ebook/bannerEbookBuy.astro'
-import { replaceUrls } from '../utils/parser'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { useTranslations } from '../i18n/ui'
+import { replaceUrls } from '../lib/content'
+import { getSite } from '../lib/site'
+import { getEbookPrice, type Page } from '../lib/wordpress'
 
-type Link = {
-  link_label: string
-  link_icon: string
-  link_url: {
-    url: string
-    title: string
-    target: string
-  }
-}
+type Props = { node: Page }
 
-interface ACF extends Page {
-  acf: {
-    sections: {
-      type: 'links' | 'ebook'
-      titre: string
-      links: boolean | Link[]
-    }[]
-  }
-}
-
-type Props = {
-  node: ACF
-}
-
-const { node: page }: Props = Astro.props
+const { node: page } = Astro.props
+const lang = Astro.currentLocale as string
+const site = getSite(lang)
+const t = useTranslations(lang as 'fr')
+const price = site.ebook ? await getEbookPrice() : null
+const sections = page.acf.sections || []
 ---
 
-<div class="mx-auto px-4 pb-8 md:container md:mt-0 md:px-8">
-  <div class="flex flex-col items-center gap-12">
-    {
-      page.acf.sections.map((section) => {
-        if (section.type === 'ebook') {
-          return <BannerEbookBuy />
-        }
-        if (section.type === 'links') {
-          return (
-            <section class="flex w-full flex-col items-center justify-center">
-              <h2 class="mb-4 text-center text-2xl font-bold leading-tight md:mb-4 lg:text-3xl xl:text-4xl">
-                {section.titre}
-              </h2>
-              {section.links.map((link) => {
-                return (
-                  <a
-                    href={replaceUrls(link.link_url.url)}
-                    class="mb-4 flex w-full flex-row items-center rounded-lg border border-[#AE9206] bg-vanille p-4 text-stone-900 last:mb-0 md:flex-row"
-                    target={link.link_url.target}
-                  >
-                    <i class={`icon-${link.link_icon} mr-2`} />
-                    <h2 class="text-base-md font-base inline leading-tight lg:text-lg xl:text-xl">
-                      {link.link_label}
-                    </h2>
-                  </a>
-                )
-              })}
-            </section>
+<link slot="head" rel="stylesheet" href="/icons/glace-icons.css" />
+
+<main class="mx-auto flex w-full max-w-[480px] flex-col gap-5 px-4 py-8">
+  <a href={getRelativeLocaleUrl(lang, '/')} class="mx-auto block" aria-label="Carnets Vanille">
+    <img src="/logos/footer-on-light.svg" width="373" height="163" alt="Carnets Vanille" class="h-auto w-[220px] dark:hidden" />
+    <img src="/logos/footer-on-dark.svg" width="373" height="163" alt="Carnets Vanille" class="hidden h-auto w-[220px] dark:block" />
+  </a>
+  {
+    sections.map((section: any) => {
+      if (section.type === 'ebook') {
+        return (
+          site.ebook && (
+            <a href={site.ebook.href} class="flex min-h-14 items-center rounded-md bg-vanille px-4 py-3 font-extrabold text-ink">
+              {t('nav.ebook')}{price && ` · ${price}`}
+            </a>
           )
-        }
-      })
-    }
-  </div>
-</div>
+        )
+      }
+      return (
+        <section class="flex flex-col gap-2">
+          {section.titre && <h2 class="font-sans text-sm font-bold tracking-normal text-muted">{section.titre}</h2>}
+          {(section.links || []).map((link: any) => (
+            <a
+              href={replaceUrls(link.link_url.url)}
+              target={link.link_url.target || undefined}
+              class="flex min-h-14 items-center gap-3 rounded-md bg-sunken px-4 py-3 font-extrabold hover:bg-line"
+            >
+              {link.link_icon && <i class={`icon-${link.link_icon} font-normal`} aria-hidden="true" />}
+              {link.link_label}
+            </a>
+          ))}
+        </section>
+      )
+    })
+  }
+</main>

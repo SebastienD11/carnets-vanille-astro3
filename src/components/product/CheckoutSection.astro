@@ -1,0 +1,105 @@
+---
+// Request sent to /api/stripe/checkout and analytics event names are unchanged from the old page.
+import { useTranslations } from '../../i18n/ui'
+
+type Props = {
+  priceSlider: boolean
+  productPrice: string
+  stripePriceId: string
+  stripeProductId: string
+  mailerliteGroup: string
+  productLink?: string
+  productName: string
+}
+
+const { priceSlider, productPrice, stripePriceId, stripeProductId, mailerliteGroup, productLink, productName } = Astro.props
+const t = useTranslations(Astro.currentLocale as 'fr')
+const label = `${t('product.common.buy')} `
+const displayPrice = Number(productPrice).toFixed(2).replace('.', ',')
+---
+
+<div
+  data-checkout
+  data-price-slider={priceSlider ? 'true' : 'false'}
+  data-stripe-price={stripePriceId}
+  data-stripe-product={stripeProductId}
+  data-ml-group={mailerliteGroup}
+  data-product-link={productLink}
+  data-product-name={productName}
+  class="flex flex-col gap-3"
+>
+  {
+    priceSlider && (
+      <div class="rounded-md bg-white/60 p-4">
+        <label for="price-range" class="mb-2 block text-sm font-extrabold">{t('product.common.select_price')}</label>
+        <input data-price-range id="price-range" type="range" min="0" max="10" step="1" value={productPrice} class="w-full cursor-pointer accent-ink" />
+        <div class="flex justify-between text-sm"><span>Min (0€)</span><span>5€</span><span>Max (10€)</span></div>
+      </div>
+    )
+  }
+  <div class="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-page p-3 pb-[max(12px,env(safe-area-inset-bottom))] lg:static lg:border-0 lg:bg-transparent lg:p-0">
+    <button type="button" data-create-checkout class="cv-btn cv-btn-dark group w-full !bg-ink !text-white lg:w-auto lg:px-8 lg:text-lg">
+      <span class="group-disabled:hidden">{label}<span data-checkout-price>{displayPrice}</span> €</span>
+      <span class="hidden h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent group-disabled:block" aria-hidden="true"></span>
+    </button>
+    {
+      productLink && (
+        <button type="button" data-download class="cv-btn cv-btn-dark hidden w-full !bg-ink !text-white lg:w-auto lg:px-8">
+          {t('product.common.download')}
+        </button>
+      )
+    }
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-checkout]')
+  if (root) {
+    const data = root.dataset
+    const range = root.querySelector<HTMLInputElement>('[data-price-range]')
+    const buy = root.querySelector<HTMLButtonElement>('[data-create-checkout]')
+    const download = root.querySelector<HTMLButtonElement>('[data-download]')
+    const price = root.querySelector('[data-checkout-price]')
+
+    const syncPrice = () => {
+      if (!range || !price) return
+      price.textContent = parseInt(range.value, 10).toFixed(2).replace('.', ',')
+      const free = range.value === '0'
+      buy?.classList.toggle('hidden', free)
+      download?.classList.toggle('hidden', !free)
+    }
+    if (range) {
+      syncPrice()
+      range.addEventListener('change', syncPrice)
+    }
+
+    buy?.addEventListener('click', async () => {
+      buy.disabled = true
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          stripePriceId: data.stripePrice,
+          stripeProductId: data.stripeProduct,
+          customPrice: data.priceSlider === 'true' && range ? parseInt(range.value, 10) : null,
+          page: { origin: window.location.origin, pathname: window.location.pathname },
+          mlGroup: data.mlGroup
+        })
+      })
+      ;(window as any).plausible?.(`${data.productName}-checkout-button-clicked`)
+      const { url } = await response.json()
+      window.location.href = url
+    })
+
+    download?.addEventListener('click', () => {
+      ;(window as any).plausible?.(`${data.productName}-download-button-clicked`)
+      if (!data.productLink) return
+      const link = document.createElement('a')
+      link.href = data.productLink
+      link.download = ''
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    })
+  }
+</script>

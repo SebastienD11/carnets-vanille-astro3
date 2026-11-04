@@ -1,0 +1,34 @@
+---
+// Free extract form, placed by the [shortcode_free_ebook_banner] in WordPress articles.
+import { ADMIN_EMAIL } from '../constant'
+import { useTranslations } from '../i18n/ui'
+import { getSite } from '../lib/site'
+import Field from './form/Field.astro'
+import Messages from './form/Messages.astro'
+import Submit from './form/Submit.astro'
+
+type Props = { uid: number | string }
+
+const { uid } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+---
+
+<aside class="cv-embed flex flex-col gap-3 rounded-lg bg-tint p-5 text-tint-ink lg:p-7">
+  <h3 class="text-2xl">{t('ebook.banner.sample.title')}</h3>
+  <p class="text-[15px] leading-snug">{t('ebook.banner.sample.subtitle')}</p>
+  <form onsubmit="formSubmit(event, postFreeEbook)" class="flex flex-col gap-3" novalidate>
+    <Messages
+      requiredError={t('form.error.fields')}
+      callbackError={t('form.error.generic') + ADMIN_EMAIL}
+      success={t('ebook.banner.sample.success')}
+    />
+    <div class="grid gap-3 sm:grid-cols-2">
+      <Field required id={`sample-firstName-${uid}`} name="firstName" label={t('form.input.firstName')} autocomplete="given-name" />
+      <Field required id={`sample-email-${uid}`} name="email" type="email" label={t('form.input.email')} autocomplete="email" />
+    </div>
+    <input type="hidden" name="mailerLiteGroupId" value={site.mailerlite.groupSampleEbook} />
+    <Submit label={t('ebook.banner.sample.submit')} variant="dark" />
+  </form>
+</aside>

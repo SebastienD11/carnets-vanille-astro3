@@ -1,0 +1,30 @@
+---
+import { decode } from 'html-entities'
+import { ADMIN_USER_ID } from '../constant'
+import { formatMonth, replaceUrls } from '../lib/content'
+import type { Comment } from '../lib/wordpress'
+
+type Props = { comment: Comment; reply?: boolean }
+
+const { comment, reply } = Astro.props
+const lang = Astro.currentLocale as string
+const isSarah = comment.author === ADMIN_USER_ID
+const name = decode(comment.author_name)
+---
+
+<div class:list={['flex flex-col gap-2', { 'border-l-[3px] border-vanille pl-3': reply }]}>
+  <div class="flex items-baseline justify-between gap-3">
+    {
+      comment.author_url && !isSarah ? (
+        <a href={comment.author_url} target="_blank" rel="external nofollow ugc" class="font-extrabold underline underline-offset-2">
+          {name}
+        </a>
+      ) : (
+        <span class="font-extrabold">{name}</span>
+      )
+    }
+    <span class="shrink-0 text-sm text-muted first-letter:uppercase">{formatMonth(comment.date, lang)}</span>
+  </div>
+  <div class="cv-comment text-[15px] leading-relaxed [overflow-wrap:anywhere] [&_a]:underline" set:html={replaceUrls(comment.content.rendered)} />
+  {comment.children?.map((child) => <Astro.self comment={child} reply />)}
+</div>

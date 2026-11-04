@@ -1,0 +1,204 @@
+---
+// Ebook and kids' activity book. Checkout, rating maths and the Product schema are unchanged.
+import { Image } from 'astro:assets'
+import { decode } from 'html-entities'
+import { useTranslations } from '../i18n/ui'
+import { getCommentsFor, type Page } from '../lib/wordpress'
+import CheckoutSection from '../components/product/CheckoutSection.astro'
+import ThankYouDialog from '../components/product/ThankYouDialog.astro'
+import Gallery from '../components/product/Gallery.astro'
+import Stars from '../components/product/Stars.astro'
+
+type Props = { node: Page; variant: 'ebook' | 'carnet' }
+
+const { node: page, variant } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const acf = page.acf
+const title: string = acf.content_title
+const image = acf.content_image
+const gallery = acf.content_gallery || []
+const author = acf.content_author
+
+const comments = await getCommentsFor(page.id, lang)
+
+// Ebook: previous Gumroad reviews (16 reviews at 4.9) still count towards the rating.
+let ratingTotal = variant === 'ebook' ? 4.9 * 16 : 0
+let reviewsCount = variant === 'ebook' ? 16 : 0
+for (const comment of comments) {
+  ratingTotal += comment.meta.product_rating
+  reviewsCount += 1
+}
+const aggregateRating = reviewsCount > 0 ? Math.round((ratingTotal / reviewsCount) * 2) / 2 : 0
+
+const productPrice: string = acf.product_display_informations.content_product_price
+const testMode = import.meta.env.CUSTOM_ENV !== 'production'
+const stripePriceId = testMode
+  ? acf.stripe_product_price_info.stripe_product_price_id_test
+  : acf.stripe_product_price_info.stripe_product_price_id
+const stripeProductId = testMode
+  ? acf.stripe_product_info.stripe_product_id_test
+  : acf.stripe_product_info.stripe_product_id
+
+// Overrides Yoast's markup: in WordPress this is a page, so Yoast does not know it is a product.
+const schema = {
+  '@context': 'https://schema.org/',
+  '@type': 'Product',
+  name: acf.product_schema_name,
+  image: image?.url,
+  description: acf.product_schema_description,
+  sku: acf.product_schema_sku,
+  brand: { '@type': 'Brand', name: 'Carnets Vanille' },
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: aggregateRating, reviewCount: reviewsCount },
+  offers: {
+    '@type': 'Offer',
+    url: page.link,
+    priceCurrency: 'EUR',
+    price: productPrice,
+    availability: 'https://schema.org/InStock'
+  }
+}
+const updatedIn = variant === 'ebook' ? 'Avril 2025' : 'Mai 2025'
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+<main>
+  <section class="bg-vanille text-ink">
+    <div class="cv-container grid gap-6 py-8 lg:grid-cols-[1fr_320px] lg:items-center lg:gap-12 lg:py-14">
+      <div class="flex flex-col gap-4">
+        <p class="text-[15px] font-extrabold">{t(variant === 'ebook' ? 'product.ebook.digitalProduct' : 'product.playbook.digitalProduct')} · PDF</p>
+        <h1 class="cv-h1">{title}</h1>
+        <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] font-bold">
+          {
+            aggregateRating > 0 && (
+              <>
+                <Stars count={Math.round(aggregateRating)} />
+                <span>{aggregateRating}/5 · {reviewsCount} {t('product.common.reviews')} ·</span>
+              </>
+            )
+          }
+          <span>{t('product.common.writtenBy')} Sarah Lagache, {t('product.common.updatedIn')} {updatedIn}</span>
+        </p>
+        {acf.content_intro && <div class="cv-prose cv-prose-on-vanille" set:html={acf.content_intro} />}
+        <CheckoutSection
+          priceSlider={acf.stripe_product_can_be_free}
+          productPrice={productPrice}
+          stripePriceId={stripePriceId}
+          stripeProductId={stripeProductId}
+          mailerliteGroup={acf.mailerlite_group}
+          productLink={acf.product_display_informations.product_link_pdf}
+          productName={variant === 'ebook' ? 'ebook-saint-malo' : 'carnet-enfants'}
+        />
+      </div>
+      {
+        image && (
+          <Image
+            src={image.url}
+            alt={image.alt || title}
+            width={image.width}
+            height={image.height}
+            widths={[320, 640].filter((width) => width <= image.width)}
+            sizes="(min-width: 1024px) 320px, 70vw"
+            quality={78}
+            loading="eager"
+            fetchpriority="high"
+            class="mx-auto h-auto w-[70%] max-w-[320px] rounded-md shadow-lg lg:w-full"
+          />
+        )
+      }
+    </div>
+  </section>
+
+  <div class="cv-container grid gap-10 py-10 lg:grid-cols-2 lg:gap-16 lg:py-16">
+    <div class="flex min-w-0 flex-col gap-10">
+      {acf.content_intro_bis && <div class="cv-prose" set:html={acf.content_intro_bis} />}
+      {
+        acf.content_the_content && (
+          <section class="flex flex-col gap-4">
+            <h2 class="cv-h2">{t('product.common.section.title.content')}</h2>
+            <div class="cv-prose" set:html={acf.content_the_content} />
+          </section>
+        )
+      }
+      {
+        acf.content_faq && (
+          <section class="flex flex-col gap-4">
+            <h2 class="cv-h2">{t('product.common.section.title.faq')}</h2>
+            <div class="cv-prose" set:html={acf.content_faq} />
+          </section>
+        )
+      }
+    </div>
+
+    <div class="flex min-w-0 flex-col gap-10">
+      {
+        gallery.length > 0 && (
+          <section class="flex flex-col gap-3">
+            {variant === 'ebook' ? (
+              <>
+                <ul class="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2">
+                  {gallery.map((img: any, index: number) => (
+                    <li class="w-[70%] shrink-0 snap-start sm:w-[45%]">
+                      <Image
+                        src={img.sizes['medium-2x']}
+                        alt={img.alt || `${title} - ${index + 1}`}
+                        width={img.sizes['medium-2x-width']}
+                        height={img.sizes['medium-2x-height']}
+                        quality={78}
+                        class="h-auto w-full rounded-md border border-line"
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <p class="text-sm text-muted">{t('product.ebook.scrollHintSwipe')}</p>
+              </>
+            ) : (
+              <>
+                <Gallery images={gallery} />
+                <p class="text-sm text-muted">{t('product.common.gallery')}</p>
+              </>
+            )}
+          </section>
+        )
+      }
+      {
+        comments.length > 0 && (
+          <section class="flex flex-col gap-3">
+            <h2 class="cv-h2">{t('product.common.section.title.testimonials')}</h2>
+            {comments.map((comment) => (
+              <figure class="flex flex-col gap-2 rounded-lg bg-sunken p-5">
+                {comment.meta.product_rating > 0 && <Stars count={comment.meta.product_rating} />}
+                <blockquote class="text-[15px] leading-relaxed" set:html={comment.content.rendered} />
+                <figcaption class="text-sm font-extrabold">{decode(comment.author_name)}</figcaption>
+              </figure>
+            ))}
+          </section>
+        )
+      }
+      {
+        author?.author_description && (
+          <aside class="flex items-center gap-4 rounded-lg bg-vanille p-5 text-ink">
+            {author.author_image && (
+              <Image
+                src={author.author_image.url}
+                alt={author.author_image.alt || 'Sarah Lagache'}
+                width={author.author_image.width}
+                height={author.author_image.height}
+                widths={[80, 160].filter((width) => width <= author.author_image.width)}
+                sizes="80px"
+                class="h-20 w-20 shrink-0 rounded-full object-cover"
+              />
+            )}
+            <div class="text-[15px] leading-snug" set:html={author.author_description} />
+          </aside>
+        )
+      }
+    </div>
+  </div>
+</main>
+
+<ThankYouDialog
+  title={t(variant === 'ebook' ? 'product.ebook.thankyou.title' : 'product.playbook.thankyou.title')}
+  text={t(variant === 'ebook' ? 'product.ebook.thankyou.text' : 'product.playbook.thankyou.text')}
+/>

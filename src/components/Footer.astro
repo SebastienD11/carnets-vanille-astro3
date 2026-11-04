@@ -1,0 +1,60 @@
+---
+import { useTranslations } from '../i18n/ui'
+import { getSite } from '../lib/site'
+import type { Alternate } from '../lib/content'
+import Logo from './Logo.astro'
+import LanguagePicker from './LanguagePicker.astro'
+
+type Props = { alternates?: Alternate[] }
+
+const { alternates } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+---
+
+<footer class="bg-foot text-white">
+  <div class="cv-container flex flex-col gap-8 py-10 lg:flex-row lg:justify-between lg:gap-12 lg:py-16">
+    <Logo variant="footer" class="w-[190px] shrink-0 lg:w-[260px]" />
+    <div class="grid grid-cols-2 gap-x-6 gap-y-8 text-[15px] lg:flex lg:gap-14 xl:gap-20">
+      {
+        site.footer.map((column) => (
+          <div>
+            <p class="mb-3 text-sm font-extrabold text-vanille">{column.title}</p>
+            <ul class="flex flex-col gap-2">
+              {column.links.map((link) => (
+                <li>
+                  <a href={link.href} class="hover:underline">{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+      <div class="col-span-2 lg:col-span-1">
+        <p class="mb-3 hidden text-sm font-extrabold text-vanille lg:block">{t('footer.follow')}</p>
+        <ul class="flex flex-wrap gap-x-4 gap-y-2 font-bold lg:flex-col lg:font-normal">
+          {
+            site.socials.map((social) => (
+              <li>
+                <a href={social.href} target="_blank" rel="noopener" class="hover:underline">{social.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="col-span-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/20 pt-4 text-sm lg:col-span-1 lg:flex-col lg:items-start lg:justify-start lg:border-0 lg:pt-0 lg:text-[15px]">
+        <LanguagePicker alternates={alternates} />
+        {
+          site.legal.map((link) => (
+            <a href={link.href} class="hover:underline">{link.label}</a>
+          ))
+        }
+        <button type="button" data-theme-toggle class="min-h-6 hover:underline">
+          <span class="dark:hidden">{t('theme.dark')}</span>
+          <span class="hidden dark:inline">{t('theme.light')}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>
