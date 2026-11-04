@@ -5,23 +5,23 @@ import sharp from 'sharp'
 
 const INK = '#1C1917'
 const source = await readFile('public/logos/icon.svg')
+const render = (size) => sharp(source, { density: 600 }).resize(size, size).png().toBuffer()
 
-async function icon(size, padding = 0.12) {
-  const inner = Math.round(size * (1 - padding * 2))
-  const glyph = await sharp(source, { density: 600 }).resize(inner, inner, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer()
+// Phones crop home screen icons themselves, so these fill the square with the icon's own ink.
+async function homeScreenIcon(size) {
   return sharp({ create: { width: size, height: size, channels: 4, background: INK } })
-    .composite([{ input: glyph, gravity: 'center' }])
+    .composite([{ input: await render(size), gravity: 'center' }])
     .png()
     .toBuffer()
 }
 
-await writeFile('public/apple-touch-icon.png', await icon(180))
-await writeFile('public/android-chrome-192x192.png', await icon(192))
-await writeFile('public/android-chrome-512x512.png', await icon(512))
+await writeFile('public/apple-touch-icon.png', await homeScreenIcon(180))
+await writeFile('public/android-chrome-192x192.png', await homeScreenIcon(192))
+await writeFile('public/android-chrome-512x512.png', await homeScreenIcon(512))
 await copyFile('public/logos/icon.svg', 'public/icon.svg')
 
-// A .ico is a small header followed by a PNG.
-const png = await icon(32, 0.06)
+// A .ico is a small header followed by a PNG. It keeps the round shape in browser tabs.
+const png = await render(32)
 const header = Buffer.alloc(22)
 header.writeUInt16LE(1, 2)
 header.writeUInt16LE(1, 4)
