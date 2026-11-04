@@ -1,12 +1,17 @@
 // Everything about the site that is not stored in WordPress: navigation, identity copy, switches.
-// Only link to pages that exist in the language. `npm run check:links` verifies this after a build.
+// Only link to pages that exist in the language. `npm run check:build` verifies this after a build.
 
 export const FEATURES = {
   /**
    * Mobile bottom bar (Sommaire and Menu). Built, but off: the hamburger is the default.
    * Set to true to try it.
    */
-  mobileBottomBar: false
+  mobileBottomBar: false,
+  /**
+   * Small widget for Sarah to try the logo font and layout on the real site. Never shown on a
+   * production build. Remove it, with public/logos/options/, once the choice is made.
+   */
+  designSettings: true
 }
 
 export const AUTHOR_PHOTO_ALT = 'Sarah Lagache'
@@ -18,19 +23,21 @@ const HERO_QUEBEC =
 export type NavLink = { label: string; href: string }
 export type AroundLink = { label: string; slug: string }
 
+type TileIcon = 'compass' | 'utensils' | 'bed' | 'parking' | 'waves' | 'calendar' | 'castle' | 'pin'
+
 type Site = {
   hero: { title: string; bio: string; image: string; imageAlt: string }
   /** Main navigation, shown in the desktop header and at the top of the mobile menu. */
   nav: NavLink[]
-  /** "Préparer votre séjour" tiles on the home page. The last one is highlighted. */
-  tiles: NavLink[]
+  /** Photo tiles at the top of the home page. Each photo comes from the post it links to. */
+  tiles: (NavLink & { icon: TileIcon })[]
   around: AroundLink[]
-  /** Secondary links under the ebook on the home page and in the mobile menu. */
+  /** Secondary links on the home page and in the mobile menu. */
   more: NavLink[]
   footer: { title: string; links: NavLink[] }[]
   socials: NavLink[]
   legal: NavLink[]
-  ebook: { href: string; title: string; text: string; cta: string } | null
+  ebook: { href: string; title: string; text: string; points: string[]; cta: string } | null
   sarah: { title: string; text: string; link: NavLink }
   byline: string
   landingHero: Record<string, { image: string; alt: string }>
@@ -65,12 +72,12 @@ const fr: Site = {
     { label: 'Au Québec', href: '/quebec/' }
   ],
   tiles: [
-    { label: 'Que faire', href: '/visiter-saint-malo-intra-muros/' },
-    { label: 'Où manger', href: '/restaurants-saint-malo/' },
-    { label: 'Où dormir', href: '/hebergements-saint-malo/' },
-    { label: 'Où se garer', href: '/se-garer-saint-malo/' },
-    { label: 'Les marées', href: '/grandes-marees-saint-malo/' },
-    { label: 'Les événements', href: '/evenements-saint-malo/' }
+    { label: 'Que faire', href: '/visiter-saint-malo-intra-muros/', icon: 'compass' },
+    { label: 'Où manger', href: '/restaurants-saint-malo/', icon: 'utensils' },
+    { label: 'Où dormir', href: '/hebergements-saint-malo/', icon: 'bed' },
+    { label: 'Où se garer', href: '/se-garer-saint-malo/', icon: 'parking' },
+    { label: 'Les marées', href: '/grandes-marees-saint-malo/', icon: 'waves' },
+    { label: 'Les événements', href: '/evenements-saint-malo/', icon: 'calendar' }
   ],
   around: [
     { label: 'Dinard', slug: 'visiter-dinard' },
@@ -87,7 +94,7 @@ const fr: Site = {
   ],
   footer: [
     {
-      title: 'Préparer',
+      title: 'Préparer votre visite à Saint-Malo',
       links: [
         { label: 'Que faire', href: '/visiter-saint-malo-intra-muros/' },
         { label: 'Où manger', href: '/restaurants-saint-malo/' },
@@ -114,6 +121,7 @@ const fr: Site = {
     href: '/ebook-saint-malo/',
     title: 'Tout mon Saint-Malo dans votre poche',
     text: "Mon ebook sur Saint-Malo et la Côte d'Émeraude, à garder sur votre téléphone pendant le séjour.",
+    points: ['Mes conseils de visite', "Des suggestions d'itinéraires", 'Des anecdotes sur la ville'],
     cta: "Découvrir l'ebook"
   },
   sarah: {
@@ -153,12 +161,12 @@ const en: Site = {
     { label: 'Québec', href: '/en/quebec/' }
   ],
   tiles: [
-    { label: 'Things to do', href: '/en/things-to-do-in-st-malo/' },
-    { label: 'Where to stay', href: '/en/st-malo-places-to-stay/' },
-    { label: 'Parking', href: '/en/parking-saint-malo/' },
-    { label: 'Tides', href: '/en/saint-malo-tides/' },
-    { label: 'The forts', href: '/en/saint-malo-forts/' },
-    { label: 'Emerald Coast', href: '/en/emerald-coast-brittany-france/' }
+    { label: 'Things to do', href: '/en/things-to-do-in-st-malo/', icon: 'compass' },
+    { label: 'Where to stay', href: '/en/st-malo-places-to-stay/', icon: 'bed' },
+    { label: 'Parking', href: '/en/parking-saint-malo/', icon: 'parking' },
+    { label: 'Tides', href: '/en/saint-malo-tides/', icon: 'waves' },
+    { label: 'The forts', href: '/en/saint-malo-forts/', icon: 'castle' },
+    { label: 'Emerald Coast', href: '/en/emerald-coast-brittany-france/', icon: 'pin' }
   ],
   around: [
     { label: 'Dinard', slug: 'visit-dinard-france' },
@@ -173,7 +181,7 @@ const en: Site = {
   ],
   footer: [
     {
-      title: 'Plan',
+      title: 'Plan your visit to Saint-Malo',
       links: [
         { label: 'Things to do', href: '/en/things-to-do-in-st-malo/' },
         { label: 'Where to stay', href: '/en/st-malo-places-to-stay/' },

@@ -1,11 +1,13 @@
 ---
 import { useTranslations } from '../i18n/ui'
+import { featuredPhoto } from '../lib/content'
 import { getSite } from '../lib/site'
-import { getEbookPrice } from '../lib/wordpress'
+import { getEbookPrice, getPostsBySlugs } from '../lib/wordpress'
 import type { Alternate } from '../lib/content'
 import Icon from './Icon.astro'
 import Logo from './Logo.astro'
 import LanguagePicker from './LanguagePicker.astro'
+import Photo from './Photo.astro'
 
 type Props = { alternates?: Alternate[] }
 
@@ -15,69 +17,24 @@ const t = useTranslations(lang as 'fr')
 const site = getSite(lang)
 const prefix = lang === 'en' ? '/en' : ''
 const price = site.ebook ? await getEbookPrice() : null
+const aroundPosts = await getPostsBySlugs(site.around.map((place) => place.slug), lang)
+const around = site.around.flatMap((place) => {
+  const post = aroundPosts.find((candidate) => candidate.slug === place.slug)
+  return post ? { ...place, photo: featuredPhoto(post) } : []
+})
+const firstAfterNav = 2 + site.nav.length
 ---
 
-<dialog id="cv-menu" class="cv-dialog cv-dialog-sheet" aria-label={t('nav.main')}>
-  <div class="flex min-h-full flex-col gap-6 p-4">
-    <div class="flex items-center justify-between">
-      <Logo class="w-[178px]" />
-      <button type="button" data-dialog-close class="-mr-2 flex h-11 w-11 items-center justify-center" aria-label={t('nav.close')}>
-        <Icon name="close" />
-      </button>
-    </div>
-    <button
-      type="button"
-      data-dialog-open="cv-search"
-      class="flex min-h-11 w-full items-center gap-3 rounded-md bg-sunken px-4 py-3 text-left text-muted"
-    >
-      <Icon name="search" size={20} class="text-body" />
-      {t('search.placeholder')}
+<dialog id="cv-menu" tabindex="-1" class="cv-dialog cv-dialog-sheet" aria-label={t('nav.main')}>
+  {/* Same structure as the header, so the logo and the icon stay exactly in place. */}
+  <div class="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 bg-surface px-4">
+    <Logo class="cv-header-logo" />
+    <button type="button" data-dialog-close class="-mr-2 flex h-11 w-11 items-center justify-center" aria-label={t('nav.close')}>
+      <span class="cv-burger" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
-    <nav>
-      <ul class="flex flex-col gap-3">
-        {
-          site.nav.map((link) => (
-            <li>
-              <a href={link.href} class="block font-display text-[28px] leading-tight font-extrabold tracking-tight">
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-    <div>
-      <p class="mb-2 text-sm font-bold text-muted">{t('home.around')}</p>
-      <ul class="flex flex-wrap gap-2">
-        {
-          site.around.map((place) => (
-            <li>
-              <a href={`${prefix}/${place.slug}/`} class="cv-chip">
-                {place.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-    {
-      site.ebook && (
-        <a href={site.ebook.href} class="flex items-center justify-between gap-4 rounded-md bg-vanille p-4 font-extrabold text-ink">
-          <span>{t('nav.ebook')}</span>
-          {price && <span>{price}</span>}
-        </a>
-      )
-    }
-    <ul class="flex flex-col gap-2 text-[15px]">
-      {
-        site.more.map((link) => (
-          <li>
-            <a href={link.href} class="hover:underline">{link.label}</a>
-          </li>
-        ))
-      }
-    </ul>
-    <div class="flex items-center justify-between gap-4">
+  </div>
+  <div class="flex flex-col gap-6 px-4 pb-6">
+    <div data-stagger style="--i:0" class="flex items-center justify-between gap-4">
       <ul class="flex flex-wrap gap-x-3 text-[15px] font-bold">
         {
           site.socials.map((social) => (
@@ -88,6 +45,68 @@ const price = site.ebook ? await getEbookPrice() : null
         }
       </ul>
       <LanguagePicker alternates={alternates} />
+    </div>
+    <button
+      type="button"
+      data-dialog-open="cv-search"
+      data-stagger
+      style="--i:1"
+      class="flex min-h-11 w-full items-center gap-3 rounded-md bg-sunken px-4 py-3 text-left text-muted"
+    >
+      <Icon name="search" size={20} class="text-body" />
+      {t('search.placeholder')}
+    </button>
+    <nav>
+      <ul class="flex flex-col gap-3">
+        {
+          site.nav.map((link, index) => (
+            <li data-stagger style={`--i:${index + 2}`}>
+              <a href={link.href} class="block font-display text-[28px] leading-tight font-extrabold tracking-tight">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div data-stagger style={`--i:${firstAfterNav}`}>
+      <p class="mb-2 text-sm font-bold text-muted">{t('home.around')}</p>
+      <ul class="-mx-4 flex snap-x scroll-pl-4 gap-2 overflow-x-auto px-4 [scrollbar-width:none]">
+        {
+          around.map((place) => (
+            <li class="w-[118px] shrink-0 snap-start">
+              <a href={`${prefix}/${place.slug}/`} class="relative block overflow-hidden rounded-md bg-sunken">
+                {place.photo && <Photo photo={place.photo} budget="thumb" class="aspect-[4/5] w-full object-cover" />}
+                <span class="absolute inset-0 bg-linear-to-t from-black/70 to-transparent to-60%"></span>
+                <span class="absolute inset-x-2 bottom-2 text-sm leading-tight font-extrabold text-white">{place.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    {
+      site.ebook && (
+        <a href={site.ebook.href} data-stagger style={`--i:${firstAfterNav + 1}`} class="flex items-center justify-between gap-4 rounded-md bg-vanille p-4 font-extrabold text-ink">
+          <span>{t('nav.ebook')}</span>
+          {price && <span>{price}</span>}
+        </a>
+      )
+    }
+    <div data-stagger style={`--i:${firstAfterNav + 2}`}>
+      <p class="mb-1 text-sm font-bold text-muted">{t('nav.more')}</p>
+      <ul class="divide-y divide-line">
+        {
+          site.more.map((link) => (
+            <li>
+              <a href={link.href} class="flex min-h-12 items-center justify-between gap-3 py-2 font-bold leading-snug">
+                {link.label}
+                <Icon name="arrow" size={20} class="shrink-0" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 </dialog>

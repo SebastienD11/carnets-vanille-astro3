@@ -1,0 +1,78 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { useTranslations } from '../i18n/ui'
+import Icon from './Icon.astro'
+
+type Props = { total: number; perPage: number; currentPage: number; baseUrl: string }
+
+const { total, perPage, currentPage, baseUrl } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const totalPages = Math.ceil(total / perPage)
+const urlOf = (page: number) =>
+  getRelativeLocaleUrl(lang, page === 1 ? baseUrl || '/' : `${baseUrl}/page/${page}`)
+
+// A gap of one page shows that page: an ellipsis would take the same room and hide it.
+function sequence(pages: number[]) {
+  const sorted = [...new Set(pages)].filter((page) => page >= 1 && page <= totalPages).sort((a, b) => a - b)
+  const items: (number | 'gap')[] = []
+  sorted.forEach((page, index) => {
+    const previous = sorted[index - 1]
+    if (previous && page - previous === 2) items.push(previous + 1)
+    if (previous && page - previous > 2) items.push('gap')
+    items.push(page)
+  })
+  return items
+}
+
+const near = [currentPage - 1, currentPage, currentPage + 1]
+const layouts = [
+  { class: 'hidden sm:flex', items: sequence([1, 2, 3, totalPages - 2, totalPages - 1, totalPages, ...near]) },
+  { class: 'flex sm:hidden', items: sequence([1, totalPages, ...near]) }
+]
+const cell = 'flex h-11 min-w-11 items-center justify-center rounded-md px-2 font-extrabold'
+---
+
+{
+  totalPages > 1 && (
+    <nav aria-label={t('pagination.label')}>
+      {layouts.map((layout) => (
+        <ul class:list={['items-center justify-center gap-1.5', layout.class]}>
+          {currentPage > 1 && (
+            <li>
+              <a href={urlOf(currentPage - 1)} rel="prev" aria-label={t('pagination.previous')} class:list={[cell, 'hover:bg-sunken']}>
+                <Icon name="back" size={20} />
+              </a>
+            </li>
+          )}
+          {layout.items.map((item) =>
+            item === 'gap' ? (
+              <li aria-hidden="true" class="flex h-11 w-6 items-center justify-center font-extrabold text-subtle">…</li>
+            ) : (
+              <li>
+                {item === currentPage ? (
+                  <span aria-current="page" class:list={[cell, 'bg-ink text-white dark:bg-vanille dark:text-ink']}>{item}</span>
+                ) : (
+                  <a href={urlOf(item)} class:list={[cell, 'bg-sunken transition-colors hover:bg-vanille hover:text-ink']}>{item}</a>
+                )}
+              </li>
+            )
+          )}
+          {currentPage < totalPages && (
+            <li>
+              <a
+                href={urlOf(currentPage + 1)}
+                rel="next"
+                aria-label={t('pagination.next')}
+                class:list={[cell, 'gap-2 hover:bg-sunken sm:ml-1 sm:px-3']}
+              >
+                <span class="hidden sm:inline">{t('pagination.next')}</span>
+                <Icon name="arrow" size={20} />
+              </a>
+            </li>
+          )}
+        </ul>
+      ))}
+    </nav>
+  )
+}

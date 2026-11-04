@@ -87,7 +87,7 @@ Replaced with real content:
 
 | Paper | Now |
 | :--- | :--- |
-| Series block on home | Latest article, then a grid of the next 10 with pagination |
+| Series block on home | Grid of the latest articles with pagination |
 | "L'agenda" tile | "Les événements" → `/evenements-saint-malo/` |
 | "La carte", "L'agenda", "Infos pratiques" in the nav | Se garer, Saint-Malo, Au Québec |
 | Inline newsletter form | Card opening the existing form, with the existing copy |
@@ -106,6 +106,8 @@ All of this comes from the Paper boards, not from her:
 - Byline: "Par Sarah, Malouine". The old text said "malouine de cœur".
 - Ebook card: "Tout mon Saint-Malo dans votre poche".
 - "Cette page a fondu" on the 404.
+- Ebook card points: conseils de visite, itinéraires, anecdotes. Taken from her article, with no page
+  count, because the article says "plus de 200 pages" and the old banner copy says "180+ pages".
 
 ## WordPress changes needed (nothing was touched)
 
@@ -147,6 +149,13 @@ Your adapter version has dropped Pages support, so this is required.
 7. Keep `node_modules/.astro` between builds if you can. It saves regenerating images every night.
 
 One small change to expect: URLs without a trailing slash now redirect with a 307. Canonicals are not affected.
+
+## Remove before launch
+
+- `/home-2` and `/home-3`: `src/pages/home-2.astro`, `src/pages/home-3.astro`.
+- Sarah's settings widget: `src/components/DesignSettings.astro`, its code and flag in `Layout.astro`
+  and `FEATURES.designSettings`, and `public/logos/options/`. Then set the chosen logo in `public/logos/`
+  and the chosen font in `src/styles/global.css`.
 
 ## Where things are
 

@@ -4,12 +4,22 @@ import { useTranslations } from '../i18n/ui'
 const t = useTranslations(Astro.currentLocale as 'fr')
 ---
 
-<div class="flex h-full flex-col justify-center gap-3 rounded-lg bg-sunken p-5">
-  <h3 class="text-xl leading-tight lg:text-[22px]">{t('newsletter.card.title')}</h3>
-  <p class="text-[15px] leading-snug text-muted">{t('newsletter.card.subtitle')}</p>
-  <div>
-    <button type="button" data-dialog-open="cv-newsletter" class="cv-btn cv-btn-dark w-full">
-      {t('newsletter.card.label')}
-    </button>
-  </div>
+<div class="group flex h-full flex-col gap-3 overflow-hidden rounded-lg bg-vanille p-5 text-ink lg:p-6">
+  <svg
+    class="-mt-6 -mr-8 mb-auto w-[180px] shrink-0 rotate-[8deg] self-end transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-[3deg]"
+    viewBox="0 0 200 150"
+    fill="none"
+    aria-hidden="true"
+  >
+    <circle cx="118" cy="66" r="66" fill="#ff8b99"></circle>
+    <path d="M6 112c16-12 20 8 36-4s12-20 26-16" stroke="#1c1917" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round"></path>
+    <rect x="52" y="30" width="122" height="84" rx="10" fill="#fff" stroke="#1c1917" stroke-width="3"></rect>
+    <path d="m54 36 59 46a5 5 0 0 0 6 0l53-46" stroke="#1c1917" stroke-width="3" stroke-linejoin="round"></path>
+    <path d="M113 104c-10-7-16-12-16-19a8 8 0 0 1 16-3 8 8 0 0 1 16 3c0 7-6 12-16 19Z" fill="#ff8b99" stroke="#1c1917" stroke-width="3" stroke-linejoin="round"></path>
+  </svg>
+  <h3 class="max-w-[17em] text-[22px] leading-tight lg:text-2xl">{t('newsletter.card.title')}</h3>
+  <p class="text-[15px] leading-snug">{t('newsletter.card.subtitle')}</p>
+  <button type="button" data-dialog-open="cv-newsletter" class="cv-btn cv-btn-ink w-full">
+    {t('newsletter.card.label')}
+  </button>
 </div>

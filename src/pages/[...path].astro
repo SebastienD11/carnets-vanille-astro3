@@ -69,7 +69,13 @@ const categoryList = type === 'category' ? await getPostsByCategory(lang, node!.
 const tagList = type === 'post_tag' ? await getPostsByTag(lang, node!.id, page) : null
 ---
 
-<Layout seo={seo} bare={template === 'linktree'} affiliate={!isProduct} hasToc={type === 'post'}>
+<Layout
+  seo={seo}
+  bare={template === 'linktree'}
+  affiliate={!isProduct}
+  hasToc={type === 'post'}
+  headerOverlay={kind === 'home' && page === 1 ? 'vanille' : undefined}
+>
   {kind === 'home' && page === 1 && <Home list={home!} />}
   {kind === 'home' && page > 1 && <ListPage title={t('index.posts.title')} list={home!} baseUrl="" />}
   {type === 'post' && <Post node={node as PostNode} />}

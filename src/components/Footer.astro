@@ -16,11 +16,11 @@ const site = getSite(lang)
 <footer class="bg-foot text-white">
   <div class="cv-container flex flex-col gap-8 py-10 lg:flex-row lg:justify-between lg:gap-12 lg:py-16">
     <Logo variant="footer" class="w-[190px] shrink-0 lg:w-[260px]" />
-    <div class="grid grid-cols-2 gap-x-6 gap-y-8 text-[15px] lg:flex lg:gap-14 xl:gap-20">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-8 text-[15px] lg:flex lg:gap-10 xl:gap-14">
       {
         site.footer.map((column) => (
           <div>
-            <p class="mb-3 text-sm font-extrabold text-vanille">{column.title}</p>
+            <p class="mb-3 text-sm leading-snug font-extrabold text-balance text-vanille lg:whitespace-nowrap">{column.title}</p>
             <ul class="flex flex-col gap-2">
               {column.links.map((link) => (
                 <li>

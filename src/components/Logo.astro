@@ -1,9 +1,10 @@
 ---
 // To change the logo, replace the files in public/logos/ (same names). Nothing else to touch.
-// The "on-light" and "on-dark" files name the background they sit on.
-type Props = { variant?: 'header' | 'footer'; class?: string }
+// The file names say which background they sit on. The ice cream's outline takes that background's
+// color. `overlay` adds the version for a transparent header on a hero, shown by global.css.
+type Props = { variant?: 'header' | 'footer'; overlay?: 'vanille' | 'photo'; class?: string }
 
-const { variant = 'header', class: className } = Astro.props
+const { variant = 'header', overlay, class: className } = Astro.props
 ---
 
 {
@@ -11,6 +12,7 @@ const { variant = 'header', class: className } = Astro.props
     <>
       <img
         src="/logos/header-on-light.svg"
+        data-logo="on-light"
         width="655"
         height="106"
         alt="Carnets Vanille"
@@ -18,15 +20,27 @@ const { variant = 'header', class: className } = Astro.props
       />
       <img
         src="/logos/header-on-dark.svg"
+        data-logo="on-dark"
         width="655"
         height="106"
         alt="Carnets Vanille"
         class:list={['hidden h-auto dark:block', className]}
       />
+      {overlay && (
+        <img
+          src={`/logos/header-on-${overlay}.svg`}
+          data-logo="overlay"
+          width="655"
+          height="106"
+          alt="Carnets Vanille"
+          class:list={['hidden h-auto', className]}
+        />
+      )}
     </>
   ) : (
     <img
       src="/logos/footer-on-dark.svg"
+      data-logo="footer"
       width="373"
       height="163"
       alt="Carnets Vanille"

@@ -6,6 +6,7 @@ import '../styles/global.css'
 import bricolageUrl from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url'
 import mulishUrl from '@fontsource-variable/mulish/files/mulish-latin-wght-normal.woff2?url'
 import BottomBar from '../components/BottomBar.astro'
+import DesignSettings from '../components/DesignSettings.astro'
 import Footer from '../components/Footer.astro'
 import FormScript from '../components/form/FormScript.astro'
 import Header from '../components/Header.astro'
@@ -24,10 +25,13 @@ type Props = {
   /** Product pages stay free of the Stay22 affiliate script, as they were. */
   affiliate?: boolean
   hasToc?: boolean
+  /** The page opens on a full-width hero that the header sits on. */
+  headerOverlay?: 'vanille' | 'photo'
 }
 
-const { seo, bare, affiliate = true, hasToc } = Astro.props
+const { seo, bare, affiliate = true, hasToc, headerOverlay } = Astro.props
 const lang = Astro.currentLocale as string
+const designSettings = FEATURES.designSettings && import.meta.env.CUSTOM_ENV !== 'production' && !bare
 ---
 
 <!doctype html>
@@ -49,6 +53,78 @@ const lang = Astro.currentLocale as string
         document.documentElement.classList.toggle('dark', dark)
       })()
     </script>
+    {
+      designSettings && (
+        <script is:inline>
+          // Applies the saved trial before first paint. The widget itself is DesignSettings.astro.
+          ;(function () {
+            var FONTS = {
+              bricolage: { css: "'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif" },
+              montserrat: { css: 'Montserrat, ui-sans-serif, system-ui, sans-serif', google: 'Montserrat:wght@700;800' },
+              fraunces: { css: 'Fraunces, Georgia, serif', google: 'Fraunces:opsz,wght@9..144,700;9..144,800' }
+            }
+            var KEY = 'cv-design-settings'
+            var state = { font: 'bricolage', layout: 'single', bar: 'off' }
+            try {
+              var saved = JSON.parse(localStorage.getItem(KEY) || '{}')
+              if (FONTS[saved.font]) state.font = saved.font
+              if (['single', 'a', 'd'].indexOf(saved.layout) > -1) state.layout = saved.layout
+              if (saved.bar === 'on') state.bar = 'on'
+            } catch (e) {}
+
+            function applyBar() {
+              document.documentElement.setAttribute('data-cv-bar', state.bar)
+            }
+
+            function applyFont() {
+              var font = FONTS[state.font]
+              document.documentElement.style.setProperty('--font-display', font.css)
+              if (font.google && !document.querySelector('link[data-design-font="' + state.font + '"]')) {
+                var link = document.createElement('link')
+                link.rel = 'stylesheet'
+                link.href = 'https://fonts.googleapis.com/css2?family=' + font.google + '&display=swap'
+                link.setAttribute('data-design-font', state.font)
+                document.head.appendChild(link)
+              }
+            }
+
+            function applyLogos() {
+              document.documentElement.setAttribute('data-cv-logo', state.layout)
+              var isDefault = state.font === 'bricolage' && state.layout === 'single'
+              document.querySelectorAll('img[data-logo]').forEach(function (img) {
+                var original = img.getAttribute('data-original-src') || img.getAttribute('src')
+                img.setAttribute('data-original-src', original)
+                if (isDefault) {
+                  img.setAttribute('src', original)
+                  return
+                }
+                var background = /vanille/.test(original) ? 'vanille' : /photo/.test(original) ? 'photo' : /on-dark/.test(original) ? 'ink' : 'white'
+                // The footer has room for two lines, so a one-line choice keeps its two-line version.
+                var footer = img.getAttribute('data-logo') === 'footer'
+                var layout = footer && state.layout === 'single' ? 'd' : state.layout
+                img.setAttribute('src', '/logos/options/' + state.font + '-' + layout + '-' + background + '.svg')
+              })
+            }
+
+            window.cvDesign = {
+              state: state,
+              set: function (name, value) {
+                state[name] = value
+                try {
+                  localStorage.setItem(KEY, JSON.stringify(state))
+                } catch (e) {}
+                applyFont()
+                applyLogos()
+                applyBar()
+              }
+            }
+            applyFont()
+            applyBar()
+            document.addEventListener('DOMContentLoaded', applyLogos)
+          })()
+        </script>
+      )
+    }
     <link rel="preload" href={bricolageUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={mulishUrl} as="font" type="font/woff2" crossorigin />
     {seo ? <SeoHead seo={seo} /> : <meta name="robots" content="noindex" />}
@@ -65,7 +141,7 @@ const lang = Astro.currentLocale as string
   </head>
 
   <body data-env={import.meta.env.CUSTOM_ENV} class="flex min-h-dvh flex-col">
-    {!bare && <Header alternates={seo?.alternates} />}
+    {!bare && <Header alternates={seo?.alternates} overlay={headerOverlay} />}
     <div class="flex-1">
       <slot />
     </div>
@@ -73,13 +149,22 @@ const lang = Astro.currentLocale as string
       !bare && (
         <>
           <Footer alternates={seo?.alternates} />
-          {FEATURES.mobileBottomBar && <BottomBar hasToc={hasToc} />}
+          {FEATURES.mobileBottomBar ? (
+            <BottomBar hasToc={hasToc} />
+          ) : (
+            designSettings && (
+              <div class="cv-bar-trial">
+                <BottomBar hasToc={hasToc} />
+              </div>
+            )
+          )}
           <Menu alternates={seo?.alternates} />
           <SearchDialog />
           <NewsletterDialog />
         </>
       )
     }
+    {designSettings && <DesignSettings />}
     <FormScript />
     <script>
       // Every panel is a native <dialog>: focus trap, Escape and top layer come for free.
@@ -90,7 +175,12 @@ const lang = Astro.currentLocale as string
           const dialog = document.getElementById(opener.dataset.dialogOpen ?? '') as HTMLDialogElement | null
           if (!dialog) return
           document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach((open) => open.close())
+          const origin = opener.getBoundingClientRect()
+          dialog.style.setProperty('--cv-ox', `${origin.left + origin.width / 2}px`)
+          dialog.style.setProperty('--cv-oy', `${origin.top + origin.height / 2}px`)
           dialog.showModal()
+          // With a tabindex, the panel itself takes focus, so no focus ring appears on its first button.
+          if (dialog.hasAttribute('tabindex')) dialog.focus()
           dialog.dispatchEvent(new Event('cv:open'))
           return
         }

@@ -68,6 +68,10 @@
   --cv-card-dark: #1c1917;
   --cv-foot: #1c1917;
   --cv-danger: #a3192f;
+  /* The hand-drawn strokes under links, kept from the previous site. */
+  --line-yellow: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='%23fc0' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  --line-yellow-dotted: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='%23fc0' stroke-width='2' stroke-dasharray='2 5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  --line-dark: url("data:image/svg+xml;charset=utf-8,%3Csvg preserveAspectRatio='none' width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M119 0.8C60 4 50-0.5 1 1.5' stroke='%231c1917' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   color-scheme: light;
 }
 
@@ -219,6 +223,22 @@
     color: var(--color-ink);
   }
 
+  /* Stays ink in both themes, for use on a vanille background. */
+  .cv-btn-ink {
+    background: var(--color-ink);
+    color: #fff;
+  }
+
+  .cv-btn-ink:hover {
+    background: #3a3531;
+  }
+
+  .cv-btn-pill {
+    min-height: 40px;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+  }
+
   .cv-btn-soft {
     background: var(--cv-sunken);
     color: var(--cv-body);
@@ -273,15 +293,117 @@
   }
 
   .cv-text-link {
-    color: var(--cv-link);
     font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    background: var(--line-yellow) bottom left / 100% 0.3em repeat-x;
+    padding-bottom: 0.3em;
+  }
+
+  .cv-text-link:hover {
+    background-image: var(--line-yellow-dotted);
+  }
+
+  .cv-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    border-bottom: 1px solid var(--cv-line);
+    background: var(--cv-page);
+  }
+
+  .cv-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    height: 56px;
+    margin-inline: auto;
+    padding-inline: 16px;
+  }
+
+  .cv-header-logo {
+    width: 178px;
+    transition: width 220ms;
+  }
+
+  .cv-nav-link {
+    display: block;
+    padding: 8px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--line-yellow) no-repeat 12px calc(100% - 3px) / 0 6px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background-size 220ms;
+  }
+
+  .cv-nav-link:hover {
+    background-size: calc(100% - 24px) 6px;
+  }
+
+  .cv-nav-link[aria-current='page'] {
+    background: var(--color-vanille);
+    color: var(--color-ink);
+  }
+
+  /* From desktop up, the bar turns into a floating pill once the page scrolls. */
+  @media (min-width: 1024px) {
+    .cv-header {
+      height: 92px;
+      border-bottom: 0;
+      transition: background-color 220ms;
+    }
+
+    .cv-header[data-scrolled] {
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .cv-header-bar {
+      max-width: calc(var(--container-site) + 64px);
+      height: 92px;
+      padding-inline: 32px;
+      border-radius: var(--radius-pill);
+      transition:
+        height 220ms,
+        margin-top 220ms,
+        max-width 220ms,
+        padding 220ms,
+        box-shadow 220ms,
+        background-color 220ms;
+    }
+
+    [data-scrolled] .cv-header-bar {
+      max-width: calc(var(--container-site) + 32px);
+      width: calc(100% - 32px);
+      height: 62px;
+      margin-top: 10px;
+      padding-inline: 24px;
+      background: color-mix(in srgb, var(--cv-page) 84%, transparent);
+      box-shadow:
+        0 0 0 1px var(--cv-line),
+        0 10px 30px rgb(28 25 23 / 0.12);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4);
+      backdrop-filter: blur(14px) saturate(1.4);
+      pointer-events: auto;
+    }
+
+    .cv-header-logo {
+      width: 214px;
+    }
+
+    [data-scrolled] .cv-header-logo {
+      width: 178px;
+    }
   }
 
   /* Native <dialog> panels: menu, search, newsletter, purchase confirmation. */
   .cv-dialog::backdrop {
     background: rgb(15 13 12 / 0.6);
+  }
+
+  .cv-dialog:focus {
+    outline: none;
   }
 
   .cv-dialog-sheet {
@@ -291,6 +413,103 @@
     height: 100dvh;
     background: var(--cv-surface);
     overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* The menu opens as a circle growing from the button that was tapped. Layout.astro sets the
+     origin. Browsers without @starting-style simply open it straight away. */
+  #cv-menu {
+    --cv-circle-at: at var(--cv-ox, calc(100% - 30px)) var(--cv-oy, 28px);
+    clip-path: circle(0 var(--cv-circle-at));
+    transition:
+      clip-path 280ms cubic-bezier(0.4, 0, 1, 1),
+      display 280ms allow-discrete,
+      overlay 280ms allow-discrete;
+  }
+
+  #cv-menu[open] {
+    clip-path: circle(150vmax var(--cv-circle-at));
+    transition:
+      clip-path 560ms cubic-bezier(0.22, 1, 0.36, 1),
+      display 560ms allow-discrete,
+      overlay 560ms allow-discrete;
+
+    @starting-style {
+      clip-path: circle(0 var(--cv-circle-at));
+    }
+  }
+
+  #cv-menu[open] [data-stagger] {
+    transition:
+      opacity 360ms ease-out,
+      transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(90ms + var(--i) * 32ms);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  /* Three bars drawn like the header's menu icon, turning into the close icon as the menu opens. */
+  .cv-burger {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+
+  .cv-burger > span {
+    position: absolute;
+    left: 4px;
+    top: 11px;
+    width: 16px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 200ms;
+    transition-delay: 60ms;
+  }
+
+  .cv-burger > span:nth-child(1) {
+    transform: translateY(-5px);
+  }
+
+  .cv-burger > span:nth-child(3) {
+    transform: translateY(5px);
+  }
+
+  #cv-menu[open] .cv-burger > span:nth-child(1) {
+    transform: rotate(45deg);
+
+    @starting-style {
+      transform: translateY(-5px);
+    }
+  }
+
+  #cv-menu[open] .cv-burger > span:nth-child(2) {
+    opacity: 0;
+
+    @starting-style {
+      opacity: 1;
+    }
+  }
+
+  #cv-menu[open] .cv-burger > span:nth-child(3) {
+    transform: rotate(-45deg);
+
+    @starting-style {
+      transform: translateY(5px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #cv-menu *,
+    #cv-menu [data-stagger] {
+      transition-delay: 0s !important;
+    }
   }
 
   @media (min-width: 768px) {
@@ -321,6 +540,64 @@
   }
 }
 
+/* The page behind an open panel stays still. The gutter stops it jumping sideways on desktop. */
+html:has(dialog[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* Header sitting on a hero until the page scrolls. The hero slides under it, so its tone is
+   fixed by the hero rather than the theme. Outside the layers, to win over the logo utilities. */
+.cv-header[data-overlay] {
+  margin-bottom: -57px;
+  transition:
+    background-color 220ms,
+    border-color 220ms,
+    color 220ms;
+}
+
+@media (min-width: 1024px) {
+  .cv-header[data-overlay] {
+    margin-bottom: -92px;
+  }
+}
+
+.cv-header[data-overlay]:not([data-scrolled]) {
+  border-color: transparent;
+  background: transparent;
+}
+
+.cv-header[data-overlay='vanille']:not([data-scrolled]) {
+  color: var(--color-ink);
+}
+
+.cv-header[data-overlay='photo']:not([data-scrolled]) {
+  color: #fff;
+}
+
+.cv-header[data-overlay]:not([data-scrolled]) [data-logo='overlay'] {
+  display: block;
+}
+
+.cv-header[data-overlay]:not([data-scrolled]) [data-logo='on-light'],
+.cv-header[data-overlay]:not([data-scrolled]) [data-logo='on-dark'] {
+  display: none;
+}
+
+.cv-header[data-overlay]:not([data-scrolled]) button:hover {
+  background: rgb(255 255 255 / 0.25);
+}
+
+/* The yellow stroke and the yellow button would vanish on vanilla. */
+.cv-header[data-overlay='vanille']:not([data-scrolled]) .cv-nav-link {
+  background-image: var(--line-dark);
+}
+
+.cv-header[data-overlay='vanille']:not([data-scrolled]) .cv-btn-primary {
+  background: var(--color-ink);
+  color: #fff;
+}
+
 /* The buy button is fixed to the bottom on mobile: keep the footer clear of it. */
 @media (max-width: 1023px) {
   body:has([data-checkout]) {
@@ -328,6 +605,12 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   WordPress content. Styled from a scan of all 167 articles: only blocks really
+   in use are covered, so @wordpress/block-library is no longer needed.
+   In a layer, so the utilities on the cards placed inside articles still apply.
+--------------------------------------------------------------------------- */
+@layer components {
 .cv-prose .cv-embed {
   margin-top: 1.6em;
 }
@@ -336,15 +619,20 @@
   margin-top: 0;
 }
 
-.cv-prose .cv-embed a {
-  color: inherit;
-  text-decoration: none;
+.cv-prose .cv-embed ul {
+  padding-left: 0;
+  list-style: none;
 }
 
-/* ---------------------------------------------------------------------------
-   WordPress content. Styled from a scan of all 167 articles: only blocks really
-   in use are covered, so @wordpress/block-library is no longer needed.
---------------------------------------------------------------------------- */
+.cv-prose .cv-embed li + li {
+  margin-top: 0;
+}
+
+.cv-prose .cv-embed img {
+  border-radius: 0;
+  background: none;
+}
+
 .cv-prose {
   font-size: 1.0625rem;
   line-height: 1.7;
@@ -383,16 +671,16 @@
   margin-top: 0.7em;
 }
 
-.cv-prose a {
-  color: var(--cv-link);
+.cv-prose a:not(.cv-btn, .cv-embed a, :has(img)) {
   font-weight: 600;
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 3px;
+  background: var(--line-yellow) bottom left / 100% 0.3em repeat-x;
+  padding-bottom: 0.3em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
-.cv-prose a:hover {
-  text-decoration-thickness: 2.5px;
+.cv-prose a:not(.cv-btn, .cv-embed a, :has(img)):hover {
+  background-image: var(--line-yellow-dotted);
 }
 
 .cv-prose strong {
@@ -420,38 +708,77 @@
   color: var(--cv-subtle);
 }
 
-/* Highlights: a highlighter stroke rather than a filled badge. */
+/* Highlights: a soft brush of vanilla, kept from the previous site. */
 .cv-prose mark {
-  background: linear-gradient(transparent 58%, var(--color-vanille) 58%);
+  margin-inline: -0.4em;
+  padding-inline: 0.8em;
+  border-radius: 0.8em 0.3em;
+  background: linear-gradient(to right, rgb(255 225 76 / 0.1), rgb(255 225 76 / 0.8) 4%, rgb(255 225 76 / 0.3));
   color: inherit;
-  padding-inline: 2px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
-.dark .cv-prose mark {
-  background: linear-gradient(transparent 58%, rgb(255 225 76 / 0.35) 58%);
+.cv-prose mark a:not(.cv-btn) {
+  background-image: var(--line-dark);
 }
 
-/* Sarah's tips ("Le +") are stored as verse blocks in WordPress. */
+.dark .cv-prose mark {
+  background: linear-gradient(to right, rgb(255 225 76 / 0.6), rgb(255 225 76) 4%, rgb(255 225 76 / 0.7));
+  color: var(--color-ink);
+}
+
+/* Sarah's tips ("Mon conseil ?", prices...) are stored as verse blocks in WordPress. */
 .cv-prose pre {
-  margin-top: 1.4em;
-  padding: 2px 0 2px 16px;
-  border-left: 3px solid var(--color-vanille);
-  background: transparent;
-  color: inherit;
-  font-family: var(--font-voice);
-  font-size: 1.1875rem;
-  font-style: italic;
-  line-height: 1.45;
+  position: relative;
+  margin-block: 1.8em;
+  padding: 18px 76px 18px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--color-ink);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
+.dark .cv-prose pre {
+  background: #38332e;
+}
+
+.cv-prose pre::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  bottom: -12px;
+  width: 56px;
+  height: calc(100% + 32px);
+  max-height: 200px;
+  background: url(/phare.svg) bottom center / contain no-repeat;
+  pointer-events: none;
+}
+
+.cv-prose pre em {
+  color: var(--color-vanille);
+  font-family: var(--font-voice);
+  font-size: 1.2em;
+  line-height: 1;
+}
+
 .cv-prose pre strong {
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-style: normal;
+  color: var(--color-vanille);
+}
+
+@media (min-width: 640px) {
+  .cv-prose pre {
+    padding: 24px 112px 24px 28px;
+  }
+
+  .cv-prose pre::after {
+    right: 20px;
+    width: 72px;
+  }
 }
 
 .cv-prose blockquote {
@@ -564,4 +891,5 @@
   height: auto;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
+}
 }
