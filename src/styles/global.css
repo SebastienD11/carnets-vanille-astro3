@@ -302,6 +302,12 @@
     background-image: var(--line-yellow-dotted);
   }
 
+  /* Same stroke in ink, for links on a vanilla background. */
+  .cv-text-link-dark {
+    background: var(--line-dark) bottom left / 100% 0.3em repeat-x;
+    padding-bottom: 0.3em;
+  }
+
   .cv-header {
     position: sticky;
     top: 0;

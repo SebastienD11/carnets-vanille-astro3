@@ -10,7 +10,7 @@ import { useTranslations } from '../i18n/ui'
 import mockup from '../images/banner-ebook-image.png'
 import portrait from '../images/sarah.webp'
 import { featuredPhoto } from '../lib/content'
-import { AUTHOR_PHOTO_ALT, getSite } from '../lib/site'
+import { AUTHOR_PHOTO_ALT, getSite, homeSocials } from '../lib/site'
 import { getEbookPrice, getPostsBySlugs, type PostList } from '../lib/wordpress'
 
 type Props = { list: PostList }
@@ -44,9 +44,30 @@ const spanOf = (index: number) => {
   <section class="bg-vanille text-ink">
     <div class="cv-container flex flex-col gap-5 pt-[84px] pb-28 lg:flex-row lg:items-end lg:justify-between lg:gap-14 lg:pt-[148px] lg:pb-40">
       <h1 class="cv-h1 lg:text-[88px]">{site.hero.title}</h1>
-      <div class="flex items-center gap-4 lg:max-w-[440px] lg:shrink-0 lg:pb-2">
-        <Image src={portrait} alt={AUTHOR_PHOTO_ALT} width={88} height={88} densities={[1, 2]} loading="eager" class="h-16 w-16 shrink-0 rounded-full object-cover lg:h-[88px] lg:w-[88px]" />
-        <p class="text-[15px] leading-snug lg:text-[17px]">{site.hero.bio}</p>
+      <div class="flex items-center gap-4 lg:max-w-[540px] lg:shrink-0 lg:gap-6 lg:pb-1">
+        <Image
+          src={portrait}
+          alt={AUTHOR_PHOTO_ALT}
+          width={132}
+          height={132}
+          densities={[1, 2]}
+          loading="eager"
+          class="h-[92px] w-[92px] shrink-0 -rotate-3 rounded-lg border-4 border-white object-cover shadow-[0_8px_24px_rgb(28_25_23/0.18)] lg:h-[132px] lg:w-[132px]"
+        />
+        <div class="flex flex-col items-start gap-2">
+          <p class="font-voice text-[19px] leading-[1.3] italic lg:text-2xl">{site.hero.bio}</p>
+          <p class="text-sm leading-relaxed font-extrabold">
+            {t('home.follow')}{' '}
+            {
+              homeSocials.map((social, index) => (
+                <>
+                  {index > 0 && (index === homeSocials.length - 1 ? ` ${t('home.followAnd')} ` : ', ')}
+                  <a href={social.href} target="_blank" rel="noopener" class="cv-text-link-dark">{social.label}</a>
+                </>
+              ))
+            }
+          </p>
+        </div>
       </div>
     </div>
   </section>

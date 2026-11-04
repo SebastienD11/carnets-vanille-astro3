@@ -20,14 +20,16 @@ npm run dev
 | | Before | After |
 | :--- | :--- | :--- |
 | Astro / Tailwind | 5.18 / 3.4 | 7.4 / 4.3 |
-| Build | 648s on Cloudflare | about 65s on this Mac |
-| Prerendering | 567s | about 50s |
+| Clone to deployed, on Cloudflare | 12m 31s | 2m 14s |
+| Build | 648s | 99s |
+| Prerendering | 567s | 54s |
+| Dependency install | about 68s | about 8s |
 | WordPress requests | several per page | 32 in total |
-| Images generated | 906 | fewer per photo, none at full source size |
-| Dependencies | 781 packages | 373 packages |
+| Images generated | 906 | 727, in 43s instead of 75s |
+| Dependencies | 781 packages | 371 packages |
 
-The two build times are not like for like: one is Cloudflare, the other my Mac. Expect a longer time
-on Cloudflare, but the 567s came from waiting on WordPress and that wait is gone. Not measured there.
+Both are real Cloudflare Pages logs, from 2026-11-03 and from the PR preview on 2026-11-04. Almost all
+of today's 54s of prerendering is the one WordPress fetch.
 
 ## What changed in the code
 
@@ -81,7 +83,7 @@ Bugs fixed on the way:
 ## Differences from the Paper boards
 
 These have no data yet, so they are not built: map, agenda, series, tested places, "L'essentiel",
-"Vérifié sur place", "Répondre" on comments, TikTok (no account in the code).
+"Vérifié sur place", "Répondre" on comments.
 
 Replaced with real content:
 
@@ -101,7 +103,7 @@ newsletter group labels are now translated in English. The group ids are unchang
 
 All of this comes from the Paper boards, not from her:
 
-- Home: "Moi c'est Sarah, Malouine de retour après 10 ans au Québec…" and its English version.
+- Home: "Moi c'est Sarah. Après 10 ans au Québec, je suis rentrée chez moi, à Saint-Malo…" and its English version.
 - Sarah card: "Je teste, je marche, je goûte, et je vous partage mes vraies adresses."
 - Byline: "Par Sarah, Malouine". The old text said "malouine de cœur".
 - Ebook card: "Tout mon Saint-Malo dans votre poche".

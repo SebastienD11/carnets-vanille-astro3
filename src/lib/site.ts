@@ -51,15 +51,20 @@ type Site = {
 const socials: NavLink[] = [
   { label: 'Instagram', href: 'https://www.instagram.com/carnetsvanille/' },
   { label: 'Facebook', href: 'https://www.facebook.com/carnetsvanille' },
-  { label: 'Pinterest', href: 'https://www.pinterest.ca/carnetsvanille/' }
+  { label: 'Pinterest', href: 'https://www.pinterest.ca/carnetsvanille/' },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@carnetsvanille' }
 ]
+
+/** The networks named under Sarah's intro on the home page. */
+const HOME_SOCIALS = ['Instagram', 'Facebook', 'TikTok']
+export const homeSocials = socials.filter((social) => HOME_SOCIALS.includes(social.label))
 
 const CONTACT = 'mailto:sarah@carnetsvanille.com'
 
 const fr: Site = {
   hero: {
     title: 'De retour à Saint-Malo',
-    bio: "Moi c'est Sarah, Malouine de retour après 10 ans au Québec. Voici mes adresses et mes conseils pour profiter de la Côte d'Émeraude.",
+    bio: "Moi c'est Sarah. Après 10 ans au Québec, je suis rentrée chez moi, à Saint-Malo. Je teste, je marche, je goûte, et je vous partage mes vraies adresses.",
     image: HERO_SAINT_MALO,
     imageAlt: 'Les remparts de Saint-Malo vus depuis la plage'
   },
@@ -148,7 +153,7 @@ const fr: Site = {
 const en: Site = {
   hero: {
     title: 'Back in Saint-Malo',
-    bio: "I'm Sarah, from Saint-Malo, back after 10 years in Québec. Here are my favorite places and tips for enjoying the Emerald Coast.",
+    bio: "I'm Sarah. After 10 years in Québec, I came back home to Saint-Malo. I try, I walk, I taste, and I share the places I really recommend.",
     image: HERO_SAINT_MALO,
     imageAlt: 'The ramparts of Saint-Malo seen from the beach'
   },
