@@ -156,6 +156,10 @@ One small change to expect: URLs without a trailing slash now redirect with a 30
 - Sarah's settings widget: `src/components/DesignSettings.astro`, its code and flag in `Layout.astro`
   and `FEATURES.designSettings`, and `public/logos/options/`. Then set the chosen logo in `public/logos/`
   and the chosen font in `src/styles/global.css`.
+- The review copy on 2027.carnetsvanille.com: the `carnets-vanille-2027` Worker and its domain in
+  Cloudflare, the `preview-2027` environment in `wrangler.jsonc`, the `deploy:2027` script,
+  `scripts/preview-2027-links.mjs` and its line in `public/_headers`. Only search works there: forms
+  stop at the 404 page on purpose, so they cannot reach the real MailerLite, WordPress or Stripe.
 
 ## Where things are
 

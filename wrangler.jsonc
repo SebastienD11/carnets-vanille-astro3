@@ -1,6 +1,6 @@
 {
-  // Nothing deploys from this file until the Cloudflare project is switched
-  // from Pages to Workers. See docs/REDESIGN-2027-REPORT.md.
+  // The live site is still on Pages. See docs/REDESIGN-2027-REPORT.md for the switch.
+  // Only the "preview-2027" environment below is deployed for now.
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "carnets-vanille",
   "main": "@astrojs/cloudflare/entrypoints/server",
@@ -13,5 +13,22 @@
     "run_worker_first": ["/api/*", "/preview/*"],
     "not_found_handling": "404-page"
   },
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  "env": {
+    // Review copy for Sarah, on its own Worker. Only search reaches the Worker, so a form sent
+    // from here can never reach the real MailerLite, WordPress or Stripe.
+    "preview-2027": {
+      "name": "carnets-vanille-2027",
+      "account_id": "419136d25679fe83a1fc15ef6987af48",
+      "workers_dev": false,
+      "preview_urls": false,
+      "routes": [{ "pattern": "2027.carnetsvanille.com", "custom_domain": true }],
+      "assets": {
+        "directory": "./dist/client",
+        "binding": "ASSETS",
+        "run_worker_first": ["/api/search"],
+        "not_found_handling": "404-page"
+      }
+    }
+  }
 }

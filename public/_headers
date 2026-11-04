@@ -3,4 +3,7 @@ https://carnets-vanille-astro3.pages.dev/*
   X-Robots-Tag: noindex
 
 https://stg.carnetsvanille.com/*
+  X-Robots-Tag: noindex
+
+https://2027.carnetsvanille.com/*
   X-Robots-Tag: noindex 

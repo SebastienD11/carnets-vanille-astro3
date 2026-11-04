@@ -10,6 +10,7 @@
     "astro": "astro",
     "check:build": "node scripts/check-build.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
+    "deploy:2027": "CLOUDFLARE_ENV=preview-2027 astro build && node scripts/preview-2027-links.mjs && wrangler deploy",
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed --workers=1",
     "test:ui": "npx playwright test --ui"
