@@ -3,7 +3,7 @@
 import { copyFile, readFile, writeFile } from 'node:fs/promises'
 import sharp from 'sharp'
 
-const VANILLE = '#FFE14C'
+const VANILLE = '#FFCF00'
 const source = await readFile('public/logos/icon.svg')
 const render = (size) => sharp(source, { density: 600 }).resize(size, size).png().toBuffer()
 
