@@ -1,10 +1,13 @@
+import { env } from '../../lib/env'
 // SSR API used client side at runtime.
 
 import type { APIRoute } from 'astro'
 import MailerLite from '@mailerlite/mailerlite-nodejs'
 
+export const prerender = false
+
 export const POST: APIRoute = async (context) => {
-  const mailerLiteApiKey = (context.locals as any).runtime?.env?.MAILERLITE_KEY
+  const mailerLiteApiKey = env.MAILERLITE_KEY
 
   if (!mailerLiteApiKey) {
     return new Response(JSON.stringify({ error: 'Mailerlite API key is not configured' }), {

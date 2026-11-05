@@ -13,7 +13,7 @@ test.describe('Carnet Enfants product page', () => {
   test('price slider is present and functional', async ({ page }) => {
     await page.goto(CARNET_URL)
 
-    const slider = page.locator('[price-slider]')
+    const slider = page.locator('[data-price-range]')
     await expect(slider).toBeVisible()
     await expect(slider).toHaveAttribute('min', '0')
     await expect(slider).toHaveAttribute('max', '10')
@@ -22,12 +22,12 @@ test.describe('Carnet Enfants product page', () => {
   test('slider at default value shows buy button and hides download', async ({ page }) => {
     await page.goto(CARNET_URL)
 
-    const slider = page.locator('[price-slider]')
+    const slider = page.locator('[data-price-range]')
     const sliderValue = await slider.inputValue()
 
     if (Number(sliderValue) > 0) {
-      const buyButton = page.locator('[create-checkout]')
-      const downloadButton = page.locator('[download-button]')
+      const buyButton = page.locator('[data-create-checkout]')
+      const downloadButton = page.locator('[data-download]')
 
       await expect(buyButton).toBeVisible()
       await expect(downloadButton).toBeHidden()
@@ -37,12 +37,12 @@ test.describe('Carnet Enfants product page', () => {
   test('slider at 0 hides buy button and shows download button', async ({ page }) => {
     await page.goto(CARNET_URL)
 
-    const slider = page.locator('[price-slider]')
+    const slider = page.locator('[data-price-range]')
     await slider.fill('0')
     await slider.dispatchEvent('change')
 
-    const buyButton = page.locator('[create-checkout]')
-    const downloadButton = page.locator('[download-button]')
+    const buyButton = page.locator('[data-create-checkout]')
+    const downloadButton = page.locator('[data-download]')
 
     await expect(buyButton).toBeHidden()
     await expect(downloadButton).toBeVisible()
@@ -52,11 +52,11 @@ test.describe('Carnet Enfants product page', () => {
   test('slider at value > 0 triggers Stripe checkout with custom price', async ({ page }) => {
     await page.goto(CARNET_URL)
 
-    const slider = page.locator('[price-slider]')
+    const slider = page.locator('[data-price-range]')
     await slider.fill('7')
     await slider.dispatchEvent('change')
 
-    const buyButton = page.locator('[create-checkout]')
+    const buyButton = page.locator('[data-create-checkout]')
     await expect(buyButton).toBeVisible()
 
     const checkoutRequest = page.waitForRequest((req) => {

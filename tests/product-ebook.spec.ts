@@ -13,7 +13,7 @@ test.describe('Ebook Saint-Malo product page', () => {
   test('buy button is visible and triggers Stripe checkout', async ({ page }) => {
     await page.goto(EBOOK_URL)
 
-    const buyButton = page.locator('[create-checkout]')
+    const buyButton = page.locator('[data-create-checkout]')
     await expect(buyButton).toBeVisible()
     await expect(buyButton).toContainText('Acheter')
 
@@ -50,6 +50,7 @@ test.describe('Ebook Saint-Malo product page', () => {
   test('no price slider is present (fixed price product)', async ({ page }) => {
     await page.goto(EBOOK_URL)
 
-    await expect(page.locator('[price-slider]')).not.toBeAttached()
+    await expect(page.locator('[data-checkout]')).toHaveAttribute('data-price-slider', 'false')
+    await expect(page.locator('[data-price-range]')).not.toBeAttached()
   })
 })

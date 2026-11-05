@@ -1,0 +1,131 @@
+---
+// Layout trial, not indexed. Delete this file once a home layout is chosen.
+// "La carte postale": the place first, with the planner floating over the photo.
+import { Image } from 'astro:assets'
+import { decode } from 'html-entities'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import EbookCard from '../components/EbookCard.astro'
+import Icon from '../components/Icon.astro'
+import Pagination from '../components/Pagination.astro'
+import Photo from '../components/Photo.astro'
+import PostGrid from '../components/PostGrid.astro'
+import { useTranslations } from '../i18n/ui'
+import Layout from '../layouts/Layout.astro'
+import { featuredPhoto, formatMonth } from '../lib/content'
+import { getSite } from '../lib/site'
+import { getLatestPosts, getPostsBySlugs } from '../lib/wordpress'
+
+const COLORS = ['bg-vanille', 'bg-framboise', 'bg-pistache', 'bg-[#aeb8f2]']
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+const list = await getLatestPosts(lang, 1)
+const [feature, ...rest] = list.posts
+const featurePhoto = featuredPhoto(feature)
+const side = rest.slice(0, 3)
+const aroundPosts = await getPostsBySlugs(site.around.map((place) => place.slug), lang)
+const around = site.around.flatMap((place) => {
+  const post = aroundPosts.find((candidate) => candidate.slug === place.slug)
+  return post ? { ...place, photo: featuredPhoto(post) } : []
+})
+const postUrl = (slug: string) => getRelativeLocaleUrl(lang, `/${slug}`)
+---
+
+<Layout headerOverlay="photo">
+  <title slot="head">Home 2 · Carnets Vanille</title>
+  <main>
+    <section class="relative h-[calc(68svh+56px)] min-h-[516px] overflow-hidden bg-ink lg:h-[732px]">
+      <Image
+        src={site.hero.image}
+        alt={site.hero.imageAlt}
+        inferSize
+        widths={[640, 1100, 1600, 2000]}
+        sizes="100vw"
+        quality={72}
+        loading="eager"
+        fetchpriority="high"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 bg-linear-to-t from-black/85 via-black/35 to-transparent"></div>
+      <div class="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/55 to-transparent"></div>
+      <div class="cv-container relative flex h-full flex-col justify-end gap-3 pb-24 text-white lg:gap-4 lg:pb-32">
+        <h1 class="cv-h1 lg:text-[88px]">{site.hero.title}</h1>
+        <p class="max-w-[52ch] text-[17px] leading-normal text-white/95 lg:text-lg">{site.hero.bio}</p>
+      </div>
+    </section>
+
+    <div class="cv-container relative z-10 -mt-16 lg:-mt-20">
+      <nav aria-label={t('home.prepare')} class="rounded-lg bg-surface p-3 shadow-[0_18px_50px_rgb(28_25_23/0.16)] ring-1 ring-line lg:p-4">
+        <h2 class="px-2 pt-1 pb-3 font-display text-xl font-extrabold tracking-tight lg:text-2xl">{t('home.prepare')}</h2>
+        <ul class="grid grid-cols-3 gap-1 lg:grid-cols-6">
+          {
+            site.tiles.map((tile, index) => (
+              <li>
+                <a href={tile.href} class="group flex h-full flex-col items-center gap-2 rounded-md px-1 py-3 text-center font-display text-[15px] leading-tight font-extrabold tracking-tight transition-colors hover:bg-sunken lg:text-lg">
+                  <span class:list={['flex h-12 w-12 items-center justify-center rounded-full text-ink transition-transform duration-200 group-hover:-rotate-6 lg:h-14 lg:w-14', COLORS[index % COLORS.length]]}>
+                    <Icon name={tile.icon} size={24} />
+                  </span>
+                  {tile.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div class="cv-container flex flex-col gap-12 py-10 lg:gap-20 lg:py-20">
+      <section class="grid gap-8 lg:grid-cols-[1.55fr_1fr] lg:gap-10">
+        <a href={postUrl(feature.slug)} class="group flex flex-col gap-3">
+          {featurePhoto && <Photo photo={featurePhoto} budget="hero" class="aspect-[3/2] w-full rounded-lg object-cover" />}
+          <p class="text-sm font-extrabold">{t('home.latest')} · {formatMonth(feature.modified, lang)}</p>
+          <h2 class="cv-h2 group-hover:underline">{decode(feature.title.rendered)}</h2>
+        </a>
+        <ul class="flex flex-col divide-y divide-line">
+          {
+            side.map((post) => {
+              const photo = featuredPhoto(post)
+              return (
+                <li class="py-4 first:pt-0">
+                  <a href={postUrl(post.slug)} class="group grid grid-cols-[96px_1fr] items-center gap-4 lg:grid-cols-[132px_1fr]">
+                    {photo && <Photo photo={photo} budget="card" class="aspect-square w-full rounded-md object-cover" />}
+                    <span class="flex flex-col gap-1">
+                      <span class="font-display text-lg leading-tight font-extrabold tracking-tight group-hover:underline lg:text-xl">{decode(post.title.rendered)}</span>
+                      <span class="text-sm text-muted">{formatMonth(post.modified, lang)}</span>
+                    </span>
+                  </a>
+                </li>
+              )
+            })
+          }
+        </ul>
+      </section>
+
+      <section class="flex flex-col gap-4">
+        <h2 class="cv-h2">{t('home.around')}</h2>
+        <ul class="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 [scrollbar-width:none] lg:mx-0 lg:grid lg:grid-cols-6 lg:overflow-visible lg:px-0">
+          {
+            around.map((place) => (
+              <li class="w-[58vw] max-w-[240px] shrink-0 snap-start lg:w-auto lg:max-w-none">
+                <a href={postUrl(place.slug)} class="group relative block overflow-hidden rounded-lg">
+                  {place.photo && <Photo photo={place.photo} budget="card" class="aspect-[3/4] w-full object-cover transition-transform duration-300 group-hover:scale-105" />}
+                  <span class="absolute inset-0 bg-linear-to-t from-black/65 to-transparent to-55%"></span>
+                  <span class="absolute inset-x-3 bottom-3 font-display text-lg leading-tight font-extrabold tracking-tight text-white">{place.label}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <EbookCard />
+
+      <section class="flex flex-col gap-6">
+        <h2 class="cv-h2">{t('index.posts.title')}</h2>
+        <PostGrid posts={rest.slice(3)} />
+        <Pagination total={list.total} perPage={list.perPage} currentPage={1} baseUrl="" />
+      </section>
+    </div>
+  </main>
+</Layout>

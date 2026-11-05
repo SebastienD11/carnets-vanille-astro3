@@ -1,16 +1,19 @@
+import { env } from '../../lib/env'
 // SSR API used client side at runtime.
 
 import type { APIRoute } from 'astro'
 
+export const prerender = false
+
 export const POST: APIRoute = async (context) => {
   const wpApiUrl =
-    (context.locals as any).runtime?.env?.WORDPRESS_REST_API_URL ||
+    env.WORDPRESS_REST_API_URL ||
     import.meta.env.WORDPRESS_REST_API_URL
   const wpUsername =
-    (context.locals as any).runtime?.env?.WORDPRESS_APP_USERNAME ||
+    env.WORDPRESS_APP_USERNAME ||
     import.meta.env.WORDPRESS_APP_USERNAME
   const wpPassword =
-    (context.locals as any).runtime?.env?.WORDPRESS_APP_PASSWORD ||
+    env.WORDPRESS_APP_PASSWORD ||
     import.meta.env.WORDPRESS_APP_PASSWORD
 
   const wpCommentRoute = wpApiUrl + '/comments'

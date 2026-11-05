@@ -1,0 +1,83 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { useTranslations } from '../i18n/ui'
+import { getSite } from '../lib/site'
+import type { Alternate } from '../lib/content'
+import Icon from './Icon.astro'
+import Logo from './Logo.astro'
+import LanguagePicker from './LanguagePicker.astro'
+
+type Props = {
+  alternates?: Alternate[]
+  /** Transparent over the hero until the page scrolls. Names what the hero is made of. */
+  overlay?: 'vanille' | 'photo'
+}
+
+const { alternates, overlay } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+const withSlash = (path: string) => (path.endsWith('/') ? path : `${path}/`)
+const currentPath = withSlash(Astro.url.pathname)
+---
+
+<div data-header-sentinel class="pointer-events-none absolute top-0 h-6 w-px" aria-hidden="true"></div>
+<header data-header data-overlay={overlay} class="cv-header">
+  <div class="cv-header-bar">
+    <a href={getRelativeLocaleUrl(lang, '/')} class="shrink-0" aria-label="Carnets Vanille">
+      <Logo class="cv-header-logo" overlay={overlay} />
+    </a>
+    <nav class="hidden lg:block" aria-label={t('nav.main')}>
+      <ul class="flex items-center gap-0.5 xl:gap-1">
+        {
+          site.nav.map((link) => (
+            <li>
+              <a href={link.href} class="cv-nav-link" aria-current={link.href === currentPath ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="flex items-center gap-1 lg:gap-2">
+      <button
+        type="button"
+        data-dialog-open="cv-search"
+        class="flex h-11 w-11 items-center justify-center rounded-full transition-colors lg:h-10 lg:w-10 lg:hover:bg-sunken"
+        aria-label={t('search.ariaLabel')}
+      >
+        <Icon name="search" size={22} />
+      </button>
+      <div class="hidden px-1 lg:block">
+        <LanguagePicker alternates={alternates} />
+      </div>
+      {
+        site.ebook && (
+          <a href={site.ebook.href} class="cv-btn cv-btn-primary cv-btn-pill hidden lg:inline-flex">
+            {t('nav.ebookShort')}
+          </a>
+        )
+      }
+      <button
+        type="button"
+        data-dialog-open="cv-menu"
+        class="-mr-2 flex h-11 w-11 items-center justify-center lg:hidden"
+        aria-label={t('nav.open')}
+      >
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // The bar keeps its place in the page, so condensing it never moves the content under it.
+  const header = document.querySelector<HTMLElement>('[data-header]')
+  const sentinel = document.querySelector('[data-header-sentinel]')
+  if (header && sentinel) {
+    new IntersectionObserver(([entry]) => {
+      header.toggleAttribute('data-scrolled', !entry.isIntersecting)
+    }).observe(sentinel)
+  }
+</script>

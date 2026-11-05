@@ -1,0 +1,10 @@
+---
+type Props = { label: string; variant?: 'primary' | 'dark' }
+
+const { label, variant = 'primary' } = Astro.props
+---
+
+<button type="submit" class:list={['cv-btn group w-full', variant === 'primary' ? 'cv-btn-primary' : 'cv-btn-dark']}>
+  <span class="group-disabled:hidden">{label}</span>
+  <span class="hidden h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent group-disabled:block" aria-hidden="true"></span>
+</button>

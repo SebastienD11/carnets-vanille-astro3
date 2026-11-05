@@ -1,92 +1,220 @@
 ---
-import Header from '../components/header/Header.astro'
+import '@fontsource-variable/bricolage-grotesque'
 import '@fontsource-variable/mulish'
-import Seo from '../components/head/seo.astro'
+import '@fontsource/newsreader/400-italic.css'
+import '../styles/global.css'
+import bricolageUrl from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url'
+import mulishUrl from '@fontsource-variable/mulish/files/mulish-latin-wght-normal.woff2?url'
+import BottomBar from '../components/BottomBar.astro'
+import DesignSettings from '../components/DesignSettings.astro'
+import Footer from '../components/Footer.astro'
+import FormScript from '../components/form/FormScript.astro'
+import Header from '../components/Header.astro'
+import Menu from '../components/Menu.astro'
+import NewsletterDialog from '../components/NewsletterDialog.astro'
+import SearchDialog from '../components/SearchDialog.astro'
+import SeoHead from '../components/SeoHead.astro'
+import type { Alternate } from '../lib/content'
+import { FEATURES } from '../lib/site'
+import type { Yoast } from '../lib/wordpress'
 
-import '../styles/custom.css'
-import Footer from '../components/Footer/Footer.astro'
-import FormScript from '../components/scripts/formScript.astro'
-import NewsletterModal from '../components/newsletter/newsletterModal.astro'
-import ResponsiveMenuDrawer from '../components/responsiveMenu/responsiveMenuDrawer.astro'
-import ResponsiveMenuToggle from '../components/responsiveMenu/responsiveMenuToggle.astro'
-import ThemeColorScript from '../components/scripts/themeColor.astro'
-import ResponsiveMenuContent from '../components/responsiveMenu/ResponsiveMenuContent.astro'
-import SearchDrawerMobile from '../components/search/SearchDrawerMobile.astro'
-import type { Yoast } from '../api/yoast'
-
-interface Props {
-  seo: {
-    yoast: Yoast
-    alternates: {
-      hrefLang: string
-      href: string
-    }[]
-  }
+type Props = {
+  seo?: { yoast: Yoast; alternates: Alternate[] }
+  /** No header, footer or dialogs: Linktree and previews. */
+  bare?: boolean
+  /** Product pages stay free of the Stay22 affiliate script, as they were. */
+  affiliate?: boolean
+  hasToc?: boolean
+  /** The page opens on a full-width hero that the header sits on. */
+  headerOverlay?: 'vanille' | 'photo'
 }
 
-const { seo } = Astro.props
-
+const { seo, bare, affiliate = true, hasToc, headerOverlay } = Astro.props
 const lang = Astro.currentLocale as string
+const designSettings = FEATURES.designSettings && import.meta.env.CUSTOM_ENV !== 'production' && !bare
 ---
 
 <!doctype html>
 <html lang={lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <!-- SEO -->
-    <Seo seo={seo} />
-    <!-- Favicon -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1c1917" />
+    <script is:inline>
+      // Runs before first paint so dark-mode readers never get a white flash.
+      ;(function () {
+        var stored
+        try {
+          stored = localStorage.getItem('theme')
+        } catch (e) {}
+        var dark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.classList.toggle('dark', dark)
+      })()
+    </script>
+    {
+      designSettings && (
+        <script is:inline>
+          // Applies the saved trial before first paint. The widget itself is DesignSettings.astro.
+          ;(function () {
+            var FONTS = {
+              bricolage: { css: "'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif" },
+              montserrat: { css: 'Montserrat, ui-sans-serif, system-ui, sans-serif', google: 'Montserrat:wght@700;800' },
+              fraunces: { css: 'Fraunces, Georgia, serif', google: 'Fraunces:opsz,wght@9..144,700;9..144,800' }
+            }
+            var KEY = 'cv-design-settings'
+            var state = { font: 'bricolage', layout: 'single', bar: 'off' }
+            try {
+              var saved = JSON.parse(localStorage.getItem(KEY) || '{}')
+              if (FONTS[saved.font]) state.font = saved.font
+              if (['single', 'a', 'd'].indexOf(saved.layout) > -1) state.layout = saved.layout
+              if (saved.bar === 'on') state.bar = 'on'
+            } catch (e) {}
+
+            function applyBar() {
+              document.documentElement.setAttribute('data-cv-bar', state.bar)
+            }
+
+            function applyFont() {
+              var font = FONTS[state.font]
+              document.documentElement.style.setProperty('--font-display', font.css)
+              if (font.google && !document.querySelector('link[data-design-font="' + state.font + '"]')) {
+                var link = document.createElement('link')
+                link.rel = 'stylesheet'
+                link.href = 'https://fonts.googleapis.com/css2?family=' + font.google + '&display=swap'
+                link.setAttribute('data-design-font', state.font)
+                document.head.appendChild(link)
+              }
+            }
+
+            function applyLogos() {
+              document.documentElement.setAttribute('data-cv-logo', state.layout)
+              var isDefault = state.font === 'bricolage' && state.layout === 'single'
+              document.querySelectorAll('img[data-logo]').forEach(function (img) {
+                var original = img.getAttribute('data-original-src') || img.getAttribute('src')
+                img.setAttribute('data-original-src', original)
+                if (isDefault) {
+                  img.setAttribute('src', original)
+                  return
+                }
+                var background = /vanille/.test(original) ? 'vanille' : /photo/.test(original) ? 'photo' : /on-dark/.test(original) ? 'ink' : 'white'
+                // The footer has room for two lines, so a one-line choice keeps its two-line version.
+                var footer = img.getAttribute('data-logo') === 'footer'
+                var layout = footer && state.layout === 'single' ? 'd' : state.layout
+                img.setAttribute('src', '/logos/options/' + state.font + '-' + layout + '-' + background + '.svg')
+              })
+            }
+
+            window.cvDesign = {
+              state: state,
+              set: function (name, value) {
+                state[name] = value
+                try {
+                  localStorage.setItem(KEY, JSON.stringify(state))
+                } catch (e) {}
+                applyFont()
+                applyLogos()
+                applyBar()
+              }
+            }
+            applyFont()
+            applyBar()
+            document.addEventListener('DOMContentLoaded', applyLogos)
+          })()
+        </script>
+      )
+    }
+    <link rel="preload" href={bricolageUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={mulishUrl} as="font" type="font/woff2" crossorigin />
+    {seo ? <SeoHead seo={seo} /> : <meta name="robots" content="noindex" />}
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <!-- CSS -->
-    <link rel="stylesheet" href="/icons/glace-icons.css" />
-    <!-- Privacy-friendly analytics by Plausible -->
+    <slot name="head" />
     <script async src="https://plausible.sebastiendelrue.me/js/pa-oQTW0GojrZBbaEX-IMzS0.js"></script>
-    <script>
+    <script is:inline>
       window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
       plausible.init()
     </script>
   </head>
 
-  <body
-    class="mx-auto bg-stone-50 px-4 py-6 font-mulish md:container dark:bg-stone-900 dark:text-white text-stone-900"
-    data-env={import.meta.env.CUSTOM_ENV}
-  >
-    <Header />
-    <ResponsiveMenuToggle />
-    <slot />
-    <Footer alternates={seo.alternates} />
-    <ResponsiveMenuDrawer>
-      <ResponsiveMenuContent />
-    </ResponsiveMenuDrawer>
-    <SearchDrawerMobile />
+  <body data-env={import.meta.env.CUSTOM_ENV} class="flex min-h-dvh flex-col">
+    {!bare && <Header alternates={seo?.alternates} overlay={headerOverlay} />}
+    <div class="flex-1">
+      <slot />
+    </div>
+    {
+      !bare && (
+        <>
+          <Footer alternates={seo?.alternates} />
+          {FEATURES.mobileBottomBar ? (
+            <BottomBar hasToc={hasToc} />
+          ) : (
+            designSettings && (
+              <div class="cv-bar-trial">
+                <BottomBar hasToc={hasToc} />
+              </div>
+            )
+          )}
+          <Menu alternates={seo?.alternates} />
+          <SearchDialog />
+          <NewsletterDialog />
+        </>
+      )
+    }
+    {designSettings && <DesignSettings />}
     <FormScript />
-    <ThemeColorScript />
-    <NewsletterModal />
-    <script is:inline>
-      ;(function (s, t, a, y, twenty, two) {
-        if (document.body.dataset.env === 'production') {
-          s.Stay22 = s.Stay22 || {}
-          // Just fill out your configs here
-          s.Stay22.params = {
-            aid: 'carnetsvanille'
-          }
-          // Leave this part as-is;
-          twenty = t.createElement(a)
-          two = t.getElementsByTagName(a)[0]
-          twenty.async = 1
-          twenty.src = y
-          two.parentNode.insertBefore(twenty, two)
+    <script>
+      // Every panel is a native <dialog>: focus trap, Escape and top layer come for free.
+      document.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement
+        const opener = target.closest<HTMLElement>('[data-dialog-open]')
+        if (opener) {
+          const dialog = document.getElementById(opener.dataset.dialogOpen ?? '') as HTMLDialogElement | null
+          if (!dialog) return
+          document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach((open) => open.close())
+          const origin = opener.getBoundingClientRect()
+          dialog.style.setProperty('--cv-ox', `${origin.left + origin.width / 2}px`)
+          dialog.style.setProperty('--cv-oy', `${origin.top + origin.height / 2}px`)
+          dialog.showModal()
+          // With a tabindex, the panel itself takes focus, so no focus ring appears on its first button.
+          if (dialog.hasAttribute('tabindex')) dialog.focus()
+          dialog.dispatchEvent(new Event('cv:open'))
+          return
         }
-      })(window, document, 'script', 'https://scripts.stay22.com/letmeallez.js')
+        if (target.closest('[data-dialog-close]') || target.matches('dialog')) {
+          target.closest('dialog')?.close()
+          return
+        }
+        // Following an in-page link from a panel (the table of contents) closes it.
+        if (target.closest('dialog a[href^="#"]')) target.closest('dialog')?.close()
+
+        if (target.closest('[data-theme-toggle]')) {
+          const dark = document.documentElement.classList.toggle('dark')
+          try {
+            localStorage.setItem('theme', dark ? 'dark' : 'light')
+          } catch {}
+        }
+      })
     </script>
+    {
+      affiliate && (
+        <script is:inline>
+          ;(function (s, t, a, y, twenty, two) {
+            if (document.body.dataset.env === 'production') {
+              s.Stay22 = s.Stay22 || {}
+              s.Stay22.params = { aid: 'carnetsvanille' }
+              twenty = t.createElement(a)
+              two = t.getElementsByTagName(a)[0]
+              twenty.async = 1
+              twenty.src = y
+              two.parentNode.insertBefore(twenty, two)
+            }
+          })(window, document, 'script', 'https://scripts.stay22.com/letmeallez.js')
+        </script>
+      )
+    }
   </body>
 </html>

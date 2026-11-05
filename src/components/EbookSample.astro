@@ -1,0 +1,48 @@
+---
+// Free extract form, placed by the [shortcode_free_ebook_banner] in WordPress articles.
+import { Image } from 'astro:assets'
+import mockup from '../images/banner-samble-ebook-image.png'
+import { ADMIN_EMAIL } from '../constant'
+import { useTranslations } from '../i18n/ui'
+import { getSite } from '../lib/site'
+import Field from './form/Field.astro'
+import Messages from './form/Messages.astro'
+import Submit from './form/Submit.astro'
+
+type Props = { uid: number | string }
+
+const { uid } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+---
+
+<aside class="cv-embed @container overflow-hidden rounded-lg bg-tint text-tint-ink">
+  <div class="flex flex-col @xl:flex-row @xl:items-center">
+    <Image
+      src={mockup}
+      alt=""
+      widths={[300, 600]}
+      sizes="(min-width: 768px) 280px, 240px"
+      quality={78}
+      class="mx-auto -mb-2 h-auto w-[230px] -rotate-3 pt-3 @xl:my-0 @xl:ml-2 @xl:w-[270px] @xl:shrink-0 @xl:pt-0"
+    />
+    <div class="flex min-w-0 flex-1 flex-col gap-3 p-5 @xl:py-7 @xl:pr-7 @xl:pl-3">
+      <h3 class="text-[22px] leading-tight @xl:text-[26px]">{t('ebook.banner.sample.title')}</h3>
+      <p class="text-[15px] leading-snug">{t('ebook.banner.sample.subtitle')}</p>
+      <form onsubmit="formSubmit(event, postFreeEbook)" class="flex flex-col gap-3" novalidate>
+        <Messages
+          requiredError={t('form.error.fields')}
+          callbackError={t('form.error.generic') + ADMIN_EMAIL}
+          success={t('ebook.banner.sample.success')}
+        />
+        <div class="grid gap-3 @md:grid-cols-2">
+          <Field required id={`sample-firstName-${uid}`} name="firstName" label={t('form.input.firstName')} autocomplete="given-name" />
+          <Field required id={`sample-email-${uid}`} name="email" type="email" label={t('form.input.email')} autocomplete="email" />
+        </div>
+        <input type="hidden" name="mailerLiteGroupId" value={site.mailerlite.groupSampleEbook} />
+        <Submit label={t('ebook.banner.sample.submit')} variant="dark" />
+      </form>
+    </div>
+  </div>
+</aside>

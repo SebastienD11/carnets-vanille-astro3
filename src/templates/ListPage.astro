@@ -1,0 +1,30 @@
+---
+// Categories, tags and /page/N of the blog share one layout.
+import Pagination from '../components/Pagination.astro'
+import PostGrid from '../components/PostGrid.astro'
+import type { PostList } from '../lib/wordpress'
+
+type Props = {
+  title?: string
+  kicker?: string
+  description?: string
+  list: PostList
+  baseUrl: string
+}
+
+const { title, kicker, description, list, baseUrl } = Astro.props
+---
+
+<main class="cv-container flex flex-col gap-6 py-8 lg:gap-8 lg:py-14">
+  {
+    title && (
+      <header class="flex flex-col gap-2">
+        {kicker && <p class="text-sm font-bold text-muted">{kicker}</p>}
+        <h1 class="cv-h1">{title}</h1>
+        {description && <div class="max-w-[62ch] text-lg" set:html={description} />}
+      </header>
+    )
+  }
+  <PostGrid posts={list.posts} as={title ? 'h2' : 'h3'} />
+  <Pagination total={list.total} perPage={list.perPage} currentPage={list.currentPage} baseUrl={baseUrl} />
+</main>

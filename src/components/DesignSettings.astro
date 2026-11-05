@@ -1,0 +1,243 @@
+---
+// Trial widget for Sarah: logo and heading font, logo on one or two lines. Saved in this browser only.
+// Layout.astro holds the code that applies the choice. Remove both once the choice is made.
+import Icon from './Icon.astro'
+
+const groups = [
+  {
+    name: 'font',
+    label: 'Police du logo et des titres',
+    options: [
+      { value: 'bricolage', label: 'Bricolage' },
+      { value: 'montserrat', label: 'Montserrat' },
+      { value: 'fraunces', label: 'Fraunces' }
+    ]
+  },
+  {
+    name: 'layout',
+    label: 'Logo dans le menu',
+    options: [
+      { value: 'single', label: 'Une ligne' },
+      { value: 'a', label: 'Deux lignes A' },
+      { value: 'd', label: 'Deux lignes D' }
+    ]
+  },
+  {
+    name: 'bar',
+    label: 'Barre en bas sur mobile',
+    mobileOnly: true,
+    options: [
+      { value: 'off', label: 'Masquer' },
+      { value: 'on', label: 'Afficher' }
+    ]
+  }
+]
+---
+
+<div class="settings" data-design-settings>
+  <button type="button" popovertarget="cv-design-panel" class="settings-toggle" aria-label="Essayer le logo et les polices">
+    <Icon name="sliders" size={18} />
+  </button>
+  <div id="cv-design-panel" popover class="settings-panel">
+    <p class="settings-title">Essayer le logo et les polices</p>
+    {
+      groups.map((group) => (
+        <div class:list={['settings-group', { 'settings-mobile': group.mobileOnly }]} role="group" aria-label={group.label}>
+          <p class="settings-label">{group.label}</p>
+          <div class="settings-options">
+            {group.options.map((option) => (
+              <button type="button" class="settings-option" data-name={group.name} data-value={option.value} aria-pressed="false">
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+    <p class="settings-note">Visible par toi seule, sur cet appareil. Les lecteurs ne voient rien.</p>
+    <button type="button" class="settings-reset" data-reset>Revenir au choix de départ</button>
+  </div>
+</div>
+
+<script is:inline>
+  ;(function () {
+    var root = document.querySelector('[data-design-settings]')
+    var refresh = function () {
+      root.querySelectorAll('[data-name]').forEach(function (button) {
+        var on = window.cvDesign.state[button.dataset.name] === button.dataset.value
+        button.setAttribute('aria-pressed', String(on))
+      })
+    }
+    root.addEventListener('click', function (event) {
+      var option = event.target.closest('[data-name]')
+      if (option) window.cvDesign.set(option.dataset.name, option.dataset.value)
+      if (event.target.closest('[data-reset]')) {
+        window.cvDesign.set('font', 'bricolage')
+        window.cvDesign.set('layout', 'single')
+        window.cvDesign.set('bar', 'off')
+      }
+      refresh()
+    })
+    refresh()
+  })()
+</script>
+
+<style>
+  .settings-toggle {
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: var(--cv-surface);
+    color: var(--cv-muted);
+    box-shadow:
+      0 0 0 1px var(--cv-line),
+      0 4px 14px rgb(28 25 23 / 0.14);
+    opacity: 0.75;
+    transition: opacity 150ms;
+  }
+
+  .settings-toggle:hover,
+  .settings-toggle:focus-visible {
+    opacity: 1;
+  }
+
+  .settings-panel {
+    position: fixed;
+    inset: auto auto 60px 12px;
+    width: min(300px, calc(100vw - 24px));
+    margin: 0;
+    padding: 16px;
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: var(--cv-surface);
+    color: var(--cv-body);
+    box-shadow:
+      0 0 0 1px var(--cv-line),
+      0 16px 40px rgb(28 25 23 / 0.2);
+  }
+
+  .settings-title {
+    margin-bottom: 12px;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .settings-group {
+    margin-bottom: 12px;
+  }
+
+  @media (min-width: 1024px) {
+    .settings-mobile {
+      display: none;
+    }
+  }
+
+  .settings-label {
+    margin-bottom: 6px;
+    color: var(--cv-muted);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .settings-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .settings-option {
+    min-height: 36px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--cv-sunken);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .settings-option[aria-pressed='true'] {
+    background: var(--color-vanille);
+    color: var(--color-ink);
+  }
+
+  .settings-note {
+    color: var(--cv-muted);
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+
+  .settings-reset {
+    margin-top: 8px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>
+
+<style is:global>
+  /* Bottom bar trial. It replaces the header's menu icon, and stays off the product pages, where
+     the buy button already takes the bottom of the screen. */
+  .cv-bar-trial {
+    display: none;
+  }
+
+  html[data-cv-bar='on'] .cv-bar-trial {
+    display: contents;
+  }
+
+  html[data-cv-bar='on'] body:has([data-checkout]) .cv-bar-trial {
+    display: none;
+  }
+
+  html[data-cv-bar='on'] body:not(:has([data-checkout])) .cv-header [data-dialog-open='cv-menu'] {
+    display: none;
+  }
+
+  @media (max-width: 1023px) {
+    /* Keeps the button clear of the fixed buy button or the bottom bar. */
+    body:has([data-checkout]) .settings-toggle {
+      bottom: 84px;
+    }
+
+    body:has([data-checkout]) .settings-panel {
+      bottom: 132px;
+    }
+
+    html[data-cv-bar='on'] body:not(:has([data-checkout])) .settings-toggle {
+      bottom: 68px;
+    }
+
+    html[data-cv-bar='on'] body:not(:has([data-checkout])) .settings-panel {
+      bottom: 116px;
+    }
+  }
+
+  /* Two-line logos are sized by height, because their width changes with the font. */
+  html[data-cv-logo='a'] .cv-header-logo,
+  html[data-cv-logo='d'] .cv-header-logo {
+    width: auto;
+    height: 46px;
+  }
+
+  @media (min-width: 1024px) {
+    html[data-cv-logo='a'] .cv-header-logo,
+    html[data-cv-logo='d'] .cv-header-logo {
+      height: 70px;
+    }
+
+    html[data-cv-logo='a'] [data-scrolled] .cv-header-logo,
+    html[data-cv-logo='d'] [data-scrolled] .cv-header-logo {
+      height: 52px;
+    }
+  }
+</style>

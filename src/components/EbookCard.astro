@@ -1,0 +1,55 @@
+---
+// The price is read from the ebook page's ACF field, so it can never disagree with the checkout.
+import { Image } from 'astro:assets'
+import mockup from '../images/banner-ebook-image.png'
+import { getSite } from '../lib/site'
+import { getEbookPrice } from '../lib/wordpress'
+import Icon from './Icon.astro'
+
+type Props = { compact?: boolean; class?: string }
+
+const { compact, class: className } = Astro.props
+const site = getSite(Astro.currentLocale as string)
+const ebook = site.ebook
+const price = ebook ? await getEbookPrice() : null
+const cta = ebook && price ? `${ebook.cta} · ${price}` : ebook?.cta
+---
+
+{
+  ebook &&
+    (compact ? (
+      <aside class:list={['cv-embed flex flex-col gap-3 rounded-lg bg-card-dark p-4 text-white', className]}>
+        <Image src={mockup} alt="" widths={[260, 520]} sizes="260px" quality={78} class="mx-auto h-auto w-[180px]" />
+        <h3 class="text-lg">{ebook.title}</h3>
+        <a href={ebook.href} class="cv-btn cv-btn-primary w-full">{cta}</a>
+      </aside>
+    ) : (
+      <aside class:list={['cv-embed group @container overflow-hidden rounded-lg bg-card-dark text-white', className]}>
+        <div class="flex flex-col @xl:flex-row @xl:items-center">
+          <div class="flex flex-1 flex-col gap-4 p-5 @xl:py-8 @xl:pr-2 @xl:pl-8">
+            <h3 class="text-[28px] leading-[1.08] @xl:text-[34px]">{ebook.title}</h3>
+            <p class="text-[15px] leading-snug text-white/85">{ebook.text}</p>
+            <ul class="flex flex-col gap-1.5 text-[15px] font-bold">
+              {ebook.points.map((point) => (
+                <li class="flex items-center gap-2">
+                  <Icon name="check" size={18} class="shrink-0 text-vanille" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+            <div>
+              <a href={ebook.href} class="cv-btn cv-btn-primary w-full @xl:w-auto">{cta}</a>
+            </div>
+          </div>
+          <Image
+            src={mockup}
+            alt=""
+            widths={[340, 680]}
+            sizes="(min-width: 768px) 340px, 300px"
+            quality={78}
+            class="order-first mx-auto -mb-6 h-auto w-[270px] -rotate-3 pt-3 transition-transform duration-300 group-hover:scale-[1.03] group-hover:-rotate-1 @xl:order-none @xl:-my-6 @xl:mr-1 @xl:w-[320px] @xl:shrink-0 @xl:pt-0"
+          />
+        </div>
+      </aside>
+    ))
+}

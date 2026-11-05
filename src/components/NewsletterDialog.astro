@@ -1,0 +1,48 @@
+---
+import { ADMIN_EMAIL } from '../constant'
+import { useTranslations } from '../i18n/ui'
+import { getSite } from '../lib/site'
+import Field from './form/Field.astro'
+import Messages from './form/Messages.astro'
+import Submit from './form/Submit.astro'
+import Icon from './Icon.astro'
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const { groups } = getSite(lang).mailerlite
+---
+
+<dialog id="cv-newsletter" class="cv-dialog cv-dialog-modal" aria-label={t('newsletter.header.title')}>
+  <div class="flex flex-col gap-5 p-5 lg:p-8">
+    <div class="flex items-start justify-between gap-4">
+      <h2 class="text-3xl">{t('newsletter.header.title')}</h2>
+      <button type="button" data-dialog-close class="-mt-2 -mr-2 flex h-11 w-11 shrink-0 items-center justify-center" aria-label={t('nav.close')}>
+        <Icon name="close" />
+      </button>
+    </div>
+    <p class="text-[15px]" set:html={t('newsletter.header.subtitle')} />
+    <form onsubmit="formSubmit(event, postMailerlite)" class="flex flex-col gap-4" novalidate>
+      <Messages
+        requiredError={t('newsletter.form.error.fields')}
+        callbackError={t('form.error.generic') + ADMIN_EMAIL}
+        success={t('newsletter.form.success')}
+      />
+      <div class="grid gap-4 sm:grid-cols-2">
+        <Field required id="nl-firstName" name="firstName" label={t('newsletter.form.firstName')} autocomplete="given-name" />
+        <Field required id="nl-email" name="email" type="email" label={t('newsletter.form.email')} autocomplete="email" />
+      </div>
+      <fieldset class="flex flex-col gap-2">
+        {
+          groups.map((group) => (
+            <label class="flex min-h-6 cursor-pointer items-start gap-2 text-[15px]">
+              <input type="checkbox" name="groups" value={group.id} class="mt-1 h-4 w-4 accent-ink dark:accent-vanille" />
+              {group.label}
+            </label>
+          ))
+        }
+      </fieldset>
+      <Submit label={t('newsletter.form.submit')} />
+    </form>
+    <p class="text-sm text-muted" set:html={t('newsletter.footer.copy')} />
+  </div>
+</dialog>

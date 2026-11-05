@@ -1,0 +1,39 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import type { Alternate } from '../lib/content'
+
+type Props = { alternates?: Alternate[]; class?: string }
+
+const { alternates = [], class: className } = Astro.props
+const current = Astro.currentLocale as string
+
+// A page with no translation links to the other language's home page.
+function urlFor(lang: string) {
+  const translation = alternates.find((alternate) => alternate.hrefLang === lang)
+  if (translation) {
+    try {
+      return new URL(translation.href).pathname
+    } catch {
+      return translation.href
+    }
+  }
+  return getRelativeLocaleUrl(lang, '/')
+}
+---
+
+<span class:list={['inline-flex items-center gap-1 text-sm', className]}>
+  {
+    ['fr', 'en'].map((lang, index) => (
+      <>
+        {index > 0 && <span aria-hidden="true">·</span>}
+        {lang === current ? (
+          <strong class="font-extrabold uppercase">{lang}</strong>
+        ) : (
+          <a href={urlFor(lang)} hreflang={lang} class="uppercase hover:underline">
+            {lang}
+          </a>
+        )}
+      </>
+    ))
+  }
+</span>

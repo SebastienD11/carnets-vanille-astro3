@@ -1,0 +1,94 @@
+---
+// Global because forms call these from their onsubmit attribute. Payloads sent to
+// /api/comments and /api/mailerlite are the same as before the redesign.
+---
+
+<script is:inline>
+  function formSubmit(event, callback) {
+    event.preventDefault()
+    const form = event.target
+    const show = (attr, visible) =>
+      form.querySelector('[' + attr + ']')?.classList.toggle('hidden', !visible)
+    const submit = form.querySelector('[type="submit"]')
+
+    show('data-form-success', false)
+    show('data-form-callback-error', false)
+
+    if (!isFormValid(form)) {
+      show('data-form-required-error', true)
+      return false
+    }
+    show('data-form-required-error', false)
+
+    submit.disabled = true
+    callback(form)
+      .then(() => {
+        show('data-form-success', true)
+        form.reset()
+      })
+      .catch((res) => {
+        console.error(res?.statusText || res)
+        show('data-form-callback-error', true)
+      })
+      .finally(() => {
+        submit.disabled = false
+      })
+  }
+
+  function isFormValid(form) {
+    const invalid = Array.from(form.querySelectorAll('[required]')).filter((field) => {
+      const bad =
+        field.type === 'email'
+          ? !field.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
+          : !field.value.trim()
+      field.classList.toggle('is-invalid', bad)
+      return bad
+    })
+    return invalid.length === 0
+  }
+
+  async function postJson(url, body) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+    if (!response.ok) throw response
+    return response
+  }
+
+  async function postComment(form) {
+    const response = await postJson('/api/comments', {
+      post: form.postId.value,
+      author_name: form.firstName.value,
+      author_email: form.email.value,
+      content: form.comment.value
+    })
+    // The opt-in only exists on articles with a Mailerlite group.
+    if (form.mailerlite_group_id?.checked) {
+      await postJson('/api/mailerlite', {
+        email: form.email.value,
+        fields: { cv_source: 'articleComment', name: form.firstName.value },
+        groups: [form.mailerlite_group_id.value]
+      })
+    }
+    return response
+  }
+
+  function postMailerlite(form) {
+    const groups = Array.from(form.querySelectorAll('[name="groups"]:checked')).map((el) => el.value)
+    return postJson('/api/mailerlite', {
+      email: form.email.value,
+      fields: { cv_source: 'newsletterModal', name: form.firstName.value },
+      groups
+    })
+  }
+
+  function postFreeEbook(form) {
+    return postJson('/api/mailerlite', {
+      email: form.email.value,
+      fields: { cv_source: 'Banner Free Ebook', name: form.firstName.value },
+      groups: [form.mailerLiteGroupId.value]
+    })
+  }
+</script>

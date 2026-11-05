@@ -11,10 +11,10 @@ test.describe('Newsletter subscription modal', () => {
   test('newsletter modal opens when toggle is clicked', async ({ page }) => {
     await page.goto(HOME_URL)
 
-    const modal = page.locator('#newsletter-modal')
+    const modal = page.locator('#cv-newsletter')
     await expect(modal).toBeHidden()
 
-    await page.locator('[toggle-newsletter-modal]').first().click()
+    await page.locator('[data-dialog-open="cv-newsletter"]').first().click()
 
     await expect(modal).toBeVisible()
   })
@@ -22,8 +22,8 @@ test.describe('Newsletter subscription modal', () => {
   test('newsletter form has required fields and group checkboxes', async ({ page }) => {
     await page.goto(HOME_URL)
 
-    await page.locator('[toggle-newsletter-modal]').first().click()
-    const modal = page.locator('#newsletter-modal')
+    await page.locator('[data-dialog-open="cv-newsletter"]').first().click()
+    const modal = page.locator('#cv-newsletter')
     await expect(modal).toBeVisible()
 
     const form = modal.locator('form')
@@ -42,8 +42,8 @@ test.describe('Newsletter subscription modal', () => {
   }) => {
     await page.goto(HOME_URL)
 
-    await page.locator('[toggle-newsletter-modal]').first().click()
-    const modal = page.locator('#newsletter-modal')
+    await page.locator('[data-dialog-open="cv-newsletter"]').first().click()
+    const modal = page.locator('#cv-newsletter')
     await expect(modal).toBeVisible()
 
     const form = modal.locator('form')
@@ -83,8 +83,8 @@ test.describe('Newsletter subscription modal', () => {
   test('submitting with both groups checked sends both group IDs', async ({ page }) => {
     await page.goto(HOME_URL)
 
-    await page.locator('[toggle-newsletter-modal]').first().click()
-    const modal = page.locator('#newsletter-modal')
+    await page.locator('[data-dialog-open="cv-newsletter"]').first().click()
+    const modal = page.locator('#cv-newsletter')
     await expect(modal).toBeVisible()
 
     const form = modal.locator('form')

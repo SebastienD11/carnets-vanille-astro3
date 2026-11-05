@@ -1,0 +1,152 @@
+---
+// Layout trial, not indexed. Delete this file once a home layout is chosen.
+// The previous home page: vanilla and photo split, then icon tiles.
+import { Image } from 'astro:assets'
+import { decode } from 'html-entities'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { useTranslations } from '../i18n/ui'
+import Layout from '../layouts/Layout.astro'
+import { getSite } from '../lib/site'
+import { featuredPhoto, formatMonth } from '../lib/content'
+import { getLatestPosts, getPostsBySlugs } from '../lib/wordpress'
+import EbookCard from '../components/EbookCard.astro'
+import Icon from '../components/Icon.astro'
+import Pagination from '../components/Pagination.astro'
+import Photo from '../components/Photo.astro'
+import PostGrid from '../components/PostGrid.astro'
+
+const TILE_COLORS = ['bg-vanille', 'bg-framboise', 'bg-pistache', 'bg-[#aeb8f2]']
+
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+const list = await getLatestPosts(lang, 1)
+const [feature, ...rest] = list.posts
+const featurePhoto = feature ? featuredPhoto(feature) : null
+const aroundPosts = await getPostsBySlugs(site.around.map((place) => place.slug), lang)
+const around = site.around.flatMap((place) => {
+  const post = aroundPosts.find((candidate) => candidate.slug === place.slug)
+  return post ? { ...place, post, photo: featuredPhoto(post) } : []
+})
+---
+
+<Layout>
+  <title slot="head">Home 3 · Carnets Vanille</title>
+  <main>
+    <section class="grid bg-vanille text-ink lg:grid-cols-2">
+      <div class="flex items-center lg:min-h-[520px] lg:justify-end">
+        <div class="flex w-full flex-col gap-4 px-4 py-6 lg:max-w-[632px] lg:gap-6 lg:px-8 lg:py-16">
+          <h1 class="cv-h1">{site.hero.title}</h1>
+          <p class="max-w-[52ch] text-[17px] leading-normal lg:text-lg">{site.hero.bio}</p>
+        </div>
+      </div>
+      <Image
+        src={site.hero.image}
+        alt={site.hero.imageAlt}
+        inferSize
+        widths={[640, 1100, 1600]}
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        quality={72}
+        loading="eager"
+        fetchpriority="high"
+        class="aspect-[3/2] h-full w-full object-cover lg:aspect-auto"
+      />
+    </section>
+
+    <div class="cv-container flex flex-col gap-10 py-8 lg:gap-16 lg:py-14">
+      <section class="flex flex-col gap-4">
+        <h2 class="cv-h2">{t('home.prepare')}</h2>
+        <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3">
+          {
+            site.tiles.map((tile, index) => {
+              const highlighted = index === site.tiles.length - 1 && lang === 'fr'
+              return (
+                <li>
+                  <a
+                    href={tile.href}
+                    class:list={[
+                      'group flex h-[116px] flex-col justify-between rounded-lg p-3 font-display text-lg leading-tight font-extrabold tracking-tight transition-transform duration-200 hover:-translate-y-1 lg:h-[148px] lg:p-4 lg:text-xl',
+                      highlighted ? 'bg-ink text-white dark:bg-vanille dark:text-ink' : 'bg-sunken'
+                    ]}
+                  >
+                    <span
+                      class:list={[
+                        'flex h-11 w-11 items-center justify-center rounded-full text-ink transition-transform duration-200 group-hover:-rotate-6 lg:h-12 lg:w-12',
+                        highlighted ? 'bg-vanille dark:bg-ink dark:text-vanille' : TILE_COLORS[index % TILE_COLORS.length]
+                      ]}
+                    >
+                      <Icon name={tile.icon} size={23} />
+                    </span>
+                    {tile.label}
+                  </a>
+                </li>
+              )
+            })
+          }
+        </ul>
+      </section>
+
+      {
+        feature && (
+          <section>
+            <a href={getRelativeLocaleUrl(lang, `/${feature.slug}`)} class="group grid gap-3 lg:grid-cols-2 lg:items-center lg:gap-10">
+              {featurePhoto && <Photo photo={featurePhoto} budget="feature" class="aspect-[3/2] w-full rounded-lg object-cover" />}
+              <div class="flex flex-col gap-2">
+                <p class="text-sm font-extrabold">{t('home.latest')} · {formatMonth(feature.modified, lang)}</p>
+                <h2 class="cv-h2 group-hover:underline">{decode(feature.title.rendered)}</h2>
+              </div>
+            </a>
+          </section>
+        )
+      }
+
+      <section class="flex flex-col gap-4">
+        <h2 class="cv-h2">{t('home.around')}</h2>
+        <ul class="flex flex-wrap gap-2 lg:hidden">
+          {
+            around.map((place) => (
+              <li>
+                <a href={getRelativeLocaleUrl(lang, `/${place.slug}`)} class="cv-chip">{place.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+        <ul class="hidden gap-3 lg:grid lg:grid-cols-4">
+          {
+            around.slice(0, 4).map((place) => (
+              <li>
+                <a href={getRelativeLocaleUrl(lang, `/${place.slug}`)} class="group flex flex-col gap-2">
+                  {place.photo && <Photo photo={place.photo} budget="card" class="aspect-[4/3] w-full rounded-lg object-cover" />}
+                  <span class="font-display text-xl font-extrabold tracking-tight group-hover:underline">{place.label}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class:list={['grid gap-6', site.ebook && 'lg:grid-cols-[1.8fr_1fr] lg:items-center lg:gap-5']}>
+        <EbookCard />
+        <ul class="border-t border-line">
+          {
+            site.more.map((link) => (
+              <li class="border-b border-line">
+                <a href={link.href} class="block py-3.5 font-bold hover:underline">{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {
+        rest.length > 0 && (
+          <section class="flex flex-col gap-6">
+            <h2 class="cv-h2">{t('index.posts.title')}</h2>
+            <PostGrid posts={rest} />
+            <Pagination total={list.total} perPage={list.perPage} currentPage={1} baseUrl="" />
+          </section>
+        )
+      }
+    </div>
+  </main>
+</Layout>

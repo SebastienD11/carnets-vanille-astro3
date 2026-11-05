@@ -1,10 +1,13 @@
+import { env } from '../../lib/env'
 // SSR API used client side at runtime for search functionality.
 
 import type { APIRoute } from 'astro'
 
+export const prerender = false
+
 export const GET: APIRoute = async (context) => {
   const wpApiUrl =
-    (context.locals as any).runtime?.env?.WORDPRESS_REST_API_URL ||
+    env.WORDPRESS_REST_API_URL ||
     import.meta.env.WORDPRESS_REST_API_URL
 
   const searchParams = context.url.searchParams

@@ -1,0 +1,158 @@
+---
+// A short vanilla intro, then the guide itself as a grid of real photos.
+import { Image } from 'astro:assets'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import Icon from '../components/Icon.astro'
+import Pagination from '../components/Pagination.astro'
+import Photo from '../components/Photo.astro'
+import PostGrid from '../components/PostGrid.astro'
+import { useTranslations } from '../i18n/ui'
+import mockup from '../images/banner-ebook-image.png'
+import portrait from '../images/sarah.webp'
+import { featuredPhoto } from '../lib/content'
+import { AUTHOR_PHOTO_ALT, getSite, homeSocials } from '../lib/site'
+import { getEbookPrice, getPostsBySlugs, type PostList } from '../lib/wordpress'
+
+type Props = { list: PostList }
+
+const { list } = Astro.props
+const lang = Astro.currentLocale as string
+const t = useTranslations(lang as 'fr')
+const site = getSite(lang)
+const slugOf = (href: string) => href.replace(/^\/(en\/)?|\/$/g, '')
+const tilePosts = await getPostsBySlugs(site.tiles.map((tile) => slugOf(tile.href)), lang)
+const tiles = site.tiles.map((tile) => {
+  const post = tilePosts.find((candidate) => candidate.slug === slugOf(tile.href))
+  return { ...tile, photo: post ? featuredPhoto(post) : null }
+})
+const aroundPosts = await getPostsBySlugs(site.around.map((place) => place.slug), lang)
+const around = site.around.flatMap((place) => {
+  const post = aroundPosts.find((candidate) => candidate.slug === place.slug)
+  return post ? { ...place, photo: featuredPhoto(post) } : []
+})
+const price = site.ebook ? await getEbookPrice() : null
+// The first tile fills the left block. The last one shares the bottom row with the ebook,
+// and takes the whole row in English, which has no ebook.
+const spanOf = (index: number) => {
+  if (index === 0) return 'col-span-2 row-span-2 aspect-[16/11] lg:aspect-auto'
+  if (index < tiles.length - 1) return 'aspect-square lg:aspect-auto'
+  return ['col-span-2 aspect-[16/9] lg:aspect-auto', !site.ebook && 'lg:col-span-4']
+}
+---
+
+<main>
+  <section class="bg-vanille text-ink">
+    <div class="cv-container flex flex-col gap-5 pt-[84px] pb-28 lg:flex-row lg:items-end lg:justify-between lg:gap-14 lg:pt-[148px] lg:pb-40">
+      <h1 class="cv-h1 lg:text-[88px]">{site.hero.title}</h1>
+      <div class="flex items-center gap-4 lg:max-w-[540px] lg:shrink-0 lg:gap-6 lg:pb-1">
+        <Image
+          src={portrait}
+          alt={AUTHOR_PHOTO_ALT}
+          width={132}
+          height={132}
+          densities={[1, 2]}
+          loading="eager"
+          class="h-[92px] w-[92px] shrink-0 -rotate-3 rounded-lg border-4 border-white object-cover shadow-[0_8px_24px_rgb(28_25_23/0.18)] lg:h-[132px] lg:w-[132px]"
+        />
+        <div class="flex flex-col items-start gap-2">
+          <p class="font-voice text-[19px] leading-[1.3] italic lg:text-2xl">{site.hero.bio}</p>
+          <p class="text-sm leading-relaxed font-extrabold">
+            {t('home.follow')}{' '}
+            {
+              homeSocials.map((social, index) => (
+                <>
+                  {index > 0 && (index === homeSocials.length - 1 ? ` ${t('home.followAnd')} ` : ', ')}
+                  <a href={social.href} target="_blank" rel="noopener" class="cv-text-link-dark">{social.label}</a>
+                </>
+              ))
+            }
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cv-container -mt-20 lg:-mt-28">
+    <section>
+      <h2 class="sr-only">{t('home.prepare')}</h2>
+      <ul class="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:grid-rows-[230px_230px_200px] lg:gap-3">
+        {
+          tiles.map((tile, index) => (
+            <li class:list={[spanOf(index)]}>
+              <a href={tile.href} class="group relative block h-full overflow-hidden rounded-lg bg-ink">
+                {tile.photo && (
+                  <Photo
+                    photo={tile.photo}
+                    budget={index === 0 ? 'feature' : 'card'}
+                    priority={index === 0}
+                    class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                )}
+                <span class="absolute inset-0 bg-linear-to-t from-black/70 to-transparent to-60%"></span>
+                <span class="absolute inset-x-3 bottom-3 flex items-center gap-2 text-white lg:inset-x-4 lg:bottom-4">
+                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-vanille text-ink">
+                    <Icon name={tile.icon} size={19} />
+                  </span>
+                  <span class:list={['font-display leading-tight font-extrabold tracking-tight', index === 0 ? 'text-2xl lg:text-4xl' : 'text-lg lg:text-xl']}>
+                    {tile.label}
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+        {
+          site.ebook && (
+            <li class="col-span-2">
+              <a href={site.ebook.href} class="group flex h-full items-center justify-between gap-2 overflow-hidden rounded-lg bg-ink p-4 text-white lg:p-5 dark:bg-surface">
+                <span class="flex flex-col gap-2">
+                  <span class="font-display text-xl leading-tight font-extrabold tracking-tight lg:text-2xl">{site.ebook.title}</span>
+                  <span class="cv-btn cv-btn-primary cv-btn-pill self-start">{price ? `${site.ebook.cta} · ${price}` : site.ebook.cta}</span>
+                </span>
+                <Image src={mockup} alt="" widths={[200, 400]} sizes="200px" quality={78} class="h-auto w-[120px] shrink-0 -rotate-3 transition-transform duration-300 group-hover:scale-105 lg:w-[190px]" />
+              </a>
+            </li>
+          )
+        }
+      </ul>
+    </section>
+  </div>
+
+  <div class="cv-container flex flex-col gap-12 py-10 lg:gap-20 lg:py-20">
+    <section class="flex flex-col gap-4">
+      <h2 class="cv-h2">{t('home.around')}</h2>
+      <ul class="-mx-4 flex snap-x scroll-pl-4 gap-2 overflow-x-auto px-4 [scrollbar-width:none] lg:mx-0 lg:grid lg:auto-cols-fr lg:grid-flow-col lg:gap-3 lg:overflow-visible lg:px-0">
+        {
+          around.map((place) => (
+            <li class="w-[150px] shrink-0 snap-start lg:w-auto">
+              <a href={getRelativeLocaleUrl(lang, `/${place.slug}`)} class="group relative block overflow-hidden rounded-lg bg-sunken">
+                {place.photo && <Photo photo={place.photo} budget="card" class="aspect-[4/5] w-full object-cover transition-transform duration-300 group-hover:scale-105" />}
+                <span class="absolute inset-0 bg-linear-to-t from-black/70 to-transparent to-60%"></span>
+                <span class="absolute inset-x-3 bottom-3 font-display leading-tight font-extrabold tracking-tight text-white lg:text-lg">{place.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <ul class="-mt-6 grid gap-2 sm:auto-cols-fr sm:grid-flow-col lg:-mt-12 lg:gap-3">
+      {
+        site.more.map((link) => (
+          <li>
+            <a href={link.href} class="flex h-full items-center justify-between gap-3 rounded-lg bg-sunken px-4 py-3.5 font-bold leading-snug transition-colors hover:bg-vanille hover:text-ink">
+              {link.label}
+              <Icon name="arrow" size={20} class="shrink-0" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section class="flex flex-col gap-6">
+      <h2 class="cv-h2">{t('index.posts.title')}</h2>
+      <PostGrid posts={list.posts} />
+      <Pagination total={list.total} perPage={list.perPage} currentPage={1} baseUrl="" />
+    </section>
+  </div>
+</main>
